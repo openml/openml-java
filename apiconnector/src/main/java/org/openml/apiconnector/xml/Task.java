@@ -111,7 +111,7 @@ public class Task implements Serializable {
 			private Integer data_set_id;
 			private String target_feature;
 			
-			@XStreamOmitField
+			// do not serialize
 			private DataSetDescription dsdCache;
 			
 			public Integer getData_set_id() {
@@ -134,7 +134,7 @@ public class Task implements Serializable {
 			private String data_splits_url;
 			private Parameter[] parameters;
 			
-			@XStreamOmitField
+			// do not serialize
 			private File data_splits_cache;
 			
 			public String getType() {

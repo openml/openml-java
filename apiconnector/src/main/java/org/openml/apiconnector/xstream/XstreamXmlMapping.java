@@ -71,6 +71,8 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:default_target_attribute", DataSetDescription.class, "default_target_attribute");
 		xstream.aliasField("oml:md5_checksum", DataSetDescription.class, "md5_checksum");
 		
+		xstream.omitField(DataSetDescription.class, "dataset_cache");
+		
 		// upload data set
 		xstream.alias("oml:upload_data_set", UploadDataSet.class);
 		xstream.aliasField("oml:id", UploadDataSet.class, "id");
@@ -179,6 +181,8 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:evaluation_measures", Task.Input.class, "evaluation_measures");
 		xstream.aliasField("oml:predictions", Task.Output.class, "predictions");
 		xstream.aliasField("oml:format", Task.Output.Predictions.class, "format");
+		xstream.omitField(Task.Input.Estimation_procedure.class, "data_splits_cache");
+		xstream.omitField(Task.Input.Data_set.class,"dsdCache");
 		
 		xstream.useAttributeFor(Task.Input.class, "name");
 		xstream.useAttributeFor(Task.Output.class, "name");

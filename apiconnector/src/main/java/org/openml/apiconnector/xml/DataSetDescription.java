@@ -48,7 +48,7 @@ public class DataSetDescription implements Serializable {
 	private String default_target_attribute;
 	private String md5_checksum;
 	
-	@XStreamOmitField
+	// do not serialize
 	private File dataset_cache;
 	
 	/*
