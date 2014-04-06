@@ -98,6 +98,10 @@ public class ArffHelper {
 		String[] words = attributeLine.split("\\s+");
 		if( words.length < 2 ) throw new Exception("Not a valid attribute.");
 		
+		if( words[1].charAt( 0 ) == '\'' && words[1].charAt( words[1].length()-1 ) == '\'' ) {
+			return words[1].substring( 1, words[1].length() - 1 );
+		}
+		
 		return words[1];
 	}
 	
@@ -119,7 +123,14 @@ public class ArffHelper {
 		if( idxStartBracket > idxEndBracket ) {
 			throw new Exception("Not a legal nominal attribute. ");
 		}
-		return attributeLine.substring( idxStartBracket + 1, idxEndBracket ).split(",");
+		String[] classes = attributeLine.substring( idxStartBracket + 1, idxEndBracket ).split(",");
+		for( int i = 0; i < classes.length; ++i ) {
+			classes[i] = classes[i].trim();
+			if( classes[i].charAt( 0 ) == '\'' && classes[i].charAt( classes[i].length()-1 ) == '\'' ) {
+				classes[i] = classes[i].substring( 1, classes[i].length() - 1 );
+			}
+		}
+		return classes;
 	}
 	
 }

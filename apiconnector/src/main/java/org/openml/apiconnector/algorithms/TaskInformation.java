@@ -20,6 +20,7 @@
 package org.openml.apiconnector.algorithms;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 
 import org.openml.apiconnector.xml.DataSetDescription;
@@ -125,7 +126,11 @@ public class TaskInformation {
 	public static String[] getClassNames( Task t ) throws Exception {
 		DataSetDescription dsd = getSourceData(t).getDataSetDescription();
 		String targetFeature = getSourceData(t).getTarget_feature();
-		BufferedReader br = new BufferedReader( new FileReader( dsd.getDataset() ) );
+		return getClassNames( dsd.getDataset(), targetFeature );
+	}
+	
+	public static String[] getClassNames( File dataset, String targetFeature ) throws Exception {
+		BufferedReader br = new BufferedReader( new FileReader( dataset ) );
 		
 		String line;
 		
