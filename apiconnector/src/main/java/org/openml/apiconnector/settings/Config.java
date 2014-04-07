@@ -60,9 +60,9 @@ public class Config {
 			}
 		}
 		br.close();
-
-		if( getServer() != null ) { ApiConnector.API_URL = getServer(); }
 		loaded = true;
+		
+		if( getServer() != null ) { ApiConnector.API_URL = getServer(); }
 	}
 	
 	/**
