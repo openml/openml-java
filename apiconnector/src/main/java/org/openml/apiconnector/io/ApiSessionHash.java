@@ -76,6 +76,7 @@ public class ApiSessionHash implements Serializable {
 			this.sessionHash = auth.getSessionHash();
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
