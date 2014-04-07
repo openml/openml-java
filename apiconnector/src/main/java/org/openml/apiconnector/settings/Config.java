@@ -24,6 +24,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.openml.apiconnector.io.ApiConnector;
+
 /**
  * A Class that loads a config file with username/password and server information.
  * Highly recommended to use config file and this class when executing experiments
@@ -58,6 +60,8 @@ public class Config {
 			}
 		}
 		br.close();
+
+		if( getServer() != null ) { ApiConnector.API_URL = getServer(); }
 		loaded = true;
 	}
 	

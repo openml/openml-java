@@ -57,11 +57,15 @@ public class ApiSessionHash implements Serializable {
 	 * @return true if authentication was successful; false otherwise.
 	 * @throws ParseException
 	 */
-	public boolean set( String username, String password ) throws ParseException {
+	public boolean set( String username, String password ) {
 		this.username = username;
 		this.password = password;
-		
-		return update();
+		try {
+			update();
+			return true;
+		} catch( Exception e ) {
+			return false;
+		}
 	}
 	
 	/**
@@ -69,16 +73,11 @@ public class ApiSessionHash implements Serializable {
 	 * 
 	 * @return True on successful authentication; false otherwise. 
 	 */
-	public boolean update() {
-		try {
-			Authenticate auth = ApiConnector.openmlAuthenticate(username, password);
-			this.validUntil = DateParser.mysqlDateToTimeStamp(auth.getValidUntil());
-			this.sessionHash = auth.getSessionHash();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+	public void update() throws Exception {
+		Authenticate auth = ApiConnector.openmlAuthenticate(username, password);
+		this.validUntil = DateParser.mysqlDateToTimeStamp(auth.getValidUntil());
+		this.sessionHash = auth.getSessionHash();
+		return;
 	}
 
 	/**
@@ -91,9 +90,24 @@ public class ApiSessionHash implements Serializable {
 	/**
 	 * @return The password that was set
 	 */
-	public String getSessionHash() {
+	public String getSessionHash() throws Exception {
 		if( isValid() == false )
 			update();
 		return sessionHash;
+	}
+	
+	/**
+	 * Checks given credentials whether these can be used to login on the server
+	 * @param username
+	 * @param password
+	 * @return whether the user can login with the given credentials. 
+	 */
+	public static boolean checkCredentials(String username, String password) {
+		try {
+			ApiConnector.openmlAuthenticate(username, password);
+			return true;
+		} catch( Exception e ) {
+			return false;
+		}
 	}
 }
