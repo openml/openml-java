@@ -76,6 +76,13 @@ public class Config {
 	}
 	
 	/**
+	 * @return The server address specified in the config file
+	 */
+	public String getServer() {
+		return get("server");
+	}
+	
+	/**
 	 * @param key - Item name to be loaded from the config file. 
 	 * @return Field "key", if specified in the config file. null otherwise
 	 */
