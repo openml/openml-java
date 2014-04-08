@@ -19,8 +19,15 @@
  */
 package org.openml.apiconnector.algorithms;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
 public class MathHelper {
 
+	public final static DecimalFormat defaultDecimalFormat = new DecimalFormat("#.######", DecimalFormatSymbols.getInstance( Locale.ENGLISH ) );
+	public final static DecimalFormat visualDecimalFormat = new DecimalFormat("#.##", DecimalFormatSymbols.getInstance( Locale.ENGLISH ) );
+	
 	/**
 	 * Calculates the standard deviation of a population. 
 	 * 
