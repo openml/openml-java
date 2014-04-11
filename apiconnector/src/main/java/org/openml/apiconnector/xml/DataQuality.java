@@ -24,8 +24,18 @@ import org.openml.apiconnector.settings.Constants;
 public class DataQuality {
 	
 	private final String oml = Constants.OPENML_XMLNS;
+	private Integer did;
 	private Quality[] qualities;
-
+	
+	public DataQuality( Integer did, Quality[] qualities ) {
+		this.did = did;
+		this.qualities = qualities;
+	}
+	
+	public Integer getDid() {
+		return did;
+	}
+	
 	public Quality[] getQualities() {
 		return qualities;
 	}

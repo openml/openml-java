@@ -93,6 +93,7 @@ public class XstreamXmlMapping {
 		
 		// data quality
 		xstream.alias("oml:data_qualities", DataQuality.class);
+		xstream.aliasField("oml:did", DataQuality.Quality.class, "did");
 		xstream.aliasAttribute(DataQuality.class, "oml", "xmlns:oml");
 		xstream.addImplicitCollection(DataQuality.class, "qualities", "oml:quality", DataQuality.Quality.class);
 		

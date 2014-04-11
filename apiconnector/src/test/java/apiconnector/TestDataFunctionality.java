@@ -37,7 +37,7 @@ public class TestDataFunctionality {
 	 * data set description, features and qualities. 
 	 */
 	@Test
-	public void test() {
+	public void testApiDataDownload() {
 		Random r = new Random( 0L );
 		
 		try {
