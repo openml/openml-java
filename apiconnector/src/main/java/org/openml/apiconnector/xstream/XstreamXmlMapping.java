@@ -19,6 +19,9 @@
  */
 package org.openml.apiconnector.xstream;
 
+import org.openml.apiconnector.xml.Data;
+import org.openml.apiconnector.xml.DataFeature;
+import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.ImplementationDelete;
 import org.openml.apiconnector.xml.ImplementationExists;
 import org.openml.apiconnector.xml.ImplementationOwned;
@@ -50,6 +53,11 @@ public class XstreamXmlMapping {
 	public static XStream getInstance() {
 		XStream xstream = new XStream(new DomDriver("UFT-8", new NoNameCoder()));
 		
+		// data
+		xstream.alias("oml:data", Data.class);
+		xstream.aliasAttribute(Data.class, "oml", "xmlns:oml");
+		xstream.addImplicitCollection(Data.class, "did", "oml:did", Integer.class);
+		
 		// data set description
 		xstream.alias("oml:data_set_description", DataSetDescription.class);
 		xstream.aliasAttribute(DataSetDescription.class, "oml", "xmlns:oml");
@@ -72,6 +80,25 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:md5_checksum", DataSetDescription.class, "md5_checksum");
 		
 		xstream.omitField(DataSetDescription.class, "dataset_cache");
+		
+		// data feature
+		xstream.alias("oml:data_features", DataFeature.class);
+		xstream.aliasAttribute(DataFeature.class, "oml", "xmlns:oml");
+		xstream.addImplicitCollection(DataFeature.class, "features", "oml:feature", DataFeature.Feature.class);
+		
+		xstream.alias("oml:data_feature", DataFeature.Feature.class);
+		xstream.aliasField("oml:name", DataFeature.Feature.class, "name");
+		xstream.aliasField("oml:data_type", DataFeature.Feature.class, "data_type");
+		xstream.aliasField("oml:index", DataFeature.Feature.class, "index");
+		
+		// data quality
+		xstream.alias("oml:data_qualities", DataQuality.class);
+		xstream.aliasAttribute(DataQuality.class, "oml", "xmlns:oml");
+		xstream.addImplicitCollection(DataQuality.class, "qualities", "oml:quality", DataQuality.Quality.class);
+		
+		xstream.alias("oml:data_quality", DataQuality.Quality.class);
+		xstream.aliasField("oml:name", DataQuality.Quality.class, "name");
+		xstream.aliasField("oml:value", DataQuality.Quality.class, "value");
 		
 		// upload data set
 		xstream.alias("oml:upload_data_set", UploadDataSet.class);

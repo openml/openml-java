@@ -28,8 +28,6 @@ import org.openml.apiconnector.algorithms.TaskInformation;
 import org.openml.apiconnector.io.ApiConnector;
 import org.openml.apiconnector.settings.Constants;
 
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
-
 public class Task implements Serializable {
 	private static final long serialVersionUID = 987612341009L;
 

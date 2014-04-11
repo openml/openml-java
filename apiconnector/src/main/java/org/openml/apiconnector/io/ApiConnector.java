@@ -34,6 +34,9 @@ import org.openml.apiconnector.algorithms.Hashing;
 import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xml.ApiError;
 import org.openml.apiconnector.xml.Authenticate;
+import org.openml.apiconnector.xml.Data;
+import org.openml.apiconnector.xml.DataFeature;
+import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.Implementation;
 import org.openml.apiconnector.xml.ImplementationExists;
@@ -43,7 +46,6 @@ import org.openml.apiconnector.xml.UploadDataSet;
 import org.openml.apiconnector.xml.UploadImplementation;
 import org.openml.apiconnector.xml.UploadRun;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
@@ -57,7 +59,6 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-
 import org.openml.apiconnector.xml.ImplementationDelete;
 import org.openml.apiconnector.xml.ImplementationOwned;
 
@@ -72,6 +73,8 @@ public class ApiConnector {
 	private static HttpClient httpclient;
 	
 	/**
+	 * Authenticates the current user. 
+	 * 
 	 * @param username - The username that is used for authentication
 	 * @param password - The password used for authentication
 	 * @return Authenticate - An object containing the Api Session Hash 
@@ -91,8 +94,25 @@ public class ApiConnector {
         	throw new DataFormatException("Casting Api Object to Authenticate");
         }
 	}
+	/**
+	 * Retrieves an array of id's off all valid data sets in the system. 
+	 * 
+	 * @return Data - An object containing the all valid data id's
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public static Data openmlData() throws Exception {
+		Object apiResult = doApiRequest("openml.data", "" );
+        if( apiResult instanceof Data){
+        	return (Data) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to Data");
+        }
+	}
 	
 	/**
+	 * Retrieves the description of a specified data set. 
+	 * 
 	 * @param did - The data_id of the data description to download. 
 	 * @return DataSetDescription - An object containing the description of the data
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
@@ -104,6 +124,40 @@ public class ApiConnector {
         	return (DataSetDescription) apiResult;
         } else {
         	throw new DataFormatException("Casting Api Object to DataSetDescription");
+        }
+	}
+	
+	/**
+	 * Retrieves the features of a specified data set. 
+	 * 
+	 * @param did - The data_id of the data features to download. 
+	 * @return DataFeatures - An object containing the features of the data
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public static DataFeature openmlDataFeatures( int did ) throws Exception {
+		Object apiResult = doApiRequest("openml.data.features", "&data_id=" + did );
+        if( apiResult instanceof DataFeature){
+        	return (DataFeature) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to DataFeature");
+        }
+	}
+	
+	/**
+	 * Retrieves the qualities (meta-features) of a specified data set. 
+	 * 
+	 * @param did - The data_id of the data features to download. 
+	 * @return DataFeatures - An object containing the qualities of the data
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public static DataQuality openmlDataQuality( int did ) throws Exception {
+		Object apiResult = doApiRequest("openml.data.qualities", "&data_id=" + did );
+        if( apiResult instanceof DataQuality){
+        	return (DataQuality) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to DataQuality");
         }
 	}
 	

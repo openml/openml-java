@@ -26,8 +26,6 @@ import java.io.Serializable;
 import org.openml.apiconnector.algorithms.ArffHelper;
 import org.openml.apiconnector.settings.Constants;
 
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
-
 public class DataSetDescription implements Serializable {
 	private static final long serialVersionUID = 987612341129L;
 	private final String oml = Constants.OPENML_XMLNS;

@@ -21,8 +21,6 @@ package org.openml.apiconnector.models;
 
 import java.text.DecimalFormat;
 
-import org.openml.apiconnector.algorithms.MathHelper;
-
 public class MetricScore {
 	
 	private Double score = null;
@@ -46,7 +44,6 @@ public class MetricScore {
 	 * @param array - 
 	 */
 	public MetricScore( Double[] array ) {
-		this.score = MathHelper.mean(array);
 		this.array = array;
 	}
 
