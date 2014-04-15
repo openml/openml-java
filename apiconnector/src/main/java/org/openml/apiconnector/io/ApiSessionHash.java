@@ -71,7 +71,7 @@ public class ApiSessionHash implements Serializable {
 	/**
 	 * Executes authentication request.
 	 * 
-	 * @return True on successful authentication; false otherwise. 
+	 * @throws Exception - On authentication failure
 	 */
 	public void update() throws Exception {
 		Authenticate auth = ApiConnector.openmlAuthenticate(username, password);

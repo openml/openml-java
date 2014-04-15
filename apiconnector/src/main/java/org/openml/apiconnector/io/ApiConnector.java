@@ -222,7 +222,7 @@ public class ApiConnector {
 	/**
 	 * @param id - The numeric id of the implementation to be deleted. 
 	 * @param session_hash - A session hash (obtainable by openmlAuthenticate)
-	 * @return
+	 * @return ImplementationDelete - An object containing the id of the deleted implementation
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
@@ -305,7 +305,7 @@ public class ApiConnector {
 	}
 	
 	/**
-	 * @param descriptionUploadDataSet - An XML file describing the implementation. See documentation at openml.org.
+	 * @param description - An XML file describing the implementation. See documentation at openml.org.
 	 * @param binary - A file containing the implementation binary. 
 	 * @param source - A file containing the implementation source.
 	 * @param session_hash - A session hash (obtainable by openmlAuthenticate)
@@ -376,6 +376,12 @@ public class ApiConnector {
         }
 	}
 	
+	/**
+	 * @param sql - The query to be executed 
+	 * @return An JSON object containing the result of the query, along with meta data
+	 * @throws JSONException
+	 * @throws IOException
+	 */
 	public static JSONObject openmlFreeQuery( String sql ) throws JSONException, IOException {
 		return new JSONObject( getStringFromUrl( API_URL + "api_query/?q=" + URLEncoder.encode( sql, "ISO-8859-1" ) ) );
 	}

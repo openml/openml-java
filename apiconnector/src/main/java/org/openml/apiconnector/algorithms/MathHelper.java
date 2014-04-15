@@ -33,7 +33,7 @@ public class MathHelper {
 	 * 
 	 * @param population
 	 * @param sample
-	 * @return
+	 * @return The standard deviation of the population
 	 */
 	public static double standard_deviation( Double[] population, boolean sample ) {
 		double variance = 0;
@@ -51,7 +51,7 @@ public class MathHelper {
 	 * Returns the sum of values in an array. 
 	 * 
 	 * @param array
-	 * @return
+	 * @return The sum of values in the array
 	 */
 	public static double sum( Double[] array ) {
 		double total = 0;
@@ -63,7 +63,7 @@ public class MathHelper {
 	 * Returns the mean of values in an array
 	 * 
 	 * @param array
-	 * @return
+	 * @return The mean of the array
 	 */
 	public static double mean( Double[] array ) {
 		return sum(array) / array.length;
@@ -74,7 +74,7 @@ public class MathHelper {
 	 * 
 	 * @param array
 	 * @param naturalNumbers
-	 * @return
+	 * @return The index of the highest number in the array
 	 */
 	public static int argmax( double[] array, boolean naturalNumbers ) {
 		int best = -1;
