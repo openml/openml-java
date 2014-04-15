@@ -34,7 +34,7 @@ public class DataFeature {
 		return oml;
 	}
 	
-	public class Feature {
+	public static class Feature {
 		private String name;
 		private String data_type;
 		private int index;

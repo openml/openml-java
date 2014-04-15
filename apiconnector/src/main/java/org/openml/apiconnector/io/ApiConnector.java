@@ -24,11 +24,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.DataFormatException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.algorithms.Hashing;
 import org.openml.apiconnector.settings.Settings;
@@ -37,6 +40,7 @@ import org.openml.apiconnector.xml.Authenticate;
 import org.openml.apiconnector.xml.Data;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
+import org.openml.apiconnector.xml.DataQualityUpload;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.Implementation;
 import org.openml.apiconnector.xml.ImplementationExists;
@@ -66,11 +70,19 @@ import com.thoughtworks.xstream.XStream;
 
 public class ApiConnector {
 	
-	public static String API_URL = Settings.BASE_URL; // can be altered outside the class
-	public static final String API_PART = "rest_api/";
-	private static XStream xstream = XstreamXmlMapping.getInstance();
+	public static String API_URL = Settings.BASE_URL; // can be altered outside the class'
 	
-	private static HttpClient httpclient;
+	private static final String API_PART = "rest_api/";
+	private static final XStream xstream = XstreamXmlMapping.getInstance();
+	
+	/**
+	 * Returns the URL to which api calls are made
+	 * 
+	 * @return the API endpoint
+	 */
+	public static String getApiUrl() {
+		return API_URL + API_PART;
+	}
 	
 	/**
 	 * Authenticates the current user. 
@@ -158,6 +170,19 @@ public class ApiConnector {
         	return (DataQuality) apiResult;
         } else {
         	throw new DataFormatException("Casting Api Object to DataQuality");
+        }
+	}
+	
+	public static DataQualityUpload openmlDataQualityUpload( File description, String session_hash ) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("description", new FileBody(description));
+		params.addPart("session_hash",new StringBody(session_hash));
+		
+		Object apiResult = doApiRequest("openml.data.qualities.upload", "", params );
+		if( apiResult instanceof DataQualityUpload){
+        	return (DataQualityUpload) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to DataQualityUpload");
         }
 	}
 	
@@ -351,6 +376,10 @@ public class ApiConnector {
         }
 	}
 	
+	public static JSONObject openmlFreeQuery( String sql ) throws JSONException, IOException {
+		return new JSONObject( getStringFromUrl( API_URL + "api_query/?q=" + URLEncoder.encode( sql, "ISO-8859-1" ) ) );
+	}
+	
 	/**
 	 * @param url - The URL to obtain
 	 * @return String - The content of the URL
@@ -378,7 +407,7 @@ public class ApiConnector {
 	
 	private static Object doApiRequest(String function, String queryString, HttpEntity entity) throws Exception {
 		String result = "";
-		httpclient = new DefaultHttpClient();
+		HttpClient httpclient = new DefaultHttpClient();
 		String requestUri = API_URL + API_PART + "?f=" + function + queryString;
 		long contentLength = 0;
 		try {

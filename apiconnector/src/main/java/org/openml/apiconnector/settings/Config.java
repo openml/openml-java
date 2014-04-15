@@ -20,9 +20,13 @@
 package org.openml.apiconnector.settings;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import org.openml.apiconnector.io.ApiConnector;
 
@@ -41,8 +45,16 @@ public class Config {
 	/**
 	 * @throws IOException - Could not load config file
 	 */
-	public Config() throws IOException {
-		load("openml.conf");
+	public Config() {
+		try {
+			load(new File("openml.conf"));
+		} catch( IOException ioe ) {
+			throw new RuntimeException( "Could no locate config file: " + ioe.getMessage() );
+		}
+	}
+	
+	public Config( String config ) {
+		process( Arrays.asList( config.split(";") ) );
 	}
 	
 	/**
@@ -50,16 +62,26 @@ public class Config {
 	 * file can be found. 
 	 * @throws IOException - Could not load config file
 	 */
-	public void load( String f ) throws IOException {
-		config = new HashMap<String, String>();
+	private void load( File f ) throws IOException {
+		
 		BufferedReader br = new BufferedReader(new FileReader(f));
+		List<String> lines = new ArrayList<String>();
 		while( br.ready() ) {
-			String[] l = br.readLine().split("=");
+			lines.add( br.readLine() );
+		}
+		br.close();
+		process( lines );
+	}
+	
+	private void process( List<String> lines ) {
+		config = new HashMap<String, String>();
+		
+		for( String line : lines ) {
+			String[] l = line.split("=");
 			if( l.length == 2 ) {
 				config.put( l[0].trim(), l[1].trim() );
 			}
 		}
-		br.close();
 		loaded = true;
 		
 		if( getServer() != null ) { ApiConnector.API_URL = getServer(); }

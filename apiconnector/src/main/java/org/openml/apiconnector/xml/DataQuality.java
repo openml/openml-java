@@ -52,11 +52,19 @@ public class DataQuality {
 		return qualities;
 	}
 	
+	public String[] getQualityNames() {
+		String[] result = new String[qualities.length];
+		for( int i = 0; i < qualities.length; ++i ) {
+			result[i] = qualities[i].getName();
+		}
+		return result;
+	}
+	
 	public String getOml() {
 		return oml;
 	}
 	
-	public class Quality {
+	public static class Quality {
 		private String name;
 		private String value;
 		
@@ -68,6 +76,7 @@ public class DataQuality {
 		public String getName() {
 			return name;
 		}
+		
 		public String getValue() {
 			return value;
 		}

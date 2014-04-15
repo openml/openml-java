@@ -22,6 +22,7 @@ package org.openml.apiconnector.xstream;
 import org.openml.apiconnector.xml.Data;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
+import org.openml.apiconnector.xml.DataQualityUpload;
 import org.openml.apiconnector.xml.ImplementationDelete;
 import org.openml.apiconnector.xml.ImplementationExists;
 import org.openml.apiconnector.xml.ImplementationOwned;
@@ -93,13 +94,17 @@ public class XstreamXmlMapping {
 		
 		// data quality
 		xstream.alias("oml:data_qualities", DataQuality.class);
-		xstream.aliasField("oml:did", DataQuality.Quality.class, "did");
+		xstream.aliasField("oml:did", DataQuality.class, "did");
 		xstream.aliasAttribute(DataQuality.class, "oml", "xmlns:oml");
 		xstream.addImplicitCollection(DataQuality.class, "qualities", "oml:quality", DataQuality.Quality.class);
 		
 		xstream.alias("oml:data_quality", DataQuality.Quality.class);
 		xstream.aliasField("oml:name", DataQuality.Quality.class, "name");
 		xstream.aliasField("oml:value", DataQuality.Quality.class, "value");
+		
+		// data qualities upload
+		xstream.alias("oml:data_qualities_upload", DataQualityUpload.class);
+		xstream.aliasField("oml:did", DataQualityUpload.class, "did");
 		
 		// upload data set
 		xstream.alias("oml:upload_data_set", UploadDataSet.class);
