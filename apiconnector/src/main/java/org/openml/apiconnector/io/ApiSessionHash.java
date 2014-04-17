@@ -75,7 +75,7 @@ public class ApiSessionHash implements Serializable {
 	 */
 	public void update() throws Exception {
 		Authenticate auth = ApiConnector.openmlAuthenticate(username, password);
-		this.validUntil = DateParser.mysqlDateToTimeStamp(auth.getValidUntil());
+		this.validUntil = DateParser.mysqlDateToTimeStamp(auth.getValidUntil(),auth.getTimezone());
 		this.sessionHash = auth.getSessionHash();
 		return;
 	}
@@ -91,8 +91,10 @@ public class ApiSessionHash implements Serializable {
 	 * @return The password that was set
 	 */
 	public String getSessionHash() throws Exception {
-		if( isValid() == false )
+		if( isValid() == false ) {
+			System.out.println("Updating session hash ... ");
 			update();
+		}
 		return sessionHash;
 	}
 	

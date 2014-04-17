@@ -23,11 +23,17 @@ public class Authenticate {
 	
 	private String sessionHash;
 	private String validUntil;
+	private String timezone;
 	
 	public String getSessionHash() {
 		return sessionHash;
 	}
+	
 	public String getValidUntil() {
 		return validUntil;
+	}
+	
+	public String getTimezone() {
+		return timezone;
 	}
 }

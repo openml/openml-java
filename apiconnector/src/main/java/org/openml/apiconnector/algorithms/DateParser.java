@@ -37,10 +37,10 @@ public class DateParser {
 	 * @return Unix Time Stamp of mysqlTime
 	 * @throws ParseException
 	 */
-	public static long mysqlDateToTimeStamp(String mysqlTime) throws ParseException {
+	public static long mysqlDateToTimeStamp(String mysqlTime, String timezone) throws ParseException {
 		DateFormat current = (DateFormat) defaultOrder.clone();
 		Calendar cal = Calendar.getInstance();
-	    current.setTimeZone(TimeZone.getTimeZone("GMT"));
+	    current.setTimeZone(TimeZone.getTimeZone(timezone));
 	    cal.setTime(current.parse(mysqlTime));
 	    //System.out.println("Valid until: " + sdf.format(cal.getTime()));
 	    //System.out.println("Now: " + sdf.format(utilDate.getTime()));

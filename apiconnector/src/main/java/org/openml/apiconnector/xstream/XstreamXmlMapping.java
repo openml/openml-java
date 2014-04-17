@@ -188,6 +188,7 @@ public class XstreamXmlMapping {
 		xstream.alias("oml:authenticate", Authenticate.class);
 		xstream.aliasField("oml:session_hash", Authenticate.class, "sessionHash");
 		xstream.aliasField("oml:valid_until", Authenticate.class, "validUntil");
+		xstream.aliasField("oml:timezone", Authenticate.class, "timezone");
 		
 		// tasks
 		xstream.alias("oml:task", Task.class);
