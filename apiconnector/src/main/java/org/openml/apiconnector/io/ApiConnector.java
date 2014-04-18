@@ -22,6 +22,7 @@ package org.openml.apiconnector.io;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -68,7 +69,9 @@ import org.openml.apiconnector.xml.ImplementationOwned;
 
 import com.thoughtworks.xstream.XStream;
 
-public class ApiConnector {
+public class ApiConnector implements Serializable {
+	
+	private static final long serialVersionUID = 7362620508675762264L;
 	private static final String API_PART = "rest_api/";
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
 	
