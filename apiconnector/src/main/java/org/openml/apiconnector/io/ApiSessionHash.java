@@ -30,6 +30,8 @@ import org.openml.apiconnector.xml.Authenticate;
 public class ApiSessionHash implements Serializable {
 	
 	private static final long serialVersionUID = 7831245113631L;
+	private final ApiConnector apiconnector;
+	
 	private String username;
 	private String password;
 	private String sessionHash;
@@ -38,7 +40,8 @@ public class ApiSessionHash implements Serializable {
 	/**
 	 * Creates a new session hash. 
 	 */
-	public ApiSessionHash() {
+	public ApiSessionHash( ApiConnector apiconnector ) {
+		this.apiconnector = apiconnector;
 		sessionHash = null;
 		username = null;
 	}
@@ -74,7 +77,7 @@ public class ApiSessionHash implements Serializable {
 	 * @throws Exception - On authentication failure
 	 */
 	public void update() throws Exception {
-		Authenticate auth = ApiConnector.openmlAuthenticate(username, password);
+		Authenticate auth = apiconnector.openmlAuthenticate(username, password);
 		this.validUntil = DateParser.mysqlDateToTimeStamp(auth.getValidUntil(),auth.getTimezone());
 		this.sessionHash = auth.getSessionHash();
 		return;
@@ -92,7 +95,6 @@ public class ApiSessionHash implements Serializable {
 	 */
 	public String getSessionHash() throws Exception {
 		if( isValid() == false ) {
-			System.out.println("Updating session hash ... ");
 			update();
 		}
 		return sessionHash;
@@ -104,9 +106,9 @@ public class ApiSessionHash implements Serializable {
 	 * @param password
 	 * @return whether the user can login with the given credentials. 
 	 */
-	public static boolean checkCredentials(String username, String password) {
+	public boolean checkCredentials(String username, String password) {
 		try {
-			ApiConnector.openmlAuthenticate(username, password);
+			apiconnector.openmlAuthenticate(username, password);
 			return true;
 		} catch( Exception e ) {
 			return false;

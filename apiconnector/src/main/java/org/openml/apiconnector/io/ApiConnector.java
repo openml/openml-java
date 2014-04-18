@@ -69,18 +69,25 @@ import org.openml.apiconnector.xml.ImplementationOwned;
 import com.thoughtworks.xstream.XStream;
 
 public class ApiConnector {
-	
-	public static String API_URL = Settings.BASE_URL; // can be altered outside the class'
-	
 	private static final String API_PART = "rest_api/";
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
+	
+	private final String API_URL; 
+	
+	public ApiConnector() {
+		this.API_URL = Settings.BASE_URL;
+	}
+	
+	public ApiConnector( String url ) {
+		this.API_URL = url;
+	}
 	
 	/**
 	 * Returns the URL to which api calls are made
 	 * 
 	 * @return the API endpoint
 	 */
-	public static String getApiUrl() {
+	public String getApiUrl() {
 		return API_URL + API_PART;
 	}
 	
@@ -94,7 +101,7 @@ public class ApiConnector {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
-	public static Authenticate openmlAuthenticate( String username, String password ) throws Exception {
+	public Authenticate openmlAuthenticate( String username, String password ) throws Exception {
 		List<NameValuePair> params = new ArrayList<NameValuePair>(2);
 		params.add(new BasicNameValuePair("username", username));
 		params.add(new BasicNameValuePair("password", Hashing.md5( password )));
@@ -113,7 +120,7 @@ public class ApiConnector {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
-	public static Data openmlData() throws Exception {
+	public Data openmlData() throws Exception {
 		Object apiResult = doApiRequest("openml.data", "" );
         if( apiResult instanceof Data){
         	return (Data) apiResult;
@@ -130,7 +137,7 @@ public class ApiConnector {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
-	public static DataSetDescription openmlDataDescription( int did ) throws Exception {
+	public DataSetDescription openmlDataDescription( int did ) throws Exception {
 		Object apiResult = doApiRequest("openml.data.description", "&data_id=" + did );
         if( apiResult instanceof DataSetDescription){
         	return (DataSetDescription) apiResult;
@@ -147,7 +154,7 @@ public class ApiConnector {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
-	public static DataFeature openmlDataFeatures( int did ) throws Exception {
+	public DataFeature openmlDataFeatures( int did ) throws Exception {
 		Object apiResult = doApiRequest("openml.data.features", "&data_id=" + did );
         if( apiResult instanceof DataFeature){
         	return (DataFeature) apiResult;
@@ -164,7 +171,7 @@ public class ApiConnector {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
-	public static DataQuality openmlDataQuality( int did ) throws Exception {
+	public DataQuality openmlDataQuality( int did ) throws Exception {
 		Object apiResult = doApiRequest("openml.data.qualities", "&data_id=" + did );
         if( apiResult instanceof DataQuality){
         	return (DataQuality) apiResult;
@@ -173,7 +180,7 @@ public class ApiConnector {
         }
 	}
 	
-	public static DataQualityUpload openmlDataQualityUpload( File description, String session_hash ) throws Exception {
+	public DataQualityUpload openmlDataQualityUpload( File description, String session_hash ) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
 		params.addPart("session_hash",new StringBody(session_hash));
@@ -192,7 +199,7 @@ public class ApiConnector {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
-	public static Implementation openmlImplementationGet(int implementation_id) throws Exception {
+	public Implementation openmlImplementationGet(int implementation_id) throws Exception {
 		Object apiResult = doApiRequest("openml.implementation.get", "&implementation_id=" + implementation_id );
         if( apiResult instanceof Implementation){
         	return (Implementation) apiResult;
@@ -207,7 +214,7 @@ public class ApiConnector {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
-	public static ImplementationOwned openmlImplementationOwned( String session_hash ) throws Exception {
+	public ImplementationOwned openmlImplementationOwned( String session_hash ) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("session_hash",new StringBody(session_hash));
 		
@@ -226,7 +233,7 @@ public class ApiConnector {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
-	public static ImplementationDelete openmlImplementationDelete( int id, String session_hash ) throws Exception {
+	public ImplementationDelete openmlImplementationDelete( int id, String session_hash ) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("implementation_id",new StringBody(""+id));
 		params.addPart("session_hash",new StringBody(session_hash));
@@ -247,7 +254,7 @@ public class ApiConnector {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
-	public static ImplementationExists openmlImplementationExists( String name, String external_version ) throws Exception {
+	public ImplementationExists openmlImplementationExists( String name, String external_version ) throws Exception {
 		Object apiResult = doApiRequest("openml.implementation.exists", "&name=" + name + "&external_version=" + external_version );
         if( apiResult instanceof ImplementationExists){
         	return (ImplementationExists) apiResult;
@@ -262,7 +269,7 @@ public class ApiConnector {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
-	public static Task openmlTasksSearch( int task_id ) throws Exception {
+	public Task openmlTasksSearch( int task_id ) throws Exception {
 		Object apiResult = doApiRequest("openml.tasks.search", "&task_id=" + task_id );
         if( apiResult instanceof Task){
         	return (Task) apiResult;
@@ -279,7 +286,7 @@ public class ApiConnector {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
-	public static UploadDataSet openmlDataUpload( File description, File dataset, String session_hash ) throws Exception {
+	public UploadDataSet openmlDataUpload( File description, File dataset, String session_hash ) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
 		if( dataset != null) params.addPart("dataset", new FileBody(dataset));
@@ -300,7 +307,7 @@ public class ApiConnector {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
-	public static UploadDataSet openmlDataUpload( File description, String session_hash ) throws Exception {
+	public UploadDataSet openmlDataUpload( File description, String session_hash ) throws Exception {
 		return openmlDataUpload(description, null, session_hash);
 	}
 	
@@ -313,7 +320,7 @@ public class ApiConnector {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
-	public static UploadImplementation openmlImplementationUpload( File description, File binary, File source, String session_hash ) throws Exception {
+	public UploadImplementation openmlImplementationUpload( File description, File binary, File source, String session_hash ) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
 		if(source != null)
@@ -339,7 +346,7 @@ public class ApiConnector {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
-	public static UploadRun openmlRunUpload( File description, Map<String,File> output_files, String session_hash ) throws Exception {
+	public UploadRun openmlRunUpload( File description, Map<String,File> output_files, String session_hash ) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		if(Settings.API_VERBOSE) {
 			System.out.println( Conversion.fileToString(output_files.get("predictions")) );
@@ -367,7 +374,7 @@ public class ApiConnector {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, no tasks available for this workbench.
 	 */
-	public static Job openmlRunGetjob( String workbench, String task_type_id ) throws Exception {
+	public Job openmlRunGetjob( String workbench, String task_type_id ) throws Exception {
 		Object apiResult = doApiRequest("openml.run.getjob", "&workbench=" + workbench + "&task_type_id=" + task_type_id );
         if( apiResult instanceof Job ){
         	return (Job) apiResult;
@@ -382,7 +389,7 @@ public class ApiConnector {
 	 * @throws JSONException
 	 * @throws IOException
 	 */
-	public static JSONObject openmlFreeQuery( String sql ) throws JSONException, IOException {
+	public JSONObject openmlFreeQuery( String sql ) throws JSONException, IOException {
 		return new JSONObject( getStringFromUrl( API_URL + "api_query/?q=" + URLEncoder.encode( sql, "ISO-8859-1" ) ) );
 	}
 	
@@ -407,11 +414,11 @@ public class ApiConnector {
 		return file;
 	}
 	
-	private static Object doApiRequest(String function, String queryString) throws Exception {
+	private Object doApiRequest(String function, String queryString) throws Exception {
 		return doApiRequest(function, queryString, null);
 	}
 	
-	private static Object doApiRequest(String function, String queryString, HttpEntity entity) throws Exception {
+	private Object doApiRequest(String function, String queryString, HttpEntity entity) throws Exception {
 		String result = "";
 		HttpClient httpclient = new DefaultHttpClient();
 		String requestUri = API_URL + API_PART + "?f=" + function + queryString;

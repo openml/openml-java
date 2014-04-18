@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import org.openml.apiconnector.algorithms.ArffHelper;
-import org.openml.apiconnector.algorithms.TaskInformation;
 import org.openml.apiconnector.io.ApiConnector;
 import org.openml.apiconnector.settings.Constants;
 
@@ -45,11 +44,7 @@ public class Task implements Serializable {
 	
 	@Override
 	public String toString() {
-		String source_data = "Unknown dataset";
-		try {
-			source_data = TaskInformation.getSourceData(this).getDataSetDescription().getName();
-		} catch (Exception e) {}
-		return "Task " + getTask_id() + ": " + source_data + " - " + getTask_type();
+		return "Task " + getTask_id() + ": " + getTask_type();
 	}
 	
 	@Override
@@ -118,9 +113,9 @@ public class Task implements Serializable {
 			public String getTarget_feature() {
 				return target_feature;
 			}
-			public DataSetDescription getDataSetDescription() throws Exception {
+			public DataSetDescription getDataSetDescription( ApiConnector apiconnector ) throws Exception {
 				if(dsdCache == null) {
-					dsdCache = ApiConnector.openmlDataDescription(data_set_id);
+					dsdCache = apiconnector.openmlDataDescription(data_set_id);
 				}
 				return dsdCache;
 			}

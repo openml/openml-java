@@ -39,16 +39,17 @@ public class TestDataFunctionality {
 	@Test
 	public void testApiDataDownload() {
 		Random r = new Random( 0L );
+		ApiConnector apiconnector = new ApiConnector();
 		
 		try {
-			Data d = ApiConnector.openmlData();
+			Data d = apiconnector.openmlData();
 			
 			Integer[] allDataIds = d.getDid();
 			int probe = allDataIds[Math.abs(r.nextInt() % allDataIds.length)];
 			
-			DataSetDescription dsd = ApiConnector.openmlDataDescription( probe );
-			DataFeature features = ApiConnector.openmlDataFeatures( probe );
-			DataQuality qualities = ApiConnector.openmlDataQuality( probe );
+			DataSetDescription dsd = apiconnector.openmlDataDescription( probe );
+			DataFeature features = apiconnector.openmlDataFeatures( probe );
+			DataQuality qualities = apiconnector.openmlDataQuality( probe );
 			
 			// very easy checks, should all pass
 			assertTrue( dsd.getId() == probe );
