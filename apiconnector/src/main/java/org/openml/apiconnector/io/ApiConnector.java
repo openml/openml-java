@@ -41,6 +41,7 @@ import org.openml.apiconnector.xml.Authenticate;
 import org.openml.apiconnector.xml.Data;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
+import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataQualityUpload;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.Implementation;
@@ -197,6 +198,15 @@ public class ApiConnector implements Serializable {
         }
 	}
 	
+	public DataQualityList openmlDataQualityList() throws Exception {
+		Object apiResult = doApiRequest("openml.data.qualities.list", "" );
+		if( apiResult instanceof DataQualityList){
+        	return (DataQualityList) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to DataQualityList");
+        }
+	}
+	
 	/**
 	 * @param implementation_id - Numeric ID of the implementation to be obtained. 
 	 * @return Implementation - An object containing the description of the implementation
@@ -288,7 +298,7 @@ public class ApiConnector implements Serializable {
         if( apiResult instanceof TaskEvaluations){
         	return (TaskEvaluations) apiResult;
         } else {
-        	throw new DataFormatException("Casting Api Object to Task");
+        	throw new DataFormatException("Casting Api Object to TaskEvaluations");
         }
 	}
 	

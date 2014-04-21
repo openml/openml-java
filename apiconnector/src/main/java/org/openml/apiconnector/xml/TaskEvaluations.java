@@ -67,6 +67,14 @@ public class TaskEvaluations {
 		public Measure[] getMeasures() {
 			return measure;
 		}
+		
+		public String getMeasure( String name ) throws Exception {
+			for( Measure m : measure ) {
+				if( m.getName().equals( name ) )
+					return m.getValue();
+			}
+			throw new Exception("Could not field specified measure: " + name );
+		}
 
 		public class Measure {
 			private String name;
