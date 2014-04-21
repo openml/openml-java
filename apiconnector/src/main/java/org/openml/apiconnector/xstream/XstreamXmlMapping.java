@@ -33,6 +33,7 @@ import org.openml.apiconnector.xml.Implementation;
 import org.openml.apiconnector.xml.Job;
 import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.Task;
+import org.openml.apiconnector.xml.TaskEvaluations;
 import org.openml.apiconnector.xml.UploadDataSet;
 import org.openml.apiconnector.xml.UploadImplementation;
 import org.openml.apiconnector.xml.UploadRun;
@@ -225,6 +226,24 @@ public class XstreamXmlMapping {
 		xstream.useAttributeFor(Task.Output.Predictions.Feature.class, "type");
 		
 		xstream.registerConverter(new ToAttributedValueConverter(Task.Input.Estimation_procedure.Parameter.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
+
+		// task evaluation
+		xstream.alias("oml:task_evaluations", TaskEvaluations.class );
+		xstream.aliasField("oml:task_id", TaskEvaluations.class, "task_id");
+		xstream.aliasField("oml:task_name", TaskEvaluations.class, "task_name");
+		xstream.aliasField("oml:task_type_id", TaskEvaluations.class, "task_type_id");
+		xstream.aliasField("oml:input_data", TaskEvaluations.class, "input_data");
+		xstream.aliasField("oml:estimation_procedure", TaskEvaluations.class, "estimation_procedure");
+		
+		xstream.addImplicitCollection(TaskEvaluations.class, "evaluation", "oml:evaluation", TaskEvaluations.Evaluation.class);
+		xstream.aliasField("oml:run_id",TaskEvaluations.Evaluation.class, "run_id");
+		xstream.aliasField("oml:setup_id",TaskEvaluations.Evaluation.class, "setup_id");
+		xstream.aliasField("oml:implementation_id",TaskEvaluations.Evaluation.class,"implementation_id");
+		xstream.aliasField("oml:implementation",TaskEvaluations.Evaluation.class,"implementation");
+		
+		xstream.addImplicitCollection(TaskEvaluations.Evaluation.class, "measure", "oml:measure", TaskEvaluations.Evaluation.Measure.class);
+		xstream.useAttributeFor(TaskEvaluations.Evaluation.Measure.class, "name");
+		xstream.registerConverter(new ToAttributedValueConverter(TaskEvaluations.Evaluation.Measure.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
 		
 		// run
 		xstream.alias("oml:run", Run.class);

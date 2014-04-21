@@ -47,6 +47,7 @@ import org.openml.apiconnector.xml.Implementation;
 import org.openml.apiconnector.xml.ImplementationExists;
 import org.openml.apiconnector.xml.Job;
 import org.openml.apiconnector.xml.Task;
+import org.openml.apiconnector.xml.TaskEvaluations;
 import org.openml.apiconnector.xml.UploadDataSet;
 import org.openml.apiconnector.xml.UploadImplementation;
 import org.openml.apiconnector.xml.UploadRun;
@@ -272,10 +273,20 @@ public class ApiConnector implements Serializable {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, etc.
 	 */
-	public Task openmlTasksSearch( int task_id ) throws Exception {
-		Object apiResult = doApiRequest("openml.tasks.search", "&task_id=" + task_id );
+	public Task openmlTaskSearch( int task_id ) throws Exception {
+		Object apiResult = doApiRequest("openml.task.search", "&task_id=" + task_id );
         if( apiResult instanceof Task){
         	return (Task) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to Task");
+        }
+	}
+	
+
+	public TaskEvaluations openmlTaskEvaluations( int task_id ) throws Exception {
+		Object apiResult = doApiRequest("openml.task.evaluations", "&task_id=" + task_id );
+        if( apiResult instanceof TaskEvaluations){
+        	return (TaskEvaluations) apiResult;
         } else {
         	throw new DataFormatException("Casting Api Object to Task");
         }
@@ -377,8 +388,8 @@ public class ApiConnector implements Serializable {
 	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
 	 * server down, no tasks available for this workbench.
 	 */
-	public Job openmlRunGetjob( String workbench, String task_type_id ) throws Exception {
-		Object apiResult = doApiRequest("openml.run.getjob", "&workbench=" + workbench + "&task_type_id=" + task_type_id );
+	public Job openmlJobGet( String workbench, String task_type_id ) throws Exception {
+		Object apiResult = doApiRequest("openml.job.get", "&workbench=" + workbench + "&task_type_id=" + task_type_id );
         if( apiResult instanceof Job ){
         	return (Job) apiResult;
         } else {
