@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.algorithms.Hashing;
+import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xml.ApiError;
 import org.openml.apiconnector.xml.Authenticate;
@@ -372,9 +373,11 @@ public class ApiConnector implements Serializable {
 	 */
 	public UploadRun openmlRunUpload( File description, Map<String,File> output_files, String session_hash ) throws Exception {
 		MultipartEntity params = new MultipartEntity();
-		if(Settings.API_VERBOSE) {
-			System.out.println( Conversion.fileToString(output_files.get("predictions")) );
-			System.out.println("\n==========\n"+Conversion.fileToString(description)+"\n==========");
+		if(Settings.API_VERBOSE_LEVEL >= Constants.VERBOSE_LEVEL_ARFF ) {
+			System.out.println( Conversion.fileToString(output_files.get("predictions")) + "\n==========\n" );
+		}
+		if(Settings.API_VERBOSE_LEVEL >= Constants.VERBOSE_LEVEL_XML ) {
+			System.out.println( Conversion.fileToString(description)+"\n==========");
 		}
 		params.addPart("description", new FileBody(description));
 		for( String s : output_files.keySet() ) {
@@ -465,7 +468,7 @@ public class ApiConnector implements Serializable {
 		} finally {
             try { httpclient.getConnectionManager().shutdown(); } catch (Exception ignore) {}
         }
-		if(Settings.API_VERBOSE)
+		if(Settings.API_VERBOSE_LEVEL >= Constants.VERBOSE_LEVEL_XML)
 			System.out.println("===== REQUEST URI: " + requestUri + " (Content Length: "+contentLength+") =====\n" + result + "\n=====\n");
 		
 		Object apiResult = xstream.fromXML(result);

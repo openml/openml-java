@@ -36,4 +36,7 @@ public class Constants {
 	 * Default XMLNS String to be included in generated XML files.
 	 */
 	public static final String OPENML_XMLNS = "http://openml.org/openml";
+	
+	public static final int VERBOSE_LEVEL_XML = 1;
+	public static final int VERBOSE_LEVEL_ARFF = 2;
 }

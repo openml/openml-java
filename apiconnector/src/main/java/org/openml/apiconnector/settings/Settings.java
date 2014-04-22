@@ -24,7 +24,7 @@ public class Settings {
 	/**
 	 * When set to true, API will output all downloaded and uploaded content. 
 	 */
-	public static final boolean API_VERBOSE = false;
+	public static int API_VERBOSE_LEVEL = Constants.VERBOSE_LEVEL_XML;
 	/**
 	 * The webserver to which request are done. ends with tailing slash. 
 	 * (Api suffix will be added by ApiConnector)
