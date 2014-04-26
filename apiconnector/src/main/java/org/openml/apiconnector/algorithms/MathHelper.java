@@ -36,6 +36,8 @@ public class MathHelper {
 	 * @return The standard deviation of the population
 	 */
 	public static double standard_deviation( Double[] population, boolean sample ) {
+		if( population.length == 1 ) { return 0.0; }
+		
 		double variance = 0;
 		double mean = sum(population) / population.length;
 		
