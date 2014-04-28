@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -439,6 +440,10 @@ public class ApiConnector implements Serializable {
 		File file = new File( filepath );
 		FileUtils.copyURLToFile( new URL(url), file );
 		return file;
+	}
+	
+	public URL getOpenmlFileUrl( int id ) throws MalformedURLException, IOException {
+		return new URL( API_URL + "files/download/" + id + "/" );
 	}
 	
 	private Object doApiRequest(String function, String queryString) throws Exception {
