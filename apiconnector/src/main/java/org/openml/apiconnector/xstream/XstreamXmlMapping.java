@@ -25,6 +25,7 @@ import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataQualityUpload;
 import org.openml.apiconnector.xml.EvaluationScore;
+import org.openml.apiconnector.xml.RunEvaluate;
 import org.openml.apiconnector.xml.RunEvaluation;
 import org.openml.apiconnector.xml.ImplementationDelete;
 import org.openml.apiconnector.xml.ImplementationExists;
@@ -291,6 +292,12 @@ public class XstreamXmlMapping {
 		// upload run
 		xstream.alias("oml:upload_run", UploadRun.class);
 		xstream.aliasField("oml:run_id", UploadRun.class, "run_id");
+		
+
+		// run evaluate
+		xstream.alias("oml:run_evaluate", RunEvaluate.class);
+		xstream.aliasField("oml:run_id", RunEvaluate.class, "run_id");
+		
 		
 		// run getjob
 		xstream.alias("oml:job", Job.class);

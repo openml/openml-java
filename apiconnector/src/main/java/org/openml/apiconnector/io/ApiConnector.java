@@ -49,6 +49,7 @@ import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.Implementation;
 import org.openml.apiconnector.xml.ImplementationExists;
 import org.openml.apiconnector.xml.Job;
+import org.openml.apiconnector.xml.RunEvaluate;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskEvaluations;
 import org.openml.apiconnector.xml.UploadDataSet;
@@ -390,6 +391,19 @@ public class ApiConnector implements Serializable {
         	return (UploadRun) apiResult;
         } else {
         	throw new DataFormatException("Casting Api Object to UploadRun");
+        }
+	}
+	
+	public RunEvaluate openmlRunEvaluate( File description, String session_hash ) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("description", new FileBody(description));
+		params.addPart("session_hash",new StringBody(session_hash));
+		
+		Object apiResult = doApiRequest("openml.run.evaluate", "", params );
+		if( apiResult instanceof RunEvaluate){
+        	return (RunEvaluate) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to RunEvaluate");
         }
 	}
 	
