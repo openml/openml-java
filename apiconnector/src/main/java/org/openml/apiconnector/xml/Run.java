@@ -19,10 +19,9 @@
  */
 package org.openml.apiconnector.xml;
 
+import org.openml.apiconnector.algorithms.MathHelper;
 import org.openml.apiconnector.settings.Constants;
-
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 
 public class Run {
 
@@ -84,13 +83,12 @@ public class Run {
 	}
 	
 	public void addOutputEvaluation( String name, String implementation,
-			Double value, String[] array_data ) {
+			Double value, String array_data ) {
 		output_data.addEvaluation( name, implementation, value, array_data);
 	}
 	
-	public void addOutputEvaluation( String name, String implementation,
-			Double value, String array_data ) {
-		output_data.addEvaluation( name, implementation, value, array_data);
+	public EvaluationScore[] getOutputEvaluation() {
+		return output_data.evaluation;
 	}
 
 	public static class Parameter_setting {
@@ -122,18 +120,18 @@ public class Run {
 	
 	public static class Data {
 		private Dataset[] dataset;
-		private Evaluation[] evaluation;
+		private EvaluationScore[] evaluation;
 		
 		public Data( ) {
 			dataset = new Dataset[0];
-			evaluation = new Evaluation[0];
+			evaluation = new EvaluationScore[0];
 		}
 		
 		public Dataset[] getDataset() {
 			return dataset;
 		}
 
-		public Evaluation[] getEvaluation() {
+		public EvaluationScore[] getEvaluation() {
 			return evaluation;
 		}
 		
@@ -144,19 +142,13 @@ public class Run {
 		
 		public void addEvaluation( String name, Integer repeat, Integer fold, 
 					Integer sample, String implementation, Double value ) {
-			Evaluation e = new Evaluation(name, repeat, fold, sample, implementation, value);
-			evaluation = ArrayUtils.addAll( evaluation, e );
-		}
-		
-		public void addEvaluation( String name, String implementation,
-				Double value, String[] array_data ) {
-			Evaluation e = new Evaluation( name, implementation, value, array_data);
+			EvaluationScore e = new EvaluationScore( implementation, name, null, MathHelper.defaultDecimalFormat.format( value ), null, repeat, fold, sample, null );
 			evaluation = ArrayUtils.addAll( evaluation, e );
 		}
 		
 		public void addEvaluation( String name, String implementation,
 				Double value, String array_data ) {
-			Evaluation e = new Evaluation( name, implementation, value, array_data);
+			EvaluationScore e = new EvaluationScore( implementation, name, null, ( value != null ) ? MathHelper.defaultDecimalFormat.format( value ) : null, null, array_data);
 			evaluation = ArrayUtils.addAll( evaluation, e );
 		}
 
@@ -178,74 +170,6 @@ public class Run {
 			}
 			public String getUrl() {
 				return url;
-			}
-		}
-		
-		public static class Evaluation {
-			private Integer did;
-			private Integer repeat;
-			private Integer fold;
-			private Integer sample;
-			private String name;
-			private String implementation;
-			private Double value;
-			private String array_data;
-			
-			public Evaluation( String name, Integer repeat, Integer fold, 
-					Integer sample, String implementation, Double value ) {
-				super();
-				this.name = name;
-				this.implementation = implementation;
-				this.value = value;
-				this.repeat = repeat;
-				this.fold = fold;
-				this.sample = sample;
-			}
-			
-			public Evaluation( String name, String implementation,
-					Double value, String[] array_data) {
-				super();
-				this.name = name;
-				this.implementation = implementation;
-				this.value = value;
-				this.array_data = "[ " + StringUtils.join( array_data, ", " ) + " ]";
-			}
-			
-			public Evaluation( String name, String implementation,
-					Double value, String array_data ) {
-				super();
-				this.name = name;
-				this.implementation = implementation;
-				this.value = value;
-				this.array_data = array_data;
-			}
-			
-			public int getDid() {
-				return did;
-			}
-			public String getName() {
-				return name;
-			}
-			public String getImplementation() {
-				return implementation;
-			}
-			public Double getValue() {
-				return value;
-			}
-			public String getArray_data() {
-				return array_data;
-			}
-
-			public Integer getRepeat() {
-				return repeat;
-			}
-
-			public Integer getFold() {
-				return fold;
-			}
-
-			public Integer getSample() {
-				return sample;
 			}
 		}
 	}

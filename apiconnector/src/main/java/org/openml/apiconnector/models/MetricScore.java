@@ -21,6 +21,8 @@ package org.openml.apiconnector.models;
 
 import java.text.DecimalFormat;
 
+import org.openml.apiconnector.algorithms.MathHelper;
+
 public class MetricScore {
 	
 	private Double score = null;
@@ -110,5 +112,24 @@ public class MetricScore {
 		} else {
 			return null;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		if( score != null ) {
+			sb.append( score );
+		}
+		
+		if( score != null && hasArray() ) {
+			sb.append( ", " );
+		}
+		
+		if( hasArray() != false ) {
+			sb.append( getArrayAsString( MathHelper.defaultDecimalFormat ) );
+		}
+		
+		return "[" + sb.toString() + "]";
 	}
 }

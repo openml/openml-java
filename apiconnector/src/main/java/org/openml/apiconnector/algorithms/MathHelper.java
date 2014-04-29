@@ -27,6 +27,7 @@ public class MathHelper {
 
 	public final static DecimalFormat defaultDecimalFormat = new DecimalFormat("#.######", DecimalFormatSymbols.getInstance( Locale.ENGLISH ) );
 	public final static DecimalFormat visualDecimalFormat = new DecimalFormat("#.##", DecimalFormatSymbols.getInstance( Locale.ENGLISH ) );
+	public final static Double EPSILON = 0.00001;
 	
 	/**
 	 * Calculates the standard deviation of a population. 

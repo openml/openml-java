@@ -24,6 +24,8 @@ import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataQualityUpload;
+import org.openml.apiconnector.xml.EvaluationScore;
+import org.openml.apiconnector.xml.RunEvaluation;
 import org.openml.apiconnector.xml.ImplementationDelete;
 import org.openml.apiconnector.xml.ImplementationExists;
 import org.openml.apiconnector.xml.ImplementationOwned;
@@ -267,21 +269,24 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:value", Run.Parameter_setting.class, "value");
 		
 		xstream.addImplicitCollection( Run.Data.class, "dataset", "oml:dataset", Run.Data.Dataset.class);
-		xstream.addImplicitCollection( Run.Data.class, "evaluation", "oml:evaluation", Run.Data.Evaluation.class);
+		xstream.addImplicitCollection( Run.Data.class, "evaluation", "oml:evaluation", EvaluationScore.class);
 
 		xstream.aliasField("oml:did", Run.Data.Dataset.class, "did");
 		xstream.aliasField("oml:name", Run.Data.Dataset.class, "name");
 		xstream.aliasField("oml:url", Run.Data.Dataset.class, "url");
 
-		xstream.aliasField("oml:did", Run.Data.Evaluation.class, "did");
-		xstream.aliasField("oml:name", Run.Data.Evaluation.class, "name");
-		xstream.aliasField("oml:implementation", Run.Data.Evaluation.class, "implementation");
-		xstream.aliasField("oml:value", Run.Data.Evaluation.class, "value");
-		xstream.aliasField("oml:array_data", Run.Data.Evaluation.class, "array_data");
+		xstream.aliasField("oml:did", EvaluationScore.class, "did");
+		xstream.aliasField("oml:name", EvaluationScore.class, "function"); // TODO: inconsistency? change?
+		xstream.aliasField("oml:implementation", EvaluationScore.class, "implementation");
+		xstream.aliasField("oml:value", EvaluationScore.class, "value");
+		xstream.aliasField("oml:array_data", EvaluationScore.class, "array_data");
+		xstream.aliasField("oml:sample_size", EvaluationScore.class, "sample_size");
 		
-		xstream.useAttributeFor(Run.Data.Evaluation.class, "repeat");
-		xstream.useAttributeFor(Run.Data.Evaluation.class, "fold");
-		xstream.useAttributeFor(Run.Data.Evaluation.class, "sample");
+		xstream.useAttributeFor(EvaluationScore.class, "repeat");
+		xstream.useAttributeFor(EvaluationScore.class, "fold");
+		xstream.useAttributeFor(EvaluationScore.class, "sample");
+		xstream.useAttributeFor(EvaluationScore.class, "interval_start");
+		xstream.useAttributeFor(EvaluationScore.class, "interval_end");
 		
 		// upload run
 		xstream.alias("oml:upload_run", UploadRun.class);
@@ -291,6 +296,13 @@ public class XstreamXmlMapping {
 		xstream.alias("oml:job", Job.class);
 		xstream.aliasField("oml:task_id", Job.class, "task_id");
 		xstream.aliasField("oml:learner", Job.class, "learner");
+		
+		// run evaluation
+		xstream.alias("oml:run_evaluation", RunEvaluation.class);
+		xstream.aliasAttribute(RunEvaluation.class, "oml", "xmlns:oml");
+		xstream.aliasField("oml:run_id", RunEvaluation.class, "run_id");
+		xstream.aliasField("oml:error", RunEvaluation.class, "error");
+		xstream.addImplicitCollection(RunEvaluation.class, "evaluation", "oml:evaluation", EvaluationScore.class);
 		
 		return xstream;
 	}
