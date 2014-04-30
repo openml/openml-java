@@ -19,8 +19,6 @@
  */
 package org.openml.apiconnector.xml;
 
-import java.util.Map;
-
 import org.openml.apiconnector.settings.Constants;
 
 public class DataQuality {
@@ -32,16 +30,6 @@ public class DataQuality {
 	public DataQuality( Integer did, Quality[] qualities ) {
 		this.did = did;
 		this.qualities = qualities;
-	}
-	
-	public DataQuality( Integer did, Map<String, Double> qualities ) {
-		this.did = did;
-		this.qualities = new Quality[qualities.size()];
-		int iQualityNr = 0;
-		for( String quality : qualities.keySet() ) {
-			this.qualities[iQualityNr] = new Quality( quality, qualities.get( quality ) + "" ); 
-			++iQualityNr;
-		}
 	}
 	
 	public Integer getDid() {
@@ -67,10 +55,19 @@ public class DataQuality {
 	public static class Quality {
 		private String name;
 		private String value;
+		private Integer interval_start;
+		private Integer interval_end;
 		
 		public Quality( String name, String value ) {
 			this.name = name;
 			this.value = value;
+		}
+		
+		public Quality( String name, String value, Integer intervat_start, Integer interval_end ) {
+			this.name = name;
+			this.value = value;
+			this.interval_start = intervat_start;
+			this.interval_end = interval_end;
 		}
 		
 		public String getName() {
@@ -81,6 +78,14 @@ public class DataQuality {
 			return value;
 		}
 		
+		public Integer getInterval_start() {
+			return interval_start;
+		}
+
+		public Integer getInterval_end() {
+			return interval_end;
+		}
+
 		@Override
 		public String toString() {
 			return name;

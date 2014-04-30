@@ -106,6 +106,8 @@ public class XstreamXmlMapping {
 		xstream.alias("oml:data_quality", DataQuality.Quality.class);
 		xstream.aliasField("oml:name", DataQuality.Quality.class, "name");
 		xstream.aliasField("oml:value", DataQuality.Quality.class, "value");
+		xstream.useAttributeFor(DataQuality.Quality.class, "interval_start");
+		xstream.useAttributeFor(DataQuality.Quality.class, "interval_end");
 		
 		// data qualities upload
 		xstream.alias("oml:data_qualities_upload", DataQualityUpload.class);

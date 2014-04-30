@@ -188,6 +188,25 @@ public class ApiConnector implements Serializable {
         }
 	}
 	
+	/**
+	 * Retrieves the qualities (meta-features) of a specified data set on a specified interval. 
+	 * 
+	 * @param did - The data_id of the data features to download. 
+	 * @param interval_start - The start of interval. 
+	 * @param interval_end - The end of the interval. 
+	 * @return DataFeatures - An object containing the qualities of the data
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public DataQuality openmlDataQuality( int did, int interval_start, int interval_end ) throws Exception {
+		Object apiResult = doApiRequest("openml.data.qualities", "&data_id=" + did + "&interval_start=" + interval_start + "&interval_end=" + interval_end );
+        if( apiResult instanceof DataQuality){
+        	return (DataQuality) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to DataQuality");
+        }
+	}
+	
 	public DataQualityUpload openmlDataQualityUpload( File description, String session_hash ) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
