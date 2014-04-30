@@ -36,6 +36,7 @@ import org.openml.apiconnector.xml.ApiError;
 import org.openml.apiconnector.xml.Implementation;
 import org.openml.apiconnector.xml.Job;
 import org.openml.apiconnector.xml.Run;
+import org.openml.apiconnector.xml.RunReset;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskEvaluations;
 import org.openml.apiconnector.xml.UploadDataSet;
@@ -295,7 +296,10 @@ public class XstreamXmlMapping {
 		xstream.alias("oml:upload_run", UploadRun.class);
 		xstream.aliasField("oml:run_id", UploadRun.class, "run_id");
 		
-
+		// upload run
+		xstream.alias("oml:run_reset", RunReset.class);
+		xstream.aliasField("oml:id", RunReset.class, "run_id");
+		
 		// run evaluate
 		xstream.alias("oml:run_evaluate", RunEvaluate.class);
 		xstream.aliasField("oml:run_id", RunEvaluate.class, "run_id");
