@@ -24,7 +24,17 @@ import org.openml.apiconnector.settings.Constants;
 public class DataFeature {
 	
 	private final String oml = Constants.OPENML_XMLNS;
+	private Integer did;
 	private Feature[] features;
+
+	public DataFeature( Integer did, Feature[] features ) {
+		this.did = did;
+		this.features = features;
+	}
+	
+	public Integer getDid() {
+		return did;
+	}
 
 	public Feature[] getFeatures() {
 		return features;
@@ -35,9 +45,46 @@ public class DataFeature {
 	}
 	
 	public static class Feature {
+		private Integer index;
 		private String name;
 		private String data_type;
-		private int index;
+		private Boolean is_target;
+		private Integer NumberOfDistinctValues;
+		private Integer NumberOfUniqueValues;
+		private Integer NumberOfMissingValues;
+		private Integer NumberOfIntegerValues;
+		private Integer NumberOfRealValues;
+		private Integer NumberOfNominalValues;
+		private Integer NumberOfValues;
+		private Double MaximumValue;
+		private Double MinimumValue;
+		private Double MeanValue;
+		private Double StandardDeviation;
+		
+		public Feature(Integer index, String name, String data_type,
+				Boolean is_target, Integer numberOfDistinctValues,
+				Integer numberOfUniqueValues, Integer numberOfMissingValues,
+				Integer numberOfIntegerValues, Integer numberOfRealValues,
+				Integer numberOfNominalValues, Integer numberOfValues,
+				Double maximumValue, Double minimumValue, Double meanValue,
+				Double standardDeviation) {
+			super();
+			this.index = index;
+			this.name = name;
+			this.data_type = data_type;
+			this.is_target = is_target;
+			NumberOfDistinctValues = numberOfDistinctValues;
+			NumberOfUniqueValues = numberOfUniqueValues;
+			NumberOfMissingValues = numberOfMissingValues;
+			NumberOfIntegerValues = numberOfIntegerValues;
+			NumberOfRealValues = numberOfRealValues;
+			NumberOfNominalValues = numberOfNominalValues;
+			NumberOfValues = numberOfValues;
+			MaximumValue = maximumValue;
+			MinimumValue = minimumValue;
+			MeanValue = meanValue;
+			StandardDeviation = standardDeviation;
+		}
 		
 		public String getName() {
 			return name;
@@ -45,8 +92,44 @@ public class DataFeature {
 		public String getDataType() {
 			return data_type;
 		}
-		public int getIndex() {
+		public Integer getIndex() {
 			return index;
+		}
+		public Boolean getIs_target() {
+			return is_target;
+		}
+		public Integer getNumberOfDistinctValues() {
+			return NumberOfDistinctValues;
+		}
+		public Integer getNumberOfUniqueValues() {
+			return NumberOfUniqueValues;
+		}
+		public Integer getNumberOfMissingValues() {
+			return NumberOfMissingValues;
+		}
+		public Integer getNumberOfIntegerValues() {
+			return NumberOfIntegerValues;
+		}
+		public Integer getNumberOfRealValues() {
+			return NumberOfRealValues;
+		}
+		public Integer getNumberOfNominalValues() {
+			return NumberOfNominalValues;
+		}
+		public Integer getNumberOfValues() {
+			return NumberOfValues;
+		}
+		public Double getMaximumValue() {
+			return MaximumValue;
+		}
+		public Double getMinimumValue() {
+			return MinimumValue;
+		}
+		public Double getMeanValue() {
+			return MeanValue;
+		}
+		public Double getStandardDeviation() {
+			return StandardDeviation;
 		}
 		@Override
 		public String toString() {

@@ -21,6 +21,7 @@ package org.openml.apiconnector.xstream;
 
 import org.openml.apiconnector.xml.Data;
 import org.openml.apiconnector.xml.DataFeature;
+import org.openml.apiconnector.xml.DataFeatureUpload;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataQualityUpload;
@@ -90,13 +91,26 @@ public class XstreamXmlMapping {
 		
 		// data feature
 		xstream.alias("oml:data_features", DataFeature.class);
+		xstream.aliasField("oml:did", DataFeature.class, "did");
 		xstream.aliasAttribute(DataFeature.class, "oml", "xmlns:oml");
 		xstream.addImplicitCollection(DataFeature.class, "features", "oml:feature", DataFeature.Feature.class);
 		
 		xstream.alias("oml:data_feature", DataFeature.Feature.class);
+		xstream.aliasField("oml:index", DataFeature.Feature.class, "index");
 		xstream.aliasField("oml:name", DataFeature.Feature.class, "name");
 		xstream.aliasField("oml:data_type", DataFeature.Feature.class, "data_type");
-		xstream.aliasField("oml:index", DataFeature.Feature.class, "index");
+		xstream.aliasField("oml:is_target", DataFeature.Feature.class, "is_target");
+		xstream.aliasField("oml:NumberOfDistinctValues", DataFeature.Feature.class, "NumberOfDistinctValues" );
+		xstream.aliasField("oml:NumberOfUniqueValues", DataFeature.Feature.class, "NumberOfUniqueValues" );
+		xstream.aliasField("oml:NumberOfMissingValues", DataFeature.Feature.class, "NumberOfMissingValues" );
+		xstream.aliasField("oml:NumberOfIntegerValues", DataFeature.Feature.class, "NumberOfIntegerValues" );
+		xstream.aliasField("oml:NumberOfRealValues", DataFeature.Feature.class, "NumberOfRealValues" );
+		xstream.aliasField("oml:NumberOfNominalValues", DataFeature.Feature.class, "NumberOfNominalValues" );
+		xstream.aliasField("oml:NumberOfValues", DataFeature.Feature.class, "NumberOfValues" );
+		xstream.aliasField("oml:MaximumValue", DataFeature.Feature.class, "MaximumValue" );
+		xstream.aliasField("oml:MinimumValue", DataFeature.Feature.class, "MinimumValue" );
+		xstream.aliasField("oml:MeanValue", DataFeature.Feature.class, "MeanValue" );
+		xstream.aliasField("oml:StandardDeviation", DataFeature.Feature.class, "StandardDeviation" );
 		
 		// data quality
 		xstream.alias("oml:data_qualities", DataQuality.class);
@@ -117,6 +131,10 @@ public class XstreamXmlMapping {
 		// data qualities list
 		xstream.alias("oml:data_qualities_list", DataQualityList.class);
 		xstream.addImplicitCollection(DataQualityList.class, "quality", "oml:quality", String.class);
+
+		// data features upload
+		xstream.alias("oml:data_features_upload", DataFeatureUpload.class);
+		xstream.aliasField("oml:did", DataFeatureUpload.class, "did");
 		
 		// upload data set
 		xstream.alias("oml:upload_data_set", UploadDataSet.class);

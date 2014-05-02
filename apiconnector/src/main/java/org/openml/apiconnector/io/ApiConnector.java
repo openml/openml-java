@@ -42,6 +42,7 @@ import org.openml.apiconnector.xml.ApiError;
 import org.openml.apiconnector.xml.Authenticate;
 import org.openml.apiconnector.xml.Data;
 import org.openml.apiconnector.xml.DataFeature;
+import org.openml.apiconnector.xml.DataFeatureUpload;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataQualityUpload;
@@ -186,6 +187,19 @@ public class ApiConnector implements Serializable {
         	return (DataQuality) apiResult;
         } else {
         	throw new DataFormatException("Casting Api Object to DataQuality");
+        }
+	}
+	
+	public DataFeatureUpload openmlDataFeatureUpload( File description, String session_hash ) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("description", new FileBody(description));
+		params.addPart("session_hash",new StringBody(session_hash));
+		
+		Object apiResult = doApiRequest("openml.data.features.upload", "", params );
+		if( apiResult instanceof DataFeatureUpload){
+        	return (DataFeatureUpload) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to DataFeatureUpload");
         }
 	}
 	
