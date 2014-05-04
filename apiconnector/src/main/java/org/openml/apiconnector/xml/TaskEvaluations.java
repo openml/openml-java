@@ -73,7 +73,7 @@ public class TaskEvaluations {
 				if( m.getName().equals( name ) )
 					return m.getValue();
 			}
-			throw new Exception("Could not field specified measure: " + name );
+			throw new Exception("Could not field specified measure for implementation: " + implementation_id + "(" + implementation + ") - " + name);
 		}
 
 		public class Measure {
