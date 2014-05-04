@@ -269,6 +269,8 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:setup_id",TaskEvaluations.Evaluation.class, "setup_id");
 		xstream.aliasField("oml:implementation_id",TaskEvaluations.Evaluation.class,"implementation_id");
 		xstream.aliasField("oml:implementation",TaskEvaluations.Evaluation.class,"implementation");
+		xstream.useAttributeFor(TaskEvaluations.Evaluation.class, "interval_start");
+		xstream.useAttributeFor(TaskEvaluations.Evaluation.class, "interval_end");
 		
 		xstream.addImplicitCollection(TaskEvaluations.Evaluation.class, "measure", "oml:measure", TaskEvaluations.Evaluation.Measure.class);
 		xstream.useAttributeFor(TaskEvaluations.Evaluation.Measure.class, "name");

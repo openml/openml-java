@@ -45,6 +45,8 @@ public class TaskEvaluations {
 		private int run_id;
 		private int setup_id;
 		private int implementation_id;
+		private Integer interval_start;
+		private Integer interval_end;
 		private String implementation;
 		private Measure[] measure;
 		
@@ -68,6 +70,14 @@ public class TaskEvaluations {
 			return measure;
 		}
 		
+		public Integer getInterval_start() {
+			return interval_start;
+		}
+
+		public Integer getInterval_end() {
+			return interval_end;
+		}
+
 		public String getMeasure( String name ) throws Exception {
 			for( Measure m : measure ) {
 				if( m.getName().equals( name ) )

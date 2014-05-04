@@ -329,9 +329,17 @@ public class ApiConnector implements Serializable {
         }
 	}
 	
-
 	public TaskEvaluations openmlTaskEvaluations( int task_id ) throws Exception {
 		Object apiResult = doApiRequest("openml.task.evaluations", "&task_id=" + task_id );
+        if( apiResult instanceof TaskEvaluations){
+        	return (TaskEvaluations) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to TaskEvaluations");
+        }
+	}
+	
+	public TaskEvaluations openmlTaskEvaluations( int task_id, int interval_start, int interval_end ) throws Exception {
+		Object apiResult = doApiRequest("openml.task.evaluations", "&task_id=" + task_id + "&interval_start=" + interval_start + "&interval_end=" + interval_end );
         if( apiResult instanceof TaskEvaluations){
         	return (TaskEvaluations) apiResult;
         } else {
