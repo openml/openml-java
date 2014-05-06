@@ -190,6 +190,32 @@ public class ApiConnector implements Serializable {
         }
 	}
 	
+	/**
+	 * Retrieves the qualities (meta-features) of a specified data set on a specified interval. 
+	 * 
+	 * @param did - The data_id of the data features to download. 
+	 * @param interval_start - Constraint on where the interval should start. Null if no constraints
+	 * @param interval_end - Constraint on where the interval should end. Null if no constraints
+	 * @param interval_size - Constraint on where interval sizes. Null if no constraints
+	 * @return DataFeatures - An object containing the qualities of the data
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public DataQuality openmlDataQuality( Integer did, Integer interval_start, Integer interval_end, Integer interval_size ) throws Exception {
+		String queryString = "&data_id=" + did;
+		if( interval_start != null ) { queryString += "&interval_start=" + interval_start; }
+		if( interval_end   != null ) { queryString += "&interval_end=" + interval_end; }
+		if( interval_size  != null ) { queryString += "&interval_size=" + interval_size; }
+		
+		Object apiResult = doApiRequest("openml.data.qualities", queryString  );
+		
+        if( apiResult instanceof DataQuality){
+        	return (DataQuality) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to DataQuality");
+        }
+	}
+	
 	public DataFeatureUpload openmlDataFeatureUpload( File description, String session_hash ) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
@@ -200,25 +226,6 @@ public class ApiConnector implements Serializable {
         	return (DataFeatureUpload) apiResult;
         } else {
         	throw new DataFormatException("Casting Api Object to DataFeatureUpload");
-        }
-	}
-	
-	/**
-	 * Retrieves the qualities (meta-features) of a specified data set on a specified interval. 
-	 * 
-	 * @param did - The data_id of the data features to download. 
-	 * @param interval_start - The start of interval. 
-	 * @param interval_end - The end of the interval. 
-	 * @return DataFeatures - An object containing the qualities of the data
-	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
-	 * server down, etc.
-	 */
-	public DataQuality openmlDataQuality( int did, int interval_start, int interval_end ) throws Exception {
-		Object apiResult = doApiRequest("openml.data.qualities", "&data_id=" + did + "&interval_start=" + interval_start + "&interval_end=" + interval_end );
-        if( apiResult instanceof DataQuality){
-        	return (DataQuality) apiResult;
-        } else {
-        	throw new DataFormatException("Casting Api Object to DataQuality");
         }
 	}
 	
@@ -338,8 +345,13 @@ public class ApiConnector implements Serializable {
         }
 	}
 	
-	public TaskEvaluations openmlTaskEvaluations( int task_id, int interval_start, int interval_end ) throws Exception {
-		Object apiResult = doApiRequest("openml.task.evaluations", "&task_id=" + task_id + "&interval_start=" + interval_start + "&interval_end=" + interval_end );
+	public TaskEvaluations openmlTaskEvaluations( Integer task_id, Integer interval_start, Integer interval_end, Integer interval_size ) throws Exception {
+		String queryString = "&task_id=" + task_id;
+		if( interval_start != null ) { queryString += "&interval_start=" + interval_start; }
+		if( interval_end   != null ) { queryString += "&interval_end=" + interval_end; }
+		if( interval_size  != null ) { queryString += "&interval_size=" + interval_size; }
+		
+		Object apiResult = doApiRequest("openml.task.evaluations",  queryString );
         if( apiResult instanceof TaskEvaluations){
         	return (TaskEvaluations) apiResult;
         } else {
