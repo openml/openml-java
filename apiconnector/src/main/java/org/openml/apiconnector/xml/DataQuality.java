@@ -25,11 +25,17 @@ public class DataQuality {
 	
 	private final String oml = Constants.OPENML_XMLNS;
 	private Integer did;
+	private String error;
 	private Quality[] qualities;
 	
 	public DataQuality( Integer did, Quality[] qualities ) {
 		this.did = did;
 		this.qualities = qualities;
+	}
+	
+	public DataQuality( Integer did, String error ) {
+		this.did = did;
+		this.error = error;
 	}
 	
 	public Integer getDid() {

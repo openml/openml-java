@@ -92,6 +92,7 @@ public class XstreamXmlMapping {
 		// data feature
 		xstream.alias("oml:data_features", DataFeature.class);
 		xstream.aliasField("oml:did", DataFeature.class, "did");
+		xstream.aliasField("oml:error", DataFeature.class, "error");
 		xstream.aliasAttribute(DataFeature.class, "oml", "xmlns:oml");
 		xstream.addImplicitCollection(DataFeature.class, "features", "oml:feature", DataFeature.Feature.class);
 		
@@ -115,6 +116,7 @@ public class XstreamXmlMapping {
 		// data quality
 		xstream.alias("oml:data_qualities", DataQuality.class);
 		xstream.aliasField("oml:did", DataQuality.class, "did");
+		xstream.aliasField("oml:error", DataQuality.class, "error");
 		xstream.aliasAttribute(DataQuality.class, "oml", "xmlns:oml");
 		xstream.addImplicitCollection(DataQuality.class, "qualities", "oml:quality", DataQuality.Quality.class);
 		

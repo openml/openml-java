@@ -25,11 +25,17 @@ public class DataFeature {
 	
 	private final String oml = Constants.OPENML_XMLNS;
 	private Integer did;
+	private String error;
 	private Feature[] features;
 
 	public DataFeature( Integer did, Feature[] features ) {
 		this.did = did;
 		this.features = features;
+	}
+	
+	public DataFeature( Integer did, String error ) {
+		this.did = did;
+		this.error = error;
 	}
 	
 	public Integer getDid() {
