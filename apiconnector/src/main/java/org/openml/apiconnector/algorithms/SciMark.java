@@ -62,6 +62,7 @@ public class SciMark implements Serializable {
 	 * @return scores of the SciMark benchmark
 	 */
 	public double doBenchmark() {
+		Conversion.log("INFO", "SciMark Benchmark", "Doing JVM Benchmark.");
 		double min_time = Constants.RESOLUTION_DEFAULT;
 
 		int FFT_size = Constants.FFT_SIZE;
