@@ -6,7 +6,6 @@ public class EvaluationScore {
 
 	private String function;
 	private String implementation;
-	private String label;
 	
 	private String value;
 	private Double stdev;
@@ -20,36 +19,33 @@ public class EvaluationScore {
 	private Integer interval_start;
 	private Integer interval_end;
 	
-	public EvaluationScore(String implementation, String function, String label,
+	public EvaluationScore(String implementation, String function,
 			String value, Double stdev, String array_data) {
 		super();
 		this.implementation = implementation;
 		this.function = function;
-		this.label = label;
 		this.value = value;
 		this.stdev = stdev;
 		this.array_data = array_data;
 	}
 
-	public EvaluationScore(String implementation, String function, String label,
+	public EvaluationScore(String implementation, String function,
 			String value, String array_data, Integer repeat, Integer fold) {
 		super();
 		this.implementation = implementation;
 		this.function = function;
-		this.label = label;
 		this.value = value;
 		this.array_data = array_data;
 		this.fold = fold;
 		this.repeat = repeat;
 	}
 
-	public EvaluationScore(String implementation, String function, String label,
+	public EvaluationScore(String implementation, String function,
 			String value, String array_data, Integer repeat, Integer fold,
 			Integer sample, Integer sample_size) {
 		super();
 		this.implementation = implementation;
 		this.function = function;
-		this.label = label;
 		this.value = value;
 		this.array_data = array_data;
 		this.fold = fold;
@@ -58,13 +54,12 @@ public class EvaluationScore {
 		this.sample_size = sample_size;
 	}
 
-	public EvaluationScore(String implementation, String function, String label,
+	public EvaluationScore(String implementation, String function,
 			String value, String array_data, Integer interval_start,
 			Integer interval_end, boolean dummy ) {
 		super();
 		this.implementation = implementation;
 		this.function = function;
-		this.label = label;
 		this.value = value;
 		this.array_data = array_data;
 		this.interval_start = interval_start;
@@ -77,10 +72,6 @@ public class EvaluationScore {
 
 	public String getFunction() {
 		return function;
-	}
-
-	public String getLabel() {
-		return label;
 	}
 
 	public String getValue() {
@@ -122,7 +113,6 @@ public class EvaluationScore {
 	public boolean isSame( EvaluationScore other ) {
 		return equalStrings( implementation, other.getImplementation() ) && 
 			equalStrings( function, other.getFunction() ) && 
-			equalStrings( label, other.getLabel() ) &&
 			equalIntegers( fold, other.getFold() ) && 
 			equalIntegers( repeat, other.getRepeat() ) && 
 			equalIntegers( sample, other.getSample() ) && 

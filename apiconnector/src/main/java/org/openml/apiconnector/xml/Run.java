@@ -142,13 +142,13 @@ public class Run {
 		
 		public void addEvaluation( String name, Integer repeat, Integer fold, 
 					Integer sample, String implementation, Double value ) {
-			EvaluationScore e = new EvaluationScore( implementation, name, null, MathHelper.defaultDecimalFormat.format( value ), null, repeat, fold, sample, null );
+			EvaluationScore e = new EvaluationScore( implementation, name, MathHelper.defaultDecimalFormat.format( value ), null, repeat, fold, sample, null );
 			evaluation = ArrayUtils.addAll( evaluation, e );
 		}
 		
 		public void addEvaluation( String name, String implementation,
 				Double value, String array_data ) {
-			EvaluationScore e = new EvaluationScore( implementation, name, null, ( value != null ) ? MathHelper.defaultDecimalFormat.format( value ) : null, null, array_data);
+			EvaluationScore e = new EvaluationScore( implementation, name, ( value != null ) ? MathHelper.defaultDecimalFormat.format( value ) : null, null, array_data);
 			evaluation = ArrayUtils.addAll( evaluation, e );
 		}
 
