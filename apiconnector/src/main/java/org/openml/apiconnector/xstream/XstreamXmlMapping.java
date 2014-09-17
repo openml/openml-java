@@ -112,6 +112,8 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:MinimumValue", DataFeature.Feature.class, "MinimumValue" );
 		xstream.aliasField("oml:MeanValue", DataFeature.Feature.class, "MeanValue" );
 		xstream.aliasField("oml:StandardDeviation", DataFeature.Feature.class, "StandardDeviation" );
+		xstream.aliasField("oml:ClassDistribution", DataFeature.Feature.class, "ClassDistribution" );
+
 		
 		// data quality
 		xstream.alias("oml:data_qualities", DataQuality.class);

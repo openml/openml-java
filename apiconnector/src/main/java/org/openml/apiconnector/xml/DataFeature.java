@@ -66,6 +66,8 @@ public class DataFeature {
 		private Double MinimumValue;
 		private Double MeanValue;
 		private Double StandardDeviation;
+		private String ClassDistribution;
+
 		
 		public Feature(Integer index, String name, String data_type,
 				Boolean is_target, Integer numberOfDistinctValues,
@@ -73,7 +75,7 @@ public class DataFeature {
 				Integer numberOfIntegerValues, Integer numberOfRealValues,
 				Integer numberOfNominalValues, Integer numberOfValues,
 				Double maximumValue, Double minimumValue, Double meanValue,
-				Double standardDeviation) {
+				Double standardDeviation, String classDistribution) {
 			super();
 			this.index = index;
 			this.name = name;
@@ -90,6 +92,7 @@ public class DataFeature {
 			MinimumValue = minimumValue;
 			MeanValue = meanValue;
 			StandardDeviation = standardDeviation;
+			ClassDistribution = classDistribution;
 		}
 		
 		public String getName() {
@@ -136,6 +139,9 @@ public class DataFeature {
 		}
 		public Double getStandardDeviation() {
 			return StandardDeviation;
+		}
+		public String getClassDistribution() {
+			return ClassDistribution;
 		}
 		@Override
 		public String toString() {
