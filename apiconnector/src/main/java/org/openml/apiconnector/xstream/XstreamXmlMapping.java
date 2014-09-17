@@ -60,6 +60,7 @@ public class XstreamXmlMapping {
 	 */
 	public static XStream getInstance() {
 		XStream xstream = new XStream(new DomDriver("UFT-8", new NoNameCoder()));
+		xstream.ignoreUnknownElements();
 		
 		// data
 		xstream.alias("oml:data", Data.class);

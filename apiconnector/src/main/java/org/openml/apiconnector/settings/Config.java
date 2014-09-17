@@ -28,6 +28,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.openml.apiconnector.algorithms.Conversion;
+
 /**
  * A Class that loads a config file with username/password and server information.
  * Highly recommended to use config file and this class when executing experiments
@@ -47,7 +49,7 @@ public class Config {
 		try {
 			load(new File("openml.conf"));
 		} catch( IOException ioe ) {
-			throw new RuntimeException( "Could no locate config file: " + ioe.getMessage() );
+			Conversion.log("Warning", "Load Config", "Could not locate default config file.");
 		}
 	}
 	

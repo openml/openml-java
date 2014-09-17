@@ -221,6 +221,10 @@ public class ApiConnector implements Serializable {
 		params.addPart("description", new FileBody(description));
 		params.addPart("session_hash",new StringBody(session_hash));
 		
+		if(Settings.API_VERBOSE_LEVEL >= Constants.VERBOSE_LEVEL_ARFF ) {
+			System.out.println( Conversion.fileToString(description) + "\n==========\n" );
+		}
+		
 		Object apiResult = doApiRequest("openml.data.features.upload", "", params );
 		if( apiResult instanceof DataFeatureUpload){
         	return (DataFeatureUpload) apiResult;
