@@ -44,6 +44,7 @@ public class DataSetDescription implements Serializable {
 	private String url;
 	private String row_id_attribute;
 	private String default_target_attribute;
+	private String[] ignore_attribute;
 	private String md5_checksum;
 	
 	// do not serialize
@@ -64,6 +65,7 @@ public class DataSetDescription implements Serializable {
 			String licence, 
 			String row_id_attribute, 
 			String default_target_attribute,
+			String[] ignore_attribute,
 			String md5_checksum) {
 		this.id = null;
 		this.name = name;
@@ -79,6 +81,7 @@ public class DataSetDescription implements Serializable {
 		this.url = null;
 		this.row_id_attribute = row_id_attribute;
 		this.default_target_attribute = default_target_attribute;
+		this.ignore_attribute = ignore_attribute;
 		this.md5_checksum = md5_checksum;
 	}
 	
@@ -166,6 +169,10 @@ public class DataSetDescription implements Serializable {
 
 	public String getDefault_target_attribute() {
 		return default_target_attribute;
+	}
+
+	public String[] getIgnore_attribute() {
+		return ignore_attribute;
 	}
 
 	public String getMd5_checksum() {

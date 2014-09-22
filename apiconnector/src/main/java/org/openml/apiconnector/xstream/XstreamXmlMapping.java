@@ -73,6 +73,7 @@ public class XstreamXmlMapping {
 		
 		xstream.addImplicitCollection(DataSetDescription.class, "creator", "oml:creator", String.class);
 		xstream.addImplicitCollection(DataSetDescription.class, "contributor", "oml:contributor", String.class);
+		xstream.addImplicitCollection(DataSetDescription.class, "ignore_attribute", "oml:ignore_attribute", String.class);
 		
 		xstream.aliasField("oml:id", DataSetDescription.class, "id");
 		xstream.aliasField("oml:name", DataSetDescription.class, "name");
