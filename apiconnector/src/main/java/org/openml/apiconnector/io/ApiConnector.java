@@ -512,7 +512,11 @@ public class ApiConnector implements Serializable {
 	 * @throws IOException - Can be: server down, etc.
 	 */
 	public static String getStringFromUrl( String url ) throws IOException {
-		return IOUtils.toString(  new URL( url ) );
+		String result = IOUtils.toString(  new URL( url ) );
+		if(Settings.API_VERBOSE_LEVEL >= Constants.VERBOSE_LEVEL_XML)
+			System.out.println("===== REQUEST URI: " + url + " (Content Length: "+result.length()+") =====\n" + result + "\n=====\n");
+		
+		return result;
 	}
 	
 	/**
