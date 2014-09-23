@@ -528,7 +528,7 @@ public class ApiConnector implements Serializable {
 	}
 	
 	public URL getOpenmlFileUrl( int id ) throws MalformedURLException, IOException {
-		return new URL( API_URL + "files/download/" + id + "/filename" );
+		return new URL( API_URL + "data/download/" + id + "/filename" );
 	}
 	
 	private Object doApiRequest(String function, String queryString) throws Exception {
