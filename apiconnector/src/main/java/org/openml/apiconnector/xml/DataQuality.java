@@ -42,6 +42,10 @@ public class DataQuality {
 		return did;
 	}
 	
+	public String getError() {
+		return error;
+	}
+	
 	public Quality[] getQualities() {
 		return qualities;
 	}

@@ -41,6 +41,10 @@ public class DataFeature {
 	public Integer getDid() {
 		return did;
 	}
+	
+	public String getError() {
+		return error;
+	}
 
 	public Feature[] getFeatures() {
 		return features;
