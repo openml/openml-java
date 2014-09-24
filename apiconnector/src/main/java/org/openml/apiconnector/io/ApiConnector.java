@@ -531,8 +531,10 @@ public class ApiConnector implements Serializable {
 		return file;
 	}
 	
-	public URL getOpenmlFileUrl( int id ) throws MalformedURLException, IOException {
-		return new URL( API_URL + "data/download/" + id + "/filename" );
+	public URL getOpenmlFileUrl( int id, String filename, String session_hash ) throws MalformedURLException, IOException {
+		if( filename == null ) filename = "file";
+		String suffix = (session_hash != null) ? "?session_hash=" + session_hash : "";
+		return new URL( API_URL + "data/download/" + id + "/" + filename + suffix );
 	}
 	
 	private Object doApiRequest(String function, String queryString) throws Exception {
