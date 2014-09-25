@@ -87,6 +87,7 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:url", DataSetDescription.class, "url");
 		xstream.aliasField("oml:row_id_attribute", DataSetDescription.class, "row_id_attribute");
 		xstream.aliasField("oml:default_target_attribute", DataSetDescription.class, "default_target_attribute");
+		xstream.aliasField("oml:visibility", DataSetDescription.class, "visibility");
 		xstream.aliasField("oml:md5_checksum", DataSetDescription.class, "md5_checksum");
 		
 		xstream.omitField(DataSetDescription.class, "dataset_cache");
