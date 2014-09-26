@@ -114,4 +114,17 @@ public class ApiSessionHash implements Serializable {
 			return false;
 		}
 	}
+	
+	/**
+	 * Checks stored credentials whether these can be used to login on the server
+	 * @return whether the user can login with the given credentials. 
+	 */
+	public boolean checkCredentials() {
+		try {
+			apiconnector.openmlAuthenticate(username, password);
+			return true;
+		} catch( Exception e ) {
+			return false;
+		}
+	}
 }

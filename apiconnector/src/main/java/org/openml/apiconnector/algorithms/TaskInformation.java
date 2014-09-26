@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileReader;
 
 import org.openml.apiconnector.io.ApiConnector;
+import org.openml.apiconnector.io.ApiSessionHash;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.Task.Input.Data_set;
@@ -124,10 +125,10 @@ public class TaskInformation {
 	 * @return The classnames of the input data
 	 * @throws Exception
 	 */
-	public static String[] getClassNames( ApiConnector apiconnector, Task t ) throws Exception {
+	public static String[] getClassNames( ApiConnector apiconnector, ApiSessionHash ash, Task t ) throws Exception {
 		DataSetDescription dsd = getSourceData(t).getDataSetDescription( apiconnector );
 		String targetFeature = getSourceData(t).getTarget_feature();
-		return getClassNames( dsd.getDataset(), targetFeature );
+		return getClassNames( dsd.getDataset( ash ), targetFeature );
 	}
 	
 	public static String[] getClassNames( File dataset, String targetFeature ) throws Exception {

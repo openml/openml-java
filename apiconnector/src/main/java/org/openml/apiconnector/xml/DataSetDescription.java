@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import org.openml.apiconnector.algorithms.ArffHelper;
+import org.openml.apiconnector.io.ApiSessionHash;
 import org.openml.apiconnector.settings.Constants;
 
 public class DataSetDescription implements Serializable {
@@ -212,9 +213,10 @@ public class DataSetDescription implements Serializable {
 		return "dataset_" + getId() + "_" + getName() + ".arff";
 	}
 	
-	public File getDataset() throws IOException {
+	public File getDataset( ApiSessionHash ash ) throws Exception {
+		String url_suffix = "?session_hash=" + ash.getSessionHash();
 		if( dataset_cache == null ) 
-			dataset_cache = ArffHelper.downloadAndCache( "dataset", getCacheFileName(), getUrl(), getMd5_checksum() );
+			dataset_cache = ArffHelper.downloadAndCache( "dataset", getCacheFileName(), getUrl() + url_suffix, getMd5_checksum() );
 		return dataset_cache;
 	}
 }
