@@ -76,7 +76,7 @@ import org.openml.apiconnector.xml.ImplementationOwned;
 
 import com.thoughtworks.xstream.XStream;
 
-public class ApiConnector implements Serializable {
+public class OpenmlConnector implements Serializable {
 	
 	private static final long serialVersionUID = 7362620508675762264L;
 	private static final String API_PART = "rest_api/";
@@ -84,11 +84,11 @@ public class ApiConnector implements Serializable {
 	
 	private final String API_URL; 
 	
-	public ApiConnector() {
+	public OpenmlConnector() {
 		this.API_URL = Settings.BASE_URL;
 	}
 	
-	public ApiConnector( String url ) {
+	public OpenmlConnector( String url ) {
 		this.API_URL = url;
 	}
 	
