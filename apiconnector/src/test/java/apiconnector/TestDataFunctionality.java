@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 import java.util.Random;
 
 import org.junit.Test;
-import org.openml.apiconnector.io.ApiConnector;
+import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.Data;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
@@ -39,7 +39,7 @@ public class TestDataFunctionality {
 	@Test
 	public void testApiDataDownload() {
 		Random r = new Random( 0L );
-		ApiConnector apiconnector = new ApiConnector();
+		OpenmlConnector apiconnector = new OpenmlConnector();
 		
 		try {
 			Data d = apiconnector.openmlData();

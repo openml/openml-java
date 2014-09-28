@@ -30,7 +30,7 @@ import org.openml.apiconnector.xml.Authenticate;
 public class ApiSessionHash implements Serializable {
 	
 	private static final long serialVersionUID = 7831245113631L;
-	private final ApiConnector apiconnector;
+	private final OpenmlConnector apiconnector;
 	
 	private String username;
 	private String password;
@@ -40,7 +40,7 @@ public class ApiSessionHash implements Serializable {
 	/**
 	 * Creates a new session hash. 
 	 */
-	public ApiSessionHash( ApiConnector apiconnector ) {
+	public ApiSessionHash( OpenmlConnector apiconnector ) {
 		this.apiconnector = apiconnector;
 		sessionHash = null;
 		username = null;

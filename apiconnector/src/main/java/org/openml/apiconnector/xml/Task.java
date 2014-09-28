@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import org.openml.apiconnector.algorithms.ArffHelper;
-import org.openml.apiconnector.io.ApiConnector;
+import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Constants;
 
 public class Task implements Serializable {
@@ -113,7 +113,7 @@ public class Task implements Serializable {
 			public String getTarget_feature() {
 				return target_feature;
 			}
-			public DataSetDescription getDataSetDescription( ApiConnector apiconnector ) throws Exception {
+			public DataSetDescription getDataSetDescription( OpenmlConnector apiconnector ) throws Exception {
 				if(dsdCache == null) {
 					dsdCache = apiconnector.openmlDataDescription(data_set_id);
 				}
@@ -145,7 +145,7 @@ public class Task implements Serializable {
 			public File getDataSplits() throws IOException {
 				if( data_splits_cache == null ) {
 					// TODO: we want to get rid of the server calculated Md5 ... 
-					String serverMd5 = ApiConnector.getStringFromUrl( getData_splits_url().replace("/get/", "/md5/") );
+					String serverMd5 = OpenmlConnector.getStringFromUrl( getData_splits_url().replace("/get/", "/md5/") );
 					String identifier = getData_splits_url().substring( getData_splits_url().lastIndexOf('/') + 1 );
 					data_splits_cache = ArffHelper.downloadAndCache("splits", identifier, getData_splits_url(), serverMd5 );
 				}

@@ -24,12 +24,12 @@ public class Settings {
 	/**
 	 * When set to true, API will output all downloaded and uploaded content. 
 	 */
-	public static int API_VERBOSE_LEVEL = 1;
+	public static int API_VERBOSE_LEVEL = 0;
 	/**
 	 * The webserver to which request are done. ends with tailing slash. 
 	 * (Api suffix will be added by ApiConnector)
 	 */
-	public static final String BASE_URL = "http://openml.liacs.nl/";
+	public static final String BASE_URL = "http://www.openml.org/";
 	/**
 	 * Whether caching is allowed. Keep value to true.
 	 */

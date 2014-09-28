@@ -22,7 +22,7 @@ package org.openml.apiconnector.algorithms;
 import java.io.File;
 import java.io.IOException;
 
-import org.openml.apiconnector.io.ApiConnector;
+import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Settings;
 
 public class ArffHelper {
@@ -54,10 +54,10 @@ public class ArffHelper {
 		
 		if( Settings.CACHE_ALLOWED ) {
 			directory.mkdirs();
-			dataset = ApiConnector.getFileFromUrl( url, file.getAbsolutePath() );
+			dataset = OpenmlConnector.getFileFromUrl( url, file.getAbsolutePath() );
 			Conversion.log( "INFO", "ARFF Cache", "Stored " + type + " " + identifier + " to cache. " );
 		} else {
-			dataset = Conversion.stringToTempFile( ApiConnector.getStringFromUrl( url ), identifier, "arff" );
+			dataset = Conversion.stringToTempFile( OpenmlConnector.getStringFromUrl( url ), identifier, "arff" );
 		}
 		return dataset;
 	}
