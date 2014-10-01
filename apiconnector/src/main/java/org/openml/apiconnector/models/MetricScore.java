@@ -26,6 +26,7 @@ import org.openml.apiconnector.algorithms.MathHelper;
 public class MetricScore {
 	
 	private Double score = null;
+	private int nr_of_instances = 0;
 	private Double[] array = null;
 	private double[][] confusion_matrix = null;
 	
@@ -35,8 +36,9 @@ public class MetricScore {
 	 * 
 	 * @param score
 	 */
-	public MetricScore( Double score ) {
+	public MetricScore( Double score, int nr_of_instances ) {
 		this.score = score;
+		this.nr_of_instances = nr_of_instances;
 	}
 
 	/**
@@ -45,8 +47,9 @@ public class MetricScore {
 	 * 
 	 * @param array - 
 	 */
-	public MetricScore( Double[] array ) {
+	public MetricScore( Double[] array, int nr_of_instances ) {
 		this.array = array;
+		this.nr_of_instances = nr_of_instances;
 	}
 
 	/**
@@ -57,9 +60,10 @@ public class MetricScore {
 	 * @param score 
 	 * @param array
 	 */
-	public MetricScore( Double score, Double[] array ) {
+	public MetricScore( Double score, Double[] array, int nr_of_instances ) {
 		this.score = score;
 		this.array = array;
+		this.nr_of_instances = nr_of_instances;
 	}
 
 	/**
@@ -84,6 +88,14 @@ public class MetricScore {
 	 */
 	public boolean hasArray() {
 		return array != null || confusion_matrix != null;
+	}
+	
+
+	/**
+	 * @return Returns the number of instances this score was calculated over. 
+	 */
+	public int getNrOfInstances() {
+		return nr_of_instances;
 	}
 	
 	/**
