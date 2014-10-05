@@ -4,20 +4,20 @@ import org.openml.apiconnector.algorithms.MathHelper;
 
 public class EvaluationScore {
 
-	private String function;
-	private String implementation;
+	private final String function;
+	private final String implementation;
 	
-	private String value;
-	private Double stdev;
-	private String array_data;
+	private final String value;
+	private final Double stdev;
+	private final String array_data;
 	
-	private Integer repeat;
-	private Integer fold;
-	private Integer sample;
-	private Integer sample_size;
+	private final Integer repeat;
+	private final Integer fold;
+	private final Integer sample;
+	private Integer sample_size; /*not final*/
 	
-	private Integer interval_start;
-	private Integer interval_end;
+	private final Integer interval_start;
+	private final Integer interval_end;
 	
 	public EvaluationScore(String implementation, String function,
 			String value, Double stdev, String array_data) {
@@ -27,6 +27,14 @@ public class EvaluationScore {
 		this.value = value;
 		this.stdev = stdev;
 		this.array_data = array_data;
+		
+		// unused
+		this.repeat = null;
+		this.fold = null;
+		this.sample = null;
+		this.sample_size = null;
+		this.interval_start = null;
+		this.interval_end = null;
 	}
 
 	public EvaluationScore(String implementation, String function,
@@ -38,6 +46,13 @@ public class EvaluationScore {
 		this.array_data = array_data;
 		this.fold = fold;
 		this.repeat = repeat;
+		
+		// unused
+		this.sample = null;
+		this.sample_size = null;
+		this.interval_start = null;
+		this.interval_end = null;
+		this.stdev = null;
 	}
 
 	public EvaluationScore(String implementation, String function,
@@ -52,6 +67,11 @@ public class EvaluationScore {
 		this.repeat = repeat;
 		this.sample = sample;
 		this.sample_size = sample_size;
+		
+		// unused
+		this.interval_start = null;
+		this.interval_end = null;
+		this.stdev = null;
 	}
 
 	public EvaluationScore(String implementation, String function,
@@ -64,6 +84,13 @@ public class EvaluationScore {
 		this.array_data = array_data;
 		this.interval_start = interval_start;
 		this.interval_end = interval_end;
+		
+		// unused
+		this.repeat = null;
+		this.fold = null;
+		this.sample = null;
+		this.sample_size = null;
+		this.stdev = null;
 	}
 
 	public String getImplementation() {
@@ -96,6 +123,10 @@ public class EvaluationScore {
 
 	public Integer getSample() {
 		return sample;
+	}
+	
+	public void setSample_size( int sample_size ) {
+		this.sample_size = sample_size;
 	}
 
 	public Integer getSample_size() {
