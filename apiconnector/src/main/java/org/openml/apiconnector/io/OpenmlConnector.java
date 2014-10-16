@@ -50,6 +50,8 @@ import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.Implementation;
 import org.openml.apiconnector.xml.ImplementationExists;
 import org.openml.apiconnector.xml.Job;
+import org.openml.apiconnector.xml.Run;
+import org.openml.apiconnector.xml.RunDelete;
 import org.openml.apiconnector.xml.RunEvaluate;
 import org.openml.apiconnector.xml.RunReset;
 import org.openml.apiconnector.xml.Task;
@@ -81,15 +83,40 @@ public class OpenmlConnector implements Serializable {
 	private static final long serialVersionUID = 7362620508675762264L;
 	private static final String API_PART = "rest_api/";
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
+	private ApiSessionHash ash;
 	
 	private final String API_URL; 
 	
+	/** 
+	 * Creates a default OpenML Connector without authentication
+	 */
 	public OpenmlConnector() {
 		this.API_URL = Settings.BASE_URL;
 	}
 	
+	/** 
+	 * Creates an OpenML Connector to the specified URL without authentication
+	 */
 	public OpenmlConnector( String url ) {
 		this.API_URL = url;
+	}
+	
+	/** 
+	 * Creates a default OpenML Connector with authentication
+	 */
+	public OpenmlConnector( String username, String password ){
+		this.API_URL = Settings.BASE_URL;
+		this.ash = new ApiSessionHash(this);
+		ash.set(username,password);
+	}
+	
+	/** 
+	 * Creates an OpenML Connector to the specified URL with authentication
+	 */
+	public OpenmlConnector( String url, String username, String password ){
+		this.API_URL = url;
+		this.ash = new ApiSessionHash(this);
+		ash.set(username,password);
 	}
 	
 	/**
@@ -137,6 +164,18 @@ public class OpenmlConnector implements Serializable {
         } else {
         	throw new DataFormatException("Casting Api Object to Data");
         }
+	}
+	
+	/**
+	 * Alias for openmlDataDescription. 
+	 * 
+	 * @param did - The data_id of the data description to download. 
+	 * @return DataSetDescription - An object containing the description of the data
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public DataSetDescription openmlDataGet( int did ) throws Exception {
+		return openmlDataDescription( did );
 	}
 	
 	/**
@@ -289,6 +328,15 @@ public class OpenmlConnector implements Serializable {
 	}
 	
 	/**
+	 * @return ImplementationOwned - An object containing all implementation_ids that are owned by the current user.
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public ImplementationOwned openmlImplementationOwned() throws Exception {
+		return openmlImplementationOwned(ash.getSessionHash());
+	}
+	
+	/**
 	 * @param id - The numeric id of the implementation to be deleted. 
 	 * @param session_hash - A session hash (obtainable by openmlAuthenticate)
 	 * @return ImplementationDelete - An object containing the id of the deleted implementation
@@ -306,6 +354,16 @@ public class OpenmlConnector implements Serializable {
         } else {
         	throw new DataFormatException("Casting Api Object to ImplementationDelete");
         }
+	}
+	
+	/**
+	 * @param id - The numeric id of the implementation to be deleted. 
+	 * @return ImplementationDelete - An object containing the id of the deleted implementation
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public ImplementationDelete openmlImplementationDelete( int id ) throws Exception {
+		return openmlImplementationDelete(id, ash.getSessionHash());
 	}
 	
 	/**
@@ -338,6 +396,18 @@ public class OpenmlConnector implements Serializable {
         } else {
         	throw new DataFormatException("Casting Api Object to Task");
         }
+	}
+	
+	/**
+	 * Alias for openmlTaskSearch
+	 * 
+	 * @param task_id - The numeric id of the task to be obtained.
+	 * @return Task - An object describing the task
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public Task openmlTaskGet( int task_id ) throws Exception {
+		return openmlTaskSearch( task_id );
 	}
 	
 	public TaskEvaluations openmlTaskEvaluations( int task_id ) throws Exception {
@@ -386,6 +456,17 @@ public class OpenmlConnector implements Serializable {
 	}
 	
 	/**
+	 * @param description - A DataSetDescription describing the data. Should contain the url field.
+	 * @param dataset - The actual dataset. Preferably in ARFF format, but almost everything is OK. 
+	 * @return UploadDataSet - An object containing information on the data upload. 
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public UploadDataSet openmlDataUpload( DataSetDescription description, File dataset) throws Exception {
+		return openmlDataUpload(Conversion.stringToTempFile(xstream.toXML(description), "description", "xml"), dataset, ash.getSessionHash());
+	}
+	
+	/**
 	 * @param description - An XML file describing the data. See documentation at openml.org. Should contain the url field.
 	 * @param session_hash - A session hash (obtainable by openmlAuthenticate)
 	 * @return UploadDataSet - An object containing information on the data upload. 
@@ -394,6 +475,16 @@ public class OpenmlConnector implements Serializable {
 	 */
 	public UploadDataSet openmlDataUpload( File description, String session_hash ) throws Exception {
 		return openmlDataUpload(description, null, session_hash);
+	}
+	
+	/**
+	 * @param description - A DataSetDescription describing the data. Should contain the url field.
+	 * @return UploadDataSet - An object containing information on the data upload. 
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public UploadDataSet openmlDataUpload( DataSetDescription description) throws Exception {
+		return openmlDataUpload(Conversion.stringToTempFile(xstream.toXML(description), "description", "xml"), null, ash.getSessionHash());
 	}
 	
 	/**
@@ -420,6 +511,18 @@ public class OpenmlConnector implements Serializable {
         } else {
         	throw new DataFormatException("Casting Api Object to UploadImplementation");
         }
+	}
+	
+	/**
+	 * @param description - An XML file describing the implementation. See documentation at openml.org.
+	 * @param binary - A file containing the implementation binary. 
+	 * @param source - A file containing the implementation source.
+	 * @return UploadImplementation - An object containing information on the implementation upload. 
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public UploadImplementation openmlImplementationUpload( Implementation description, File binary, File source) throws Exception {
+		return openmlImplementationUpload( Conversion.stringToTempFile(xstream.toXML(description), "description", "xml"), binary, source, ash.getSessionHash());
 	}
 	
 	/**
@@ -452,6 +555,18 @@ public class OpenmlConnector implements Serializable {
         }
 	}
 	
+	/**
+	 * @param description - An XML file describing the run. See documentation at openml.org.
+	 * @param output_files - A Map<String,File> containing all relevant output files. Key "predictions" 
+	 * usually contains the predictions that were generated by this run. 
+	 * @return UploadRun - An object containing information on the implementation upload. 
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public UploadRun openmlRunUpload( Run description, Map<String,File> output_files ) throws Exception {
+		return openmlRunUpload( Conversion.stringToTempFile(xstream.toXML(description), "description", "xml"), output_files, ash.getSessionHash() );
+	}
+	
 	public RunEvaluate openmlRunEvaluate( File description, String session_hash ) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
@@ -463,6 +578,46 @@ public class OpenmlConnector implements Serializable {
         } else {
         	throw new DataFormatException("Casting Api Object to RunEvaluate");
         }
+	}
+
+	/**
+	 * Retrieves the description of a specified run. 
+	 * 
+	 * @param rid - The run_id of the run to download. 
+	 * @return Run - An object containing the description of the run
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public Run openmlRunGet( int rid ) throws Exception {
+		Object apiResult = doApiRequest("openml.run.get", "&run_id=" + rid );
+        if( apiResult instanceof Run){
+        	return (Run) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to Run");
+        }
+	}
+	
+	/**
+	 * @param id - The numeric id of the run to be deleted. 
+	 * @return ImplementationDelete - An object containing the id of the deleted implementation
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public RunDelete openmlRunDelete( int id ) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("run_id",new StringBody(""+id));
+		params.addPart("session_hash",new StringBody(ash.getSessionHash()));
+		
+		Object apiResult = doApiRequest("openml.run.delete", "", params);
+		if( apiResult instanceof RunDelete){
+        	return (RunDelete) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to RunDelete");
+        }
+	}
+	
+	public RunEvaluate openmlRunEvaluate( File description ) throws Exception {
+		return openmlRunEvaluate( description, ash.getSessionHash() );
 	}
 	
 	public RunReset openmlRunReset( int run_id, String session_hash ) throws Exception {
@@ -476,6 +631,10 @@ public class OpenmlConnector implements Serializable {
         } else {
         	throw new DataFormatException("Casting Api Object to RunReset");
         }
+	}
+	
+	public RunReset openmlRunReset( int run_id ) throws Exception {
+		return openmlRunReset( run_id, ash.getSessionHash() );
 	}
 	
 	/**
