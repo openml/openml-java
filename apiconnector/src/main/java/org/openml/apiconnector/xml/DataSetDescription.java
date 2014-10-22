@@ -139,6 +139,10 @@ public class DataSetDescription implements Serializable {
 	public Integer getId() {
 		return id;
 	}
+	
+	public void unsetId() {
+		id = null;
+	}
 
 	public String getName() {
 		return name;

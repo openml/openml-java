@@ -118,4 +118,17 @@ public class Config {
 		}
 		return null;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for( String s : config.keySet() ) {
+			if( s.equals("password") ) {
+				sb.append(s + "=" + config.get(s).length() + "chars\n");
+			} else {
+				sb.append(s + "=" + config.get(s)+"\n");
+			}
+		}
+		return sb.toString();
+	}
 }
