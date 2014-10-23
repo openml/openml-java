@@ -25,13 +25,22 @@ import java.util.Random;
 
 import org.junit.Test;
 import org.openml.apiconnector.io.OpenmlConnector;
+import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xml.Data;
+import org.openml.apiconnector.xml.Data.DataSet;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataSetDescription;
+import org.openml.apiconnector.xstream.XstreamXmlMapping;
+
+import com.thoughtworks.xstream.XStream;
 
 public class TestDataFunctionality {
 
+	private static final String username = "janvanrijn@gmail.com";
+	private static final String password = "Feyenoord2002";
+	private static final String server = "http://localhost/openexpdb_v2/";
+	
 	/**
 	 * Queries all data id's, chooses one of those and obtains its 
 	 * data set description, features and qualities. 
@@ -39,13 +48,18 @@ public class TestDataFunctionality {
 	@Test
 	public void testApiDataDownload() {
 		Random r = new Random( 0L );
-		OpenmlConnector apiconnector = new OpenmlConnector();
+		OpenmlConnector apiconnector = new OpenmlConnector(server,username,password);
 		
 		try {
-			Data d = apiconnector.openmlData();
+			/*Data d = apiconnector.openmlData();
 			
-			Integer[] allDataIds = d.getDid();
-			int probe = allDataIds[Math.abs(r.nextInt() % allDataIds.length)];
+			System.err.println( XstreamXmlMapping.getInstance().toXML(d) );
+			
+			DataSet[] allDataIds = d.getData();
+			System.err.println( "LENGTH: " + allDataIds.length );
+			
+			DataSet toCheck = allDataIds[Math.abs(r.nextInt() % allDataIds.length)];*/
+			int probe = 1170;
 			
 			DataSetDescription dsd = apiconnector.openmlDataDescription( probe );
 			DataFeature features = apiconnector.openmlDataFeatures( probe );

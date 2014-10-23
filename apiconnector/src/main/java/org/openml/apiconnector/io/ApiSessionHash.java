@@ -22,16 +22,20 @@ package org.openml.apiconnector.io;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.zip.DataFormatException;
 
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.StringBody;
 import org.openml.apiconnector.algorithms.DateParser;
+import org.openml.apiconnector.algorithms.Hashing;
 import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.xml.Authenticate;
 
-public class ApiSessionHash implements Serializable {
+class ApiSessionHash implements Serializable {
 	
 	private static final long serialVersionUID = 7831245113631L;
-	private final OpenmlConnector apiconnector;
 	
+	private final String server;
 	private String username;
 	private String password;
 	private String sessionHash;
@@ -40,8 +44,8 @@ public class ApiSessionHash implements Serializable {
 	/**
 	 * Creates a new session hash. 
 	 */
-	public ApiSessionHash( OpenmlConnector apiconnector ) {
-		this.apiconnector = apiconnector;
+	public ApiSessionHash( String server ) {
+		this.server = server;
 		sessionHash = null;
 		username = null;
 	}
@@ -77,7 +81,7 @@ public class ApiSessionHash implements Serializable {
 	 * @throws Exception - On authentication failure
 	 */
 	public void update() throws Exception {
-		Authenticate auth = apiconnector.openmlAuthenticate(username, password);
+		Authenticate auth = openmlAuthenticate(username, password);
 		this.validUntil = DateParser.mysqlDateToTimeStamp(auth.getValidUntil(),auth.getTimezone());
 		this.sessionHash = auth.getSessionHash();
 		return;
@@ -108,7 +112,7 @@ public class ApiSessionHash implements Serializable {
 	 */
 	public boolean checkCredentials(String username, String password) {
 		try {
-			apiconnector.openmlAuthenticate(username, password);
+			openmlAuthenticate(username, password);
 			return true;
 		} catch( Exception e ) {
 			return false;
@@ -121,10 +125,45 @@ public class ApiSessionHash implements Serializable {
 	 */
 	public boolean checkCredentials() {
 		try {
-			apiconnector.openmlAuthenticate(username, password);
+			openmlAuthenticate(username, password);
 			return true;
 		} catch( Exception e ) {
 			return false;
 		}
+	}
+	
+	/**
+	 * Authenticates the current user, based on internally stored credentials. 
+	 * 
+	 * @return Authenticate - An object containing the Api Session Hash 
+	 * (which can be used to authenticate without username / password)
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	public Authenticate openmlAuthenticate() throws Exception {
+		return openmlAuthenticate(username, password);
+	}
+	
+	/**
+	 * Authenticates the current user. 
+	 * 
+	 * @param username - The username that is used for authentication
+	 * @param password - The password used for authentication
+	 * @return Authenticate - An object containing the Api Session Hash 
+	 * (which can be used to authenticate without username / password)
+	 * @throws Exception - Can be: API Error (see documentation at openml.org), 
+	 * server down, etc.
+	 */
+	private Authenticate openmlAuthenticate(String username, String password) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("username",new StringBody(username));
+		params.addPart("password",new StringBody(Hashing.md5(password)));
+		
+		Object apiResult = HttpConnector.doApiRequest(server,"openml.authenticate", "", params, null);
+        if( apiResult instanceof Authenticate){
+        	return (Authenticate) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to Authenticate");
+        }
 	}
 }

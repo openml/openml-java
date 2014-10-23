@@ -66,7 +66,17 @@ public class XstreamXmlMapping {
 		// data
 		xstream.alias("oml:data", Data.class);
 		xstream.aliasAttribute(Data.class, "oml", "xmlns:oml");
-		xstream.addImplicitCollection(Data.class, "did", "oml:did", Integer.class);
+		xstream.addImplicitCollection(Data.class, "data", "oml:data", Data.DataSet.class);
+		
+		// Data.DataSet
+		xstream.alias("oml:dataset", Data.DataSet.class);
+		xstream.aliasField("oml:did", Data.DataSet.class, "did");
+		xstream.aliasField("oml:state", Data.DataSet.class, "state");
+		
+		xstream.addImplicitCollection(Data.DataSet.class, "qualities", "oml:quality", Data.DataSet.Quality.class);
+		xstream.useAttributeFor(Data.DataSet.Quality.class, "name");
+		xstream.registerConverter(new ToAttributedValueConverter(Data.DataSet.Quality.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
+		
 		
 		// data set description
 		xstream.alias("oml:data_set_description", DataSetDescription.class);

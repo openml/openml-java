@@ -11,16 +11,19 @@ import org.openml.apiconnector.xml.Authenticate;
 
 public class TestAuthentication {
 	
-	private static final String username = "jvrijn@liacs.nl";
-	private static final String password = "secretpassword";
+	private static final String username = "janvanrijn@gmail.com";
+	private static final String password = "Feyenoord2002";
+	private static final String server = "http://localhost/openexpdb_v2/";
 	
 	@Test
 	public void loginSucces() {
 		try {
-			Authenticate auth = new OpenmlConnector().openmlAuthenticate(username, password);
+			OpenmlConnector con = new OpenmlConnector(server, username, password);
+			Authenticate auth = con.openmlAuthenticate();
 			long validUntil = DateParser.mysqlDateToTimeStamp(auth.getValidUntil(),auth.getTimezone());
 			Assert.assertTrue( validUntil > new Date().getTime() + Constants.DEFAULT_TIME_MARGIN );
 		} catch (Exception e) {
+			e.printStackTrace();
 			Assert.fail("Login failed: " + e.getMessage() );
 		}
 	}

@@ -24,12 +24,53 @@ import org.openml.apiconnector.settings.Constants;
 public class Data {
 
 	private final String oml = Constants.OPENML_XMLNS;
-	private Integer[] did;
+	private DataSet[] data;
 	
 	public String getOml() {
 		return oml;
 	}
-	public Integer[] getDid() {
-		return did;
+	public DataSet[] getData() {
+		return data;
+	}
+	
+	public static class DataSet {
+		private int did;
+		private String status;
+		private Quality[] qualities;
+		
+		public int getDid() {
+			return did;
+		}
+		
+		public String getStatus() {
+			return status;
+		}
+		
+		public Quality[] getQualities() {
+			return qualities;
+		}
+		
+		public static class Quality {
+			private String name;
+			private String value;
+			
+			public Quality( String name, String value ) {
+				this.name = name;
+				this.value = value;
+			}
+			
+			public String getName() {
+				return name;
+			}
+			
+			public String getValue() {
+				return value;
+			}
+
+			@Override
+			public String toString() {
+				return name;
+			}
+		}
 	}
 }
