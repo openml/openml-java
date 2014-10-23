@@ -1,14 +1,11 @@
 package org.openml.apiconnector.algorithms;
 
-import java.io.IOException;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.openml.apiconnector.io.OpenmlConnector;
 
 public class QueryUtils {
 
-	public static int[] getIdsFromDatabase( OpenmlConnector apiconnector, String sql ) throws JSONException, IOException {
+	public static int[] getIdsFromDatabase( OpenmlConnector apiconnector, String sql ) throws Exception {
 		JSONArray runJson = (JSONArray) apiconnector.openmlFreeQuery( sql ).get("data");
 		
 		int[] result = new int[runJson.length()];
@@ -19,7 +16,7 @@ public class QueryUtils {
 		return result; 
 	}
 	
-	public static double getIntFromDatabase( OpenmlConnector apiconnector, String sql ) throws JSONException, IOException {
+	public static double getIntFromDatabase( OpenmlConnector apiconnector, String sql ) throws Exception {
 		int[] result = getIdsFromDatabase( apiconnector, sql );
 		return result[0];
 	}

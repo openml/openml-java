@@ -27,7 +27,6 @@ import java.net.URLEncoder;
 import java.util.Map;
 import java.util.zip.DataFormatException;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.settings.Constants;
@@ -559,11 +558,10 @@ public class OpenmlConnector implements Serializable {
 	/**
 	 * @param sql - The query to be executed 
 	 * @return An JSON object containing the result of the query, along with meta data
-	 * @throws JSONException
-	 * @throws IOException
+	 * @throws Exception 
 	 */
-	public JSONObject openmlFreeQuery( String sql ) throws JSONException, IOException {
-		return new JSONObject( getStringFromUrl( API_URL + "api_query/?q=" + URLEncoder.encode( sql, "ISO-8859-1" ) ) );
+	public JSONObject openmlFreeQuery( String sql ) throws Exception {
+		return new JSONObject( getStringFromUrl( API_URL + "api_query/?q=" + URLEncoder.encode( sql, "ISO-8859-1" ) + "&hash=" + getSessionHash() ) );
 	}
 	
 	/**
