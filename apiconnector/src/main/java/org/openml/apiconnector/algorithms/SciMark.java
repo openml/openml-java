@@ -29,6 +29,7 @@ import jnt.scimark2.kernel;
 
 public class SciMark implements Serializable {
 	
+	private static SciMark instance = null;
 	private static final long serialVersionUID = -5563065042084199486L;
 	private boolean benchmarkDone;
 	private double results[] = new double[5];
@@ -43,6 +44,13 @@ public class SciMark implements Serializable {
 		System.out.println("Composite score: " + scimark.doBenchmark() );
 		System.out.println("[ " + StringUtils.join( scimark.getStringArray(), ", " ) + " ]" );
 		
+	}
+	
+	public static SciMark getInstance() {
+		if( instance == null ) {
+			instance = new SciMark();
+		}
+		return instance;
 	}
 	
 	/**
