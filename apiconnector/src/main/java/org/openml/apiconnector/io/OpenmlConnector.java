@@ -68,7 +68,7 @@ public class OpenmlConnector implements Serializable {
 	private final String API_URL; 
 	
 	public OpenmlConnector( String url ) {
-		this.API_URL = Settings.BASE_URL;
+		this.API_URL = url;
 		this.ash = new ApiSessionHash(this.API_URL);
 	}
 	
