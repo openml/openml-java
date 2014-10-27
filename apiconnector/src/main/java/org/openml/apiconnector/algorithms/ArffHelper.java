@@ -81,8 +81,9 @@ public class ArffHelper {
 	public static boolean isAttributeDeclaration( String line ) {
 		if( line.length() == 0 ) return false;
 		if( line.charAt( 0 ) == '%' ) return false; // comment; 
-		if( line.toUpperCase().contains( "@ATTRIBUTE" ) )
+		if( line.toUpperCase().contains( "@ATTRIBUTE" ) ) {
 			return true;
+		}
 		return false;
 	}
 	
@@ -95,7 +96,7 @@ public class ArffHelper {
 		if( isAttributeDeclaration( attributeLine ) == false )
 			throw new Exception("Not a valid attribute. ");
 		
-		String[] words = attributeLine.split("\\s+");
+		String[] words = attributeLine.trim().split("\\s+");
 		if( words.length < 2 ) throw new Exception("Not a valid attribute.");
 		
 		if( words[1].charAt( 0 ) == '\'' && words[1].charAt( words[1].length()-1 ) == '\'' ) {

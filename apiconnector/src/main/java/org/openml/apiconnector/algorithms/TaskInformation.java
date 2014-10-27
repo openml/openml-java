@@ -44,7 +44,7 @@ public class TaskInformation {
 				return Integer.parseInt(ep.getParameters()[i].getValue());
 			}
 		}
-		throw new Exception("Tasks estimation procedure does not contain \"number_repeats\"");
+		throw new Exception("Tasks estimation procedure does not contain \"number_repeats\" (task_id="+t.getTask_id()+")");
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class TaskInformation {
 				return Integer.parseInt(ep.getParameters()[i].getValue());
 			}
 		}
-		throw new Exception("Tasks estimation procedure does not contain \"number_samples\"");
+		throw new Exception("Tasks estimation procedure does not contain \"number_samples\" (task_id="+t.getTask_id()+")");
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class TaskInformation {
 				return Integer.parseInt(ep.getParameters()[i].getValue());
 			}
 		}
-		throw new Exception("Tasks estimation procedure does not contain \"number_folds\"");
+		throw new Exception("Tasks estimation procedure does not contain \"number_folds\" (task_id="+t.getTask_id()+")");
 	}
 	
 	/**
@@ -88,7 +88,7 @@ public class TaskInformation {
 				return t.getInputs()[i].getEstimation_procedure();
 			}
 		}
-		throw new Exception("Task does not define an estimation procedure. ");
+		throw new Exception("Task does not define an estimation procedure (task_id="+t.getTask_id()+")");
 	}
 	
 	/**
@@ -102,7 +102,7 @@ public class TaskInformation {
 				return t.getInputs()[i].getData_set();
 			}
 		}
-		throw new Exception("Task does not define an estimation procedure. ");
+		throw new Exception("Task does not define an estimation procedure (task_id="+t.getTask_id()+")");
 	}
 	
 	/**
@@ -116,7 +116,7 @@ public class TaskInformation {
 				return t.getOutputs()[i].getPredictions();
 			}
 		}
-		throw new Exception("Task does not define an predictions. ");
+		throw new Exception("Task does not define an predictions (task_id="+t.getTask_id()+")");
 	}
 	
 	/**
@@ -127,16 +127,18 @@ public class TaskInformation {
 	public static String[] getClassNames( OpenmlConnector apiconnector, Task t ) throws Exception {
 		DataSetDescription dsd = getSourceData(t).getDataSetDescription( apiconnector );
 		String targetFeature = getSourceData(t).getTarget_feature();
-		return getClassNames( dsd.getDataset( apiconnector.getSessionHash() ), targetFeature );
+		return getClassNames( dsd.getDataset( apiconnector.getSessionHash() ), t.getTask_id(), targetFeature );
 	}
 	
-	public static String[] getClassNames( File dataset, String targetFeature ) throws Exception {
+	public static String[] getClassNames( File dataset, int task_id, String targetFeature ) throws Exception {
 		BufferedReader br = new BufferedReader( new FileReader( dataset ) );
 		
 		String line;
 		
 		while( (line = br.readLine()) != null) {
-			if( ArffHelper.isDataDeclaration(line) ) throw new Exception("Attribute not found.");
+			if( ArffHelper.isDataDeclaration(line) ) {
+				throw new Exception("Attribute not found before data declaration (task_id="+task_id+")");
+			}
 			if( ArffHelper.isAttributeDeclaration(line) ) {
 				try {
 					if( ArffHelper.getAttributeName( line ).equals( targetFeature ) ) {
@@ -147,6 +149,6 @@ public class TaskInformation {
 			}
 		}
 		br.close();
-		throw new Exception("Attribute not found.");
+		throw new Exception("Attribute not found (task_id="+task_id+")");
 	}
 }
