@@ -36,6 +36,7 @@ public class Task implements Serializable {
 	private String task_type;
 	private Input[] inputs;
 	private Output[] outputs;
+	private String[] tag;
 	
 	// for quick initialization. 
 	public Task(int id) {
@@ -74,6 +75,10 @@ public class Task implements Serializable {
 
 	public Output[] getOutputs() {
 		return outputs;
+	}
+
+	public String[] getTags() {
+		return tag;
 	}
 
 	public class Input implements Serializable {

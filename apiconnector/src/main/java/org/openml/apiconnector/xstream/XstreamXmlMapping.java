@@ -250,6 +250,7 @@ public class XstreamXmlMapping {
 		
 		xstream.addImplicitCollection(Task.class, "inputs", "oml:input", Task.Input.class);
 		xstream.addImplicitCollection(Task.class, "outputs", "oml:output", Task.Output.class);
+		xstream.addImplicitCollection(Task.class, "tag", "oml:tag", String.class);
 		xstream.addImplicitCollection(Task.Input.Estimation_procedure.class, "parameters", "oml:parameter", Task.Input.Estimation_procedure.Parameter.class);
 		xstream.addImplicitCollection(Task.Input.Evaluation_measures.class, "evaluation_measure", "oml:evaluation_measure", String.class);
 		xstream.addImplicitCollection(Task.Output.Predictions.class, "features", "oml:feature", Task.Output.Predictions.Feature.class);
