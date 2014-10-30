@@ -25,7 +25,9 @@ import org.openml.apiconnector.xml.DataFeatureUpload;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataQualityUpload;
+import org.openml.apiconnector.xml.DataTag;
 import org.openml.apiconnector.xml.EvaluationScore;
+import org.openml.apiconnector.xml.ImplementationTag;
 import org.openml.apiconnector.xml.RunDelete;
 import org.openml.apiconnector.xml.RunEvaluate;
 import org.openml.apiconnector.xml.RunEvaluation;
@@ -39,8 +41,11 @@ import org.openml.apiconnector.xml.Implementation;
 import org.openml.apiconnector.xml.Job;
 import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.RunReset;
+import org.openml.apiconnector.xml.RunTag;
+import org.openml.apiconnector.xml.SetupTag;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskEvaluations;
+import org.openml.apiconnector.xml.TaskTag;
 import org.openml.apiconnector.xml.UploadDataSet;
 import org.openml.apiconnector.xml.UploadImplementation;
 import org.openml.apiconnector.xml.UploadRun;
@@ -364,6 +369,22 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:run_id", RunEvaluation.class, "run_id");
 		xstream.aliasField("oml:error", RunEvaluation.class, "error");
 		xstream.addImplicitCollection(RunEvaluation.class, "evaluation", "oml:evaluation", EvaluationScore.class);
+		
+		// data tag
+		xstream.alias("oml:data_tag", DataTag.class);
+		xstream.aliasField("oml:id", DataTag.class, "id");
+		// implementation tag
+		xstream.alias("oml:implementation_tag", ImplementationTag.class);
+		xstream.aliasField("oml:id", ImplementationTag.class, "id");
+		// setup tag
+		xstream.alias("oml:setup_tag", SetupTag.class);
+		xstream.aliasField("oml:id", SetupTag.class, "id");
+		// task tag
+		xstream.alias("oml:task_tag", TaskTag.class);
+		xstream.aliasField("oml:id", TaskTag.class, "id");
+		// run tag
+		xstream.alias("oml:run_tag", RunTag.class);
+		xstream.aliasField("oml:id", RunTag.class, "id");
 		
 		return xstream;
 	}

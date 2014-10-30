@@ -38,14 +38,19 @@ import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataQualityUpload;
 import org.openml.apiconnector.xml.DataSetDescription;
+import org.openml.apiconnector.xml.DataTag;
 import org.openml.apiconnector.xml.Implementation;
 import org.openml.apiconnector.xml.ImplementationExists;
+import org.openml.apiconnector.xml.ImplementationTag;
 import org.openml.apiconnector.xml.Job;
 import org.openml.apiconnector.xml.RunDelete;
 import org.openml.apiconnector.xml.RunEvaluate;
 import org.openml.apiconnector.xml.RunReset;
+import org.openml.apiconnector.xml.RunTag;
+import org.openml.apiconnector.xml.SetupTag;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskEvaluations;
+import org.openml.apiconnector.xml.TaskTag;
 import org.openml.apiconnector.xml.UploadDataSet;
 import org.openml.apiconnector.xml.UploadImplementation;
 import org.openml.apiconnector.xml.UploadRun;
@@ -182,6 +187,16 @@ public class OpenmlConnector implements Serializable {
         }
 	}
 	
+	public DataTag openmlDataTag( int id, String tag ) throws Exception {
+		String qs = "&data_id=" + id + "&tag=" + tag;
+		Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.tag", qs, ash );
+        if( apiResult instanceof DataTag){
+        	return (DataTag) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to DataTag");
+        }
+	}
+	
 	/**
 	 * Retrieves the features of a specified data set. 
 	 * 
@@ -294,6 +309,16 @@ public class OpenmlConnector implements Serializable {
         }
 	}
 	
+	public ImplementationTag openmlImplementationTag( int id, String tag ) throws Exception {
+		String qs = "&implementation_id=" + id + "&tag=" + tag;
+		Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.implementation.tag", qs, ash );
+        if( apiResult instanceof ImplementationTag){
+        	return (ImplementationTag) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to ImplementationTag");
+        }
+	}
+	
 	/**
 	 * @param session_hash - A session hash (obtainable by openmlAuthenticate)
 	 * @return ImplementationOwned - An object containing all implementation_ids that are owned by the current user.
@@ -374,9 +399,19 @@ public class OpenmlConnector implements Serializable {
 		return openmlTaskSearch( task_id );
 	}
 	
+	public TaskTag openmlTaskTag( int id, String tag ) throws Exception {
+		String qs = "&task_id=" + id + "&tag=" + tag;
+		Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.task.tag", qs, ash );
+        if( apiResult instanceof TaskTag){
+        	return (TaskTag) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to TaskTag");
+        }
+	}
+	
 	public TaskEvaluations openmlTaskEvaluations( int task_id ) throws Exception {
 		Object apiResult = HttpConnector.doApiRequest( API_URL, "openml.task.evaluations", "&task_id=" + task_id, ash );
-        if( apiResult instanceof TaskEvaluations){
+        if( apiResult instanceof TaskEvaluations) {
         	return (TaskEvaluations) apiResult;
         } else {
         	throw new DataFormatException("Casting Api Object to TaskEvaluations");
@@ -495,6 +530,16 @@ public class OpenmlConnector implements Serializable {
         }
 	}
 	
+	public RunTag openmlRunTag( int id, String tag ) throws Exception {
+		String qs = "&run_id=" + id + "&tag=" + tag;
+		Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.run.tag", qs, ash );
+        if( apiResult instanceof RunTag){
+        	return (RunTag) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to RunTag");
+        }
+	}
+	
 	public RunEvaluate openmlRunEvaluate( File description ) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
@@ -534,6 +579,16 @@ public class OpenmlConnector implements Serializable {
         	return (RunReset) apiResult;
         } else {
         	throw new DataFormatException("Casting Api Object to RunReset");
+        }
+	}
+	
+	public SetupTag openmlSetupTag( int id, String tag ) throws Exception {
+		String qs = "&setup_id=" + id + "&tag=" + tag;
+		Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.setup.tag", qs, ash );
+        if( apiResult instanceof SetupTag){
+        	return (SetupTag) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to SetupTag");
         }
 	}
 	
