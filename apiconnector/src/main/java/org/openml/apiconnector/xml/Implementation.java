@@ -19,8 +19,9 @@
  */
 package org.openml.apiconnector.xml;
 
-import org.openml.apiconnector.settings.Constants;
+import java.util.Arrays;
 
+import org.openml.apiconnector.settings.Constants;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class Implementation {
@@ -45,6 +46,7 @@ public class Implementation {
 	private String implement;
 	private Parameter[] parameter;
 	private Component[] component;
+	private String[] tag;
 	private String source_url;
 	private String binary_url;
 	private String source_format;
@@ -63,7 +65,7 @@ public class Implementation {
 	public Implementation(String name, String external_version, String description,
 			String[] creator, String[] contributor, String licence,
 			String language, String full_description,
-			String installation_notes, String dependencies) {
+			String installation_notes, String dependencies, String[] tag) {
 		super();
 		this.name = name;
 		this.external_version = external_version;
@@ -75,6 +77,7 @@ public class Implementation {
 		this.full_description = full_description;
 		this.installation_notes = installation_notes;
 		this.dependencies = dependencies;
+		this.tag = tag;
 	}
 	
 	public String getOml() {
@@ -160,6 +163,10 @@ public class Implementation {
 	public Component[] getComponent() {
 		return component;
 	}
+	
+	public String[] getTag() {
+		return tag;
+	}
 
 	public String getSource_url() {
 		return source_url;
@@ -183,6 +190,16 @@ public class Implementation {
 
 	public String getBinary_md5() {
 		return binary_md5;
+	}
+	
+	public void addTag( String new_tag ) {
+		// check if tag is not already present
+		if( tag != null ) {
+			if( Arrays.asList(tag).contains(new_tag) == true ) {
+				return;
+			}
+		}
+		tag = ArrayUtils.addAll( tag, new_tag );
 	}
 
 	public void addParameter(String name, String data_type, String default_value, String description) {

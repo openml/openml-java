@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -37,8 +38,9 @@ import org.openml.apiconnector.algorithms.Conversion;
  * 
  * @author J. N. van Rijn <j.n.van.rijn@liacs.leidenuniv.nl>
  */
-public class Config {
-
+public class Config implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	private boolean loaded = false;
 	private HashMap<String, String> config;
 	
@@ -104,6 +106,19 @@ public class Config {
 	 */
 	public String getServer() {
 		return get("server");
+	}
+	
+	public String[] getTags() {
+		String result = get("tags");
+		if( result == null ) {
+			return new String[0];
+		} else {
+			String[] tags = result.split(",");
+			for( int i = 0; i < tags.length; ++i ) {
+				tags[i] = tags[i].trim();
+			}
+			return tags;
+		}
 	}
 	
 	/**

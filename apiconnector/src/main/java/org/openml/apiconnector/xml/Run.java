@@ -19,6 +19,8 @@
  */
 package org.openml.apiconnector.xml;
 
+import java.util.Arrays;
+
 import org.openml.apiconnector.algorithms.MathHelper;
 import org.openml.apiconnector.settings.Constants;
 import org.apache.commons.lang3.ArrayUtils;
@@ -31,16 +33,18 @@ public class Run {
 	private String setup_string;
 	private String error_message;
 	private Parameter_setting[] parameter_settings;
+	private String[] tag;
 	private Data input_data;
 	private Data output_data;
 	
-	public Run( int task_id, String error_message, int implementation_id, String setup_string, Parameter_setting[] parameter_settings ) {
+	public Run( int task_id, String error_message, int implementation_id, String setup_string, Parameter_setting[] parameter_settings, String[] tags ) {
 		this.task_id = task_id;
 		this.implementation_id = implementation_id;
 		this.setup_string = setup_string;
 		this.error_message = error_message;
 		this.parameter_settings = parameter_settings;
 		
+		this.tag = tags;
 		this.output_data = new Data();
 		this.input_data = new Data();
 	}
@@ -65,8 +69,22 @@ public class Run {
 		return setup_string;
 	}
 	
+	public String[] getTag() {
+		return tag;
+	}
+	
 	public Parameter_setting[] getParameter_settings() {
 		return parameter_settings;
+	}
+
+	public void addTag( String new_tag ) {
+		// check if tag is not already present
+		if( tag != null ) {
+			if( Arrays.asList(tag).contains(new_tag) == true ) {
+				return;
+			}
+		}
+		tag = ArrayUtils.addAll( tag, new_tag );
 	}
 	
 	public void addInputData( String name, String url  ) {

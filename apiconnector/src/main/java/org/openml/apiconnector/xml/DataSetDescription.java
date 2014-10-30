@@ -21,7 +21,9 @@ package org.openml.apiconnector.xml;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Arrays;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.openml.apiconnector.algorithms.ArffHelper;
 import org.openml.apiconnector.settings.Constants;
 
@@ -44,6 +46,7 @@ public class DataSetDescription implements Serializable {
 	private String row_id_attribute;
 	private String default_target_attribute;
 	private String[] ignore_attribute;
+	private String[] tag;
 	private String visibility;
 	private String md5_checksum;
 	
@@ -66,6 +69,7 @@ public class DataSetDescription implements Serializable {
 			String row_id_attribute, 
 			String default_target_attribute,
 			String[] ignore_attribute,
+			String[] tag,
 			String md5_checksum) {
 		this.id = null;
 		this.name = name;
@@ -82,6 +86,7 @@ public class DataSetDescription implements Serializable {
 		this.row_id_attribute = row_id_attribute;
 		this.default_target_attribute = default_target_attribute;
 		this.ignore_attribute = ignore_attribute;
+		this.tag = tag;
 		this.md5_checksum = md5_checksum;
 	}
 	
@@ -201,6 +206,20 @@ public class DataSetDescription implements Serializable {
 
 	public String[] getIgnore_attribute() {
 		return ignore_attribute;
+	}
+	
+	public String[] getTag() {
+		return tag;
+	}
+	
+	public void addTag( String new_tag ) {
+		// check if tag is not already present
+		if( tag != null ) {
+			if( Arrays.asList(tag).contains(new_tag) == true ) {
+				return;
+			}
+		}
+		tag = ArrayUtils.addAll( tag, new_tag );
 	}
 
 	public String getVisibility() {

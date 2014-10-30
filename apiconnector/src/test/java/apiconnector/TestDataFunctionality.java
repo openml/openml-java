@@ -21,19 +21,12 @@ package apiconnector;
 
 import static org.junit.Assert.*;
 
-import java.util.Random;
-
 import org.junit.Test;
 import org.openml.apiconnector.io.OpenmlConnector;
-import org.openml.apiconnector.settings.Settings;
-import org.openml.apiconnector.xml.Data;
-import org.openml.apiconnector.xml.Data.DataSet;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataSetDescription;
-import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
-import com.thoughtworks.xstream.XStream;
 
 public class TestDataFunctionality {
 
@@ -47,7 +40,6 @@ public class TestDataFunctionality {
 	 */
 	@Test
 	public void testApiDataDownload() {
-		Random r = new Random( 0L );
 		OpenmlConnector apiconnector = new OpenmlConnector(server,username,password);
 		
 		try {

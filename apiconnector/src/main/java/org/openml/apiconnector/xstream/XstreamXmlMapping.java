@@ -85,6 +85,8 @@ public class XstreamXmlMapping {
 		xstream.addImplicitCollection(DataSetDescription.class, "creator", "oml:creator", String.class);
 		xstream.addImplicitCollection(DataSetDescription.class, "contributor", "oml:contributor", String.class);
 		xstream.addImplicitCollection(DataSetDescription.class, "ignore_attribute", "oml:ignore_attribute", String.class);
+		xstream.addImplicitCollection(DataSetDescription.class, "tag", "oml:tag", String.class);
+		
 		
 		xstream.aliasField("oml:id", DataSetDescription.class, "id");
 		xstream.aliasField("oml:name", DataSetDescription.class, "name");
@@ -167,6 +169,7 @@ public class XstreamXmlMapping {
 		xstream.addImplicitCollection(Implementation.class, "bibliographical_reference", "oml:bibliographical_reference", Implementation.Bibliographical_reference.class);
 		xstream.addImplicitCollection(Implementation.class, "parameter", "oml:parameter", Implementation.Parameter.class);
 		xstream.addImplicitCollection(Implementation.class, "component", "oml:component", Implementation.Component.class);
+		xstream.addImplicitCollection(Implementation.class, "tag", "oml:tag", String.class);
 		
 		xstream.aliasField("oml:id", Implementation.class, "id");
 		xstream.aliasField("oml:fullName", Implementation.class, "fullName");
@@ -298,6 +301,7 @@ public class XstreamXmlMapping {
 		xstream.alias("oml:run", Run.class);
 		xstream.aliasAttribute(Run.class, "oml", "xmlns:oml");
 		xstream.addImplicitCollection(Run.class, "parameter_settings", "oml:parameter_setting", Run.Parameter_setting.class);
+		xstream.addImplicitCollection(Run.class, "tag", "oml:tag", String.class);
 		
 		xstream.aliasField("oml:task_id", Run.class, "task_id");
 		xstream.aliasField("oml:implementation_id", Run.class, "implementation_id");
