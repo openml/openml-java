@@ -51,6 +51,7 @@ import org.openml.apiconnector.xml.SetupTag;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskEvaluations;
 import org.openml.apiconnector.xml.TaskTag;
+import org.openml.apiconnector.xml.Tasks;
 import org.openml.apiconnector.xml.UploadDataSet;
 import org.openml.apiconnector.xml.UploadImplementation;
 import org.openml.apiconnector.xml.UploadRun;
@@ -372,6 +373,15 @@ public class OpenmlConnector implements Serializable {
         }
 	}
 	
+	public Tasks openmlTasks( int task_type_id ) throws Exception {
+		Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.tasks", "&task_type_id=" + task_type_id, ash );
+        if( apiResult instanceof Tasks){
+        	return (Tasks) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to Tasks");
+        }
+	}
+	
 	/**
 	 * @param task_id - The numeric id of the task to be obtained.
 	 * @return Task - An object describing the task
@@ -379,7 +389,7 @@ public class OpenmlConnector implements Serializable {
 	 * server down, etc.
 	 */
 	public Task openmlTaskSearch( int task_id ) throws Exception {
-		Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.task.search", "&task_id=" + task_id, ash );
+		Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.task.get", "&task_id=" + task_id, ash );
         if( apiResult instanceof Task){
         	return (Task) apiResult;
         } else {

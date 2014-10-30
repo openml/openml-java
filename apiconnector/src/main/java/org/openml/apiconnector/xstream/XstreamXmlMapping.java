@@ -46,6 +46,7 @@ import org.openml.apiconnector.xml.SetupTag;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskEvaluations;
 import org.openml.apiconnector.xml.TaskTag;
+import org.openml.apiconnector.xml.Tasks;
 import org.openml.apiconnector.xml.UploadDataSet;
 import org.openml.apiconnector.xml.UploadImplementation;
 import org.openml.apiconnector.xml.UploadRun;
@@ -302,6 +303,16 @@ public class XstreamXmlMapping {
 		xstream.addImplicitCollection(TaskEvaluations.Evaluation.class, "measure", "oml:measure", TaskEvaluations.Evaluation.Measure.class);
 		xstream.useAttributeFor(TaskEvaluations.Evaluation.Measure.class, "name");
 		xstream.registerConverter(new ToAttributedValueConverter(TaskEvaluations.Evaluation.Measure.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
+		
+		// tasks (overview)
+		xstream.alias("oml:tasks", Tasks.class );
+		xstream.addImplicitCollection(Tasks.class, "task", "oml:task", Tasks.Task.class);
+
+		xstream.aliasField("oml:task_id", Tasks.Task.class, "task_id");
+		xstream.aliasField("oml:task_type", Tasks.Task.class, "task_type");
+		xstream.aliasField("oml:did", Tasks.Task.class, "did");
+		xstream.aliasField("oml:name", Tasks.Task.class, "name");
+		xstream.aliasField("oml:status", Tasks.Task.class, "status");
 		
 		// run
 		xstream.alias("oml:run", Run.class);
