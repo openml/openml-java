@@ -313,6 +313,11 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:did", Tasks.Task.class, "did");
 		xstream.aliasField("oml:name", Tasks.Task.class, "name");
 		xstream.aliasField("oml:status", Tasks.Task.class, "status");
+		xstream.addImplicitCollection(Tasks.Task.class, "qualities", "oml:quality", Tasks.Task.Quality.class);
+		xstream.useAttributeFor(Tasks.Task.Quality.class, "name");
+		xstream.registerConverter(new ToAttributedValueConverter(Tasks.Task.Quality.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
+		
+		
 		
 		// run
 		xstream.alias("oml:run", Run.class);

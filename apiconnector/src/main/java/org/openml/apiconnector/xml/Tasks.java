@@ -22,6 +22,7 @@ public class Tasks {
 		private int did;
 		private String name;
 		private String status;
+		private Quality[] qualities;
 		
 		public int getTask_id() {
 			return task_id;
@@ -37,6 +38,21 @@ public class Tasks {
 		}
 		public String getStatus() {
 			return status;
+		}
+		public Quality[] getQualities() {
+			return qualities;
+		}
+		
+		public static class Quality {
+			private String name;
+			private String value;
+			
+			public String getName() {
+				return name;
+			}
+			public String getValue() {
+				return value;
+			}
 		}
 	}
 }
