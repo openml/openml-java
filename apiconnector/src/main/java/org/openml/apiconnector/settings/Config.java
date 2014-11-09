@@ -77,6 +77,8 @@ public class Config implements Serializable {
 	
 	private void process( List<String> lines ) {
 		config = new HashMap<String, String>();
+		// default server, can be overridden. 
+		config.put("server", Settings.BASE_URL );
 		
 		for( String line : lines ) {
 			String[] l = line.split("=");
