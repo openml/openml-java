@@ -39,6 +39,7 @@ import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataQualityUpload;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.DataTag;
+import org.openml.apiconnector.xml.FileUpload;
 import org.openml.apiconnector.xml.Implementation;
 import org.openml.apiconnector.xml.ImplementationExists;
 import org.openml.apiconnector.xml.ImplementationTag;
@@ -589,6 +590,21 @@ public class OpenmlConnector implements Serializable {
         	return (RunReset) apiResult;
         } else {
         	throw new DataFormatException("Casting Api Object to RunReset");
+        }
+	}
+	
+	public FileUpload openmlFileUpload( File file ) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		if(Settings.API_VERBOSE_LEVEL >= Constants.VERBOSE_LEVEL_ARFF ) {
+			System.out.println( Conversion.fileToString(file) + "\n==========\n" );
+		}
+		params.addPart("file", new FileBody(file));
+		
+		Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.file.upload", "", params, ash);
+        if( apiResult instanceof FileUpload){
+        	return (FileUpload) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to UploadFile");
         }
 	}
 	

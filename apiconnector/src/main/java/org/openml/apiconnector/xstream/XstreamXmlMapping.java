@@ -27,6 +27,7 @@ import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataQualityUpload;
 import org.openml.apiconnector.xml.DataTag;
 import org.openml.apiconnector.xml.EvaluationScore;
+import org.openml.apiconnector.xml.FileUpload;
 import org.openml.apiconnector.xml.ImplementationTag;
 import org.openml.apiconnector.xml.RunDelete;
 import org.openml.apiconnector.xml.RunEvaluate;
@@ -363,7 +364,6 @@ public class XstreamXmlMapping {
 		// reset run
 		xstream.alias("oml:run_reset", RunReset.class);
 		xstream.aliasField("oml:id", RunReset.class, "run_id");
-		
 
 		// delete run
 		xstream.alias("oml:run_delete", RunDelete.class);
@@ -373,6 +373,10 @@ public class XstreamXmlMapping {
 		xstream.alias("oml:run_evaluate", RunEvaluate.class);
 		xstream.aliasField("oml:run_id", RunEvaluate.class, "run_id");
 		
+		// reset run
+		xstream.alias("oml:file_upload", FileUpload.class);
+		xstream.aliasField("oml:id", FileUpload.class, "id");
+		xstream.aliasField("oml:url", FileUpload.class, "url");
 		
 		// run getjob
 		xstream.alias("oml:job", Job.class);
