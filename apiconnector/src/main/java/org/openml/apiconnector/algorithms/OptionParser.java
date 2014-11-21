@@ -19,6 +19,8 @@
  */
 package org.openml.apiconnector.algorithms;
 
+import org.json.JSONArray;
+
 public class OptionParser {
 
 	/**
@@ -34,5 +36,20 @@ public class OptionParser {
 		return newArray;
 	}
 	
+	public static double[][] stringToArray( String input ) throws Exception {
+		JSONArray ja = new JSONArray( input );
+		
+		double[][] result = new double[ja.length()][ja.length()];
+		for( int i = 0; i < ja.length(); ++i ) {
+			JSONArray current = (JSONArray) ja.get(i);
+			if( current.length() < ja.length() ) { throw new Exception("Array dimensions not equal (i)."); }
+			for( int j = 0; j< current.length(); ++j ) {
+				if( j >= ja.length() ) { throw new Exception("Array dimensions not equal (ii)."); }
+				result[i][j] = current.getDouble( j );
+			}
+		}
+		
+		return result;
+	}
 	
 }

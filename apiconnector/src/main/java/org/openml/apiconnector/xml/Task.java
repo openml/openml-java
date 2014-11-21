@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import org.openml.apiconnector.algorithms.ArffHelper;
+import org.openml.apiconnector.algorithms.OptionParser;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Constants;
 
@@ -86,6 +87,7 @@ public class Task implements Serializable {
 		private String name;
 		private Data_set data_set;
 		private Estimation_procedure estimation_procedure;
+		String cost_matrix;
 		private Evaluation_measures evaluation_measures;
 		
 		public String getName() {
@@ -94,6 +96,14 @@ public class Task implements Serializable {
 
 		public Data_set getData_set() {
 			return data_set;
+		}
+		
+		public double[][] getCost_Matrix() throws Exception {
+			if( cost_matrix != null && cost_matrix.equals("") == false ) {
+				return OptionParser.stringToArray(cost_matrix);
+			} else { 
+				return null;
+			}
 		}
 		
 		public Estimation_procedure getEstimation_procedure() {

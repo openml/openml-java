@@ -93,6 +93,20 @@ public class TaskInformation {
 	
 	/**
 	 * @param t - Input Task. 
+	 * @return The cost matrix
+	 * @throws Exception
+	 */
+	public static double[][] getCostMatrix( Task t ) throws Exception {
+		for( int i = 0; i < t.getInputs().length; ++i ) {
+			if(t.getInputs()[i].getName().equals("cost_matrix") ) {
+				return t.getInputs()[i].getCost_Matrix();
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @param t - Input Task. 
 	 * @return The source data
 	 * @throws Exception
 	 */

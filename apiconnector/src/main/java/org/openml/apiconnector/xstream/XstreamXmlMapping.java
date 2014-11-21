@@ -253,6 +253,7 @@ public class XstreamXmlMapping {
 		xstream.alias("oml:data_set", Task.Input.Data_set.class);
 		xstream.alias("oml:estimation_procedure", Task.Input.Estimation_procedure.class);
 		xstream.alias("oml:feature", Task.Output.Predictions.Feature.class);
+		xstream.aliasField("oml:cost_matrix", Task.Input.class, "cost_matrix");
 		xstream.aliasAttribute(Task.class, "oml", "xmlns:oml");
 		
 		xstream.addImplicitCollection(Task.class, "inputs", "oml:input", Task.Input.class);
