@@ -117,6 +117,7 @@ public class Task implements Serializable {
 		public class Data_set implements Serializable {
 			private static final long serialVersionUID = 987612341029L;
 			private Integer data_set_id;
+			private Integer labeled_data_set_id;
 			private String target_feature;
 			
 			// do not serialize
@@ -124,6 +125,9 @@ public class Task implements Serializable {
 			
 			public Integer getData_set_id() {
 				return data_set_id;
+			}
+			public Integer getLabeled_data_set_id() {
+				return labeled_data_set_id;
 			}
 			public String getTarget_feature() {
 				return target_feature;

@@ -266,6 +266,7 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:task_id", Task.class, "task_id");
 		xstream.aliasField("oml:task_type", Task.class, "task_type");
 		xstream.aliasField("oml:data_set_id", Task.Input.Data_set.class, "data_set_id");
+		xstream.aliasField("oml:labeled_data_set_id", Task.Input.Data_set.class, "labeled_data_set_id");
 		xstream.aliasField("oml:target_feature", Task.Input.Data_set.class, "target_feature");
 		xstream.aliasField("oml:data_set", Task.Input.class, "data_set");
 		xstream.aliasField("oml:type", Task.Input.Estimation_procedure.class, "type");
