@@ -268,6 +268,9 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:data_set_id", Task.Input.Data_set.class, "data_set_id");
 		xstream.aliasField("oml:labeled_data_set_id", Task.Input.Data_set.class, "labeled_data_set_id");
 		xstream.aliasField("oml:target_feature", Task.Input.Data_set.class, "target_feature");
+		xstream.aliasField("oml:target_feature_left", Task.Input.Data_set.class, "target_feature_left");
+		xstream.aliasField("oml:target_feature_right", Task.Input.Data_set.class, "target_feature_right");
+		xstream.aliasField("oml:target_feature_event", Task.Input.Data_set.class, "target_feature_event");
 		xstream.aliasField("oml:data_set", Task.Input.class, "data_set");
 		xstream.aliasField("oml:type", Task.Input.Estimation_procedure.class, "type");
 		xstream.aliasField("oml:data_splits_url", Task.Input.Estimation_procedure.class, "data_splits_url");

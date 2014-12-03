@@ -119,6 +119,9 @@ public class Task implements Serializable {
 			private Integer data_set_id;
 			private Integer labeled_data_set_id;
 			private String target_feature;
+			private String target_feature_left;
+			private String target_feature_right;
+			private String target_feature_event;
 			
 			// do not serialize
 			private DataSetDescription dsdCache;
@@ -132,6 +135,16 @@ public class Task implements Serializable {
 			public String getTarget_feature() {
 				return target_feature;
 			}
+			public String getTarget_feature_left() {
+				return target_feature_left;
+			}
+			public String getTarget_feature_right() {
+				return target_feature_right;
+			}
+			public String getTarget_feature_event() {
+				return target_feature_event;
+			}
+			
 			public DataSetDescription getDataSetDescription( OpenmlConnector apiconnector ) throws Exception {
 				if(dsdCache == null) {
 					dsdCache = apiconnector.openmlDataDescription(data_set_id);
