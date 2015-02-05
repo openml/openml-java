@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.zip.DataFormatException;
 
 import org.json.JSONObject;
+import org.openml.apiconnector.algorithms.Caching;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.settings.Settings;
@@ -144,7 +145,7 @@ public class OpenmlConnector implements Serializable {
 		return ash.openmlAuthenticate();
 	}
 	
-	/**
+	/*/**
 	 * Retrieves an array of id's off all valid data sets in the system. 
 	 * 
 	 * @return Data - An object containing the all valid data id's
@@ -181,8 +182,14 @@ public class OpenmlConnector implements Serializable {
 	 * server down, etc.
 	 */
 	public DataSetDescription openmlDataDescription( int did ) throws Exception {
+		if( Settings.LOCAL_OPERATIONS ) {
+			String dsdString = Conversion.fileToString( Caching.cached("datadescription", did ) );
+			return (DataSetDescription) XstreamXmlMapping.getInstance().fromXML( dsdString );
+		}
+		
 		Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.description", "&data_id=" + did, ash );
         if( apiResult instanceof DataSetDescription){
+        	if( Settings.CACHE_ALLOWED ) { Caching.cache( apiResult, "datadescription", did ); }
         	return (DataSetDescription) apiResult;
         } else {
         	throw new DataFormatException("Casting Api Object to DataSetDescription");
@@ -390,8 +397,14 @@ public class OpenmlConnector implements Serializable {
 	 * server down, etc.
 	 */
 	public Task openmlTaskSearch( int task_id ) throws Exception {
+		if( Settings.LOCAL_OPERATIONS ) {
+			String taskXml = Conversion.fileToString( Caching.cached("task", task_id ) );
+			return (Task) XstreamXmlMapping.getInstance().fromXML( taskXml );
+		}
+		
 		Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.task.get", "&task_id=" + task_id, ash );
-        if( apiResult instanceof Task){
+		if( apiResult instanceof Task){
+        	if( Settings.CACHE_ALLOWED ) { Caching.cache( apiResult, "task", task_id ); }
         	return (Task) apiResult;
         } else {
         	throw new DataFormatException("Casting Api Object to Task");

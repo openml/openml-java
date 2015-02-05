@@ -37,6 +37,8 @@ public class Settings {
 	/**
 	 * The directory where cache files are saved. 
 	 */
-	public static final String CACHE_DIRECTORY = "data/.openml/cache/";
+	public static final String CACHE_DIRECTORY = Constants.OPENML_DIRECTORY + "/cache/";
+	
+	public static boolean LOCAL_OPERATIONS = false;
 	
 }

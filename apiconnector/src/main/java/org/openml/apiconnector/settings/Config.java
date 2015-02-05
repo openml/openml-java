@@ -49,7 +49,8 @@ public class Config implements Serializable {
 	 */
 	public Config() {
 		try {
-			load(new File("openml.conf"));
+			String configfile = Constants.OPENML_DIRECTORY + "/openml.conf";
+			load(new File( configfile ) );
 		} catch( IOException ioe ) {
 			Conversion.log("Warning", "Load Config", "Could not locate default config file.");
 		}

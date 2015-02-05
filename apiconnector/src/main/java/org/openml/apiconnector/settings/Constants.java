@@ -37,6 +37,8 @@ public class Constants {
 	 */
 	public static final String OPENML_XMLNS = "http://openml.org/openml";
 	
+	public static final String OPENML_DIRECTORY = System.getProperty("user.home") + "/.openml";
+	
 	public static final int VERBOSE_LEVEL_XML = 1;
 	public static final int VERBOSE_LEVEL_ARFF = 2;
 }

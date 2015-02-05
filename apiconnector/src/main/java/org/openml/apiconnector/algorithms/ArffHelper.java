@@ -37,14 +37,14 @@ public class ArffHelper {
 	 * @return A file pointer to the specified arff file.
 	 * @throws IOException
 	 */
-	public static File downloadAndCache( String type, String identifier, String url, String serverMd5 ) throws IOException {
+	public static File downloadAndCache( String type, int identifier, String url, String serverMd5 ) throws IOException {
 		File directory = new File( Settings.CACHE_DIRECTORY + type + "/" );
 		File file = new File( directory.getAbsolutePath() + "/" + identifier );
 		File dataset;
 		
 		if( file.exists() ) {
 			String clientMd5 = Hashing.md5(file);
-			if( clientMd5.equals( serverMd5.trim() ) ) {
+			if( serverMd5 == null || clientMd5.equals( serverMd5.trim() ) ) {
 				Conversion.log( "INFO", "ARFF Cache", "Loaded " + type + " " + identifier + " from cache. " );
 				return file;
 			} else {
@@ -52,12 +52,16 @@ public class ArffHelper {
 			}
 		}
 		
+		if( Settings.LOCAL_OPERATIONS ) {
+			throw new IOException("Cache file of " + type + " #" + identifier + " not available, and only local operations are allowed. " );
+		}
+		
 		if( Settings.CACHE_ALLOWED ) {
 			directory.mkdirs();
 			dataset = OpenmlConnector.getFileFromUrl( url, file.getAbsolutePath() );
 			Conversion.log( "INFO", "ARFF Cache", "Stored " + type + " " + identifier + " to cache. " );
 		} else {
-			dataset = Conversion.stringToTempFile( OpenmlConnector.getStringFromUrl( url ), identifier, "arff" );
+			dataset = Conversion.stringToTempFile( OpenmlConnector.getStringFromUrl( url ), identifier + "", "arff" );
 		}
 		return dataset;
 	}

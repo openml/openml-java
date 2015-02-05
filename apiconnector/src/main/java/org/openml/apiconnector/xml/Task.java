@@ -27,6 +27,7 @@ import org.openml.apiconnector.algorithms.ArffHelper;
 import org.openml.apiconnector.algorithms.OptionParser;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Constants;
+import org.openml.apiconnector.settings.Settings;
 
 public class Task implements Serializable {
 	private static final long serialVersionUID = 987612341009L;
@@ -174,12 +175,15 @@ public class Task implements Serializable {
 				return parameters;
 			}
 			
-			public File getDataSplits() throws IOException {
+			public File getDataSplits( int task_id ) throws IOException {
 				if( data_splits_cache == null ) {
 					// TODO: we want to get rid of the server calculated Md5 ... 
-					String serverMd5 = OpenmlConnector.getStringFromUrl( getData_splits_url().replace("/get/", "/md5/") );
-					String identifier = getData_splits_url().substring( getData_splits_url().lastIndexOf('/') + 1 );
-					data_splits_cache = ArffHelper.downloadAndCache("splits", identifier, getData_splits_url(), serverMd5 );
+					String serverMd5 = null;
+					if( Settings.LOCAL_OPERATIONS ) {
+						serverMd5 = OpenmlConnector.getStringFromUrl( getData_splits_url().replace("/get/", "/md5/") );
+					}
+					//	String identifier = getData_splits_url().substring( getData_splits_url().lastIndexOf('/') + 1 );
+					data_splits_cache = ArffHelper.downloadAndCache("splits", task_id, getData_splits_url(), serverMd5 );
 				}
 				return data_splits_cache;
 			}

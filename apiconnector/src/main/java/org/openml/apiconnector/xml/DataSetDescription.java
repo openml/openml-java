@@ -230,17 +230,13 @@ public class DataSetDescription implements Serializable {
 		return md5_checksum;
 	}
 	
-	private String getCacheFileName() {
-		return "dataset_" + getId() + "_" + getName() + ".arff";
-	}
-	
 	public File getDataset( String session_hash ) throws Exception {
 		// for privacy settings
 		String url_suffix = "";
 		if( session_hash != null ) { url_suffix = "?session_hash=" + session_hash; }
 		
 		if( dataset_cache == null ) 
-			dataset_cache = ArffHelper.downloadAndCache( "dataset", getCacheFileName(), getUrl() + url_suffix, getMd5_checksum() );
+			dataset_cache = ArffHelper.downloadAndCache( "dataset", getId(), getUrl() + url_suffix, getMd5_checksum() );
 		return dataset_cache;
 	}
 }
