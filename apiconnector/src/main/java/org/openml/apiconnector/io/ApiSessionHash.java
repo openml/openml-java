@@ -40,12 +40,14 @@ class ApiSessionHash implements Serializable {
 	private String password;
 	private String sessionHash;
 	private long validUntil;
+	private int verboseLevel;
 	
 	/**
 	 * Creates a new session hash. 
 	 */
-	public ApiSessionHash( String server ) {
+	public ApiSessionHash( String server, int verboseLevel ) {
 		this.server = server;
+		this.verboseLevel = verboseLevel;
 		sessionHash = null;
 		username = null;
 	}
@@ -159,7 +161,7 @@ class ApiSessionHash implements Serializable {
 		params.addPart("username",new StringBody(username));
 		params.addPart("password",new StringBody(Hashing.md5(password)));
 		
-		Object apiResult = HttpConnector.doApiRequest(server,"openml.authenticate", "", params, null);
+		Object apiResult = HttpConnector.doApiRequest(server,"openml.authenticate", "", params, null, verboseLevel);
         if( apiResult instanceof Authenticate){
         	return (Authenticate) apiResult;
         } else {

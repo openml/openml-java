@@ -14,7 +14,6 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.openml.apiconnector.settings.Constants;
-import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xml.ApiError;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
@@ -26,7 +25,7 @@ public class HttpConnector implements Serializable {
 	
 	private static final long serialVersionUID = -8589069573065947493L;
 	
-	public static Object doApiRequest( String url, String function, String queryString, MultipartEntity entity, ApiSessionHash ash ) throws Exception {
+	public static Object doApiRequest( String url, String function, String queryString, MultipartEntity entity, ApiSessionHash ash, int apiVerboseLevel ) throws Exception {
 		XStream xstream = XstreamXmlMapping.getInstance();
 		
 		if( ash != null ) {
@@ -61,8 +60,9 @@ public class HttpConnector implements Serializable {
 		} finally {
             try { httpclient.getConnectionManager().shutdown(); } catch (Exception ignore) {}
         }
-		if(Settings.API_VERBOSE_LEVEL >= Constants.VERBOSE_LEVEL_XML)
+		if(apiVerboseLevel >= Constants.VERBOSE_LEVEL_XML) {
 			System.out.println("===== REQUEST URI: " + requestUri + " (Content Length: "+contentLength+") =====\n" + result + "\n=====\n");
+		}
 		
 		Object apiResult = xstream.fromXML(result);
 		if(apiResult instanceof ApiError) {
@@ -72,8 +72,8 @@ public class HttpConnector implements Serializable {
 		return apiResult;
 	}
 	
-	public static Object doApiRequest(String url, String function, String queryString, ApiSessionHash ash) throws Exception {
-		return doApiRequest(url, function, queryString, null, ash);
+	public static Object doApiRequest(String url, String function, String queryString, ApiSessionHash ash, int apiVerboseLevel) throws Exception {
+		return doApiRequest(url, function, queryString, null, ash, apiVerboseLevel);
 	}
 	
 	private static String httpEntitiToString(HttpEntity resEntity) throws IOException {
