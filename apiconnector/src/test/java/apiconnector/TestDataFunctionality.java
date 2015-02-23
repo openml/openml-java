@@ -53,9 +53,9 @@ public class TestDataFunctionality {
 			DataSet toCheck = allDataIds[Math.abs(r.nextInt() % allDataIds.length)];*/
 			int probe = 1170;
 			
-			DataSetDescription dsd = apiconnector.openmlDataDescription( probe );
-			DataFeature features = apiconnector.openmlDataFeatures( probe );
-			DataQuality qualities = apiconnector.openmlDataQuality( probe );
+			DataSetDescription dsd = apiconnector.dataDescription( probe );
+			DataFeature features = apiconnector.dataFeatures( probe );
+			DataQuality qualities = apiconnector.dataQuality( probe );
 			
 			// very easy checks, should all pass
 			assertTrue( dsd.getId() == probe );
