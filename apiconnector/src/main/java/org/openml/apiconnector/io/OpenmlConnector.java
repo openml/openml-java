@@ -360,6 +360,12 @@ public class OpenmlConnector implements Serializable {
         }
     }
 
+    /**
+     * List tasks of specific type
+     * @param task_type_id
+     * @return
+     * @throws Exception
+     */
     public Tasks listTasks( int task_type_id ) throws Exception {
         Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.tasks", "&task_type_id=" + task_type_id, ash, verboseLevel );
         if( apiResult instanceof Tasks){
