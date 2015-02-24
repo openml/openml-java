@@ -150,7 +150,7 @@ public class OpenmlConnector implements Serializable {
      * @throws Exception - Can be: API Error (see documentation at openml.org),
      * server down, etc.
      */
-    public DataSetDescription dataGet( int did ) throws Exception {
+    public DataSetDescription getData( int did ) throws Exception {
         return dataDescription(did);
     }
 
