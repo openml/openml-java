@@ -131,6 +131,10 @@ public class OpenmlConnector implements Serializable {
 		verboseLevel = level;
 	}
 	
+	public int getVerboseLevel() {
+		return verboseLevel;
+	}
+	
 	/**
 	 * Returns the URL to which api calls are made
 	 * 
@@ -202,6 +206,19 @@ public class OpenmlConnector implements Serializable {
         	return (DataSetDescription) apiResult;
         } else {
         	throw new DataFormatException("Casting Api Object to DataSetDescription");
+        }
+	}
+	
+
+	public DataTag openmlDataDelete( int id ) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("data_id", new StringBody(""+id));
+		
+		Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.delete", "", params, ash, verboseLevel );
+        if( apiResult instanceof DataTag){
+        	return (DataTag) apiResult;
+        } else {
+        	throw new DataFormatException("Casting Api Object to DataTag");
         }
 	}
 	

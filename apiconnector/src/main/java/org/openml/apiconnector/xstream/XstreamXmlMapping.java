@@ -20,6 +20,7 @@
 package org.openml.apiconnector.xstream;
 
 import org.openml.apiconnector.xml.Data;
+import org.openml.apiconnector.xml.DataDelete;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataFeatureUpload;
 import org.openml.apiconnector.xml.DataQuality;
@@ -166,6 +167,10 @@ public class XstreamXmlMapping {
 		// upload data set
 		xstream.alias("oml:upload_data_set", UploadDataSet.class);
 		xstream.aliasField("oml:id", UploadDataSet.class, "id");
+		
+		// data delete
+		xstream.alias("oml:data_delete", DataDelete.class);
+		xstream.aliasField("oml:id", DataDelete.class, "id");
 		
 		// implementation 
 		xstream.alias("oml:implementation", Implementation.class);

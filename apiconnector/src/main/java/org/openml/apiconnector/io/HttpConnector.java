@@ -67,7 +67,11 @@ public class HttpConnector implements Serializable {
 		Object apiResult = xstream.fromXML(result);
 		if(apiResult instanceof ApiError) {
 			ApiError apiError = (ApiError) apiResult;
-			throw new ApiException( Integer.parseInt( apiError.getCode() ), apiError.getMessage() );
+			String message = apiError.getMessage();
+			if( apiError.getAdditional_information() != null ) {
+				message += ": " + apiError.getAdditional_information();
+			}
+			throw new ApiException( Integer.parseInt( apiError.getCode() ), message );
 		}
 		return apiResult;
 	}
