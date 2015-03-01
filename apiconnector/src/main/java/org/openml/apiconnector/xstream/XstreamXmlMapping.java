@@ -19,38 +19,7 @@
  */
 package org.openml.apiconnector.xstream;
 
-import org.openml.apiconnector.xml.Data;
-import org.openml.apiconnector.xml.DataFeature;
-import org.openml.apiconnector.xml.DataFeatureUpload;
-import org.openml.apiconnector.xml.DataQuality;
-import org.openml.apiconnector.xml.DataQualityList;
-import org.openml.apiconnector.xml.DataQualityUpload;
-import org.openml.apiconnector.xml.DataTag;
-import org.openml.apiconnector.xml.EvaluationScore;
-import org.openml.apiconnector.xml.FileUpload;
-import org.openml.apiconnector.xml.ImplementationTag;
-import org.openml.apiconnector.xml.RunDelete;
-import org.openml.apiconnector.xml.RunEvaluate;
-import org.openml.apiconnector.xml.RunEvaluation;
-import org.openml.apiconnector.xml.ImplementationDelete;
-import org.openml.apiconnector.xml.ImplementationExists;
-import org.openml.apiconnector.xml.ImplementationOwned;
-import org.openml.apiconnector.xml.Authenticate;
-import org.openml.apiconnector.xml.DataSetDescription;
-import org.openml.apiconnector.xml.ApiError;
-import org.openml.apiconnector.xml.Implementation;
-import org.openml.apiconnector.xml.Job;
-import org.openml.apiconnector.xml.Run;
-import org.openml.apiconnector.xml.RunReset;
-import org.openml.apiconnector.xml.RunTag;
-import org.openml.apiconnector.xml.SetupTag;
-import org.openml.apiconnector.xml.Task;
-import org.openml.apiconnector.xml.TaskEvaluations;
-import org.openml.apiconnector.xml.TaskTag;
-import org.openml.apiconnector.xml.Tasks;
-import org.openml.apiconnector.xml.UploadDataSet;
-import org.openml.apiconnector.xml.UploadImplementation;
-import org.openml.apiconnector.xml.UploadRun;
+import org.openml.apiconnector.xml.*;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
@@ -159,6 +128,12 @@ public class XstreamXmlMapping {
         // data qualities list
         xstream.alias("oml:data_qualities_list", DataQualityList.class);
         xstream.addImplicitCollection(DataQualityList.class, "quality", "oml:quality", String.class);
+
+        // data licences list
+        xstream.alias("oml:data_licences", LicencesList.class);
+        xstream.aliasAttribute(LicencesList.class, "oml", "xmlns:oml");
+        xstream.aliasField("oml:licences", LicencesList.class, "licences");
+        xstream.addImplicitCollection(LicencesList.Licences.class, "licences", "oml:licence", String.class);
 
         // data features upload
         xstream.alias("oml:data_features_upload", DataFeatureUpload.class);
