@@ -199,6 +199,15 @@ public class OpenmlConnector implements Serializable {
         }
     }
 
+    public LicencesList listLicences() throws Exception {
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.licences", "", ash, verboseLevel);
+        if (apiResult instanceof LicencesList) {
+            return (LicencesList) apiResult;
+        } else {
+            throw new DataFormatException("Casting Api Object to LicencesList");
+        }
+    }
+
     /**
      * Retrieves the features of a specified data set.
      *
