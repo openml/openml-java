@@ -55,7 +55,7 @@ public class TestDataFunctionality {
 			
 			DataSetDescription dsd = apiconnector.dataDescription( probe );
 			DataFeature features = apiconnector.dataFeatures( probe );
-			DataQuality qualities = apiconnector.dataQuality( probe );
+			DataQuality qualities = apiconnector.dataQualities( probe );
 			
 			// very easy checks, should all pass
 			assertTrue( dsd.getId() == probe );
