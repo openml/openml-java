@@ -50,13 +50,17 @@ public class OpenmlConnector implements Serializable {
      */
     private int verboseLevel = 0;
 
-    private final ApiSessionHash ash;
+    private final ApiSessionHash sessionHash;
 
     private final String API_URL;
 
+    /**
+     * Creates the instance of the openMl api connector
+     * @param url Url of the openMl API
+     */
     public OpenmlConnector( String url ) {
         this.API_URL = url;
-        this.ash = new ApiSessionHash(this.API_URL, verboseLevel);
+        this.sessionHash = new ApiSessionHash(this.API_URL, verboseLevel);
     }
 
     /**
@@ -64,16 +68,18 @@ public class OpenmlConnector implements Serializable {
      */
     public OpenmlConnector() {
         this.API_URL = Settings.BASE_URL;
-        this.ash = new ApiSessionHash(this.API_URL, verboseLevel);
+        this.sessionHash = new ApiSessionHash(this.API_URL, verboseLevel);
     }
 
     /**
      * Creates a default OpenML Connector with authentication
+     * @param username Username that will be used to log into OenMl API
+     * @param password Password that will be used to log into OpenML API
      */
     public OpenmlConnector( String username, String password ) {
         this.API_URL = Settings.BASE_URL;
-        this.ash = new ApiSessionHash(this.API_URL, verboseLevel);
-        ash.set(username,password);
+        this.sessionHash = new ApiSessionHash(this.API_URL, verboseLevel);
+        sessionHash.set(username, password);
     }
 
     /**
@@ -81,24 +87,30 @@ public class OpenmlConnector implements Serializable {
      */
     public OpenmlConnector( String url, String username, String password ){
         this.API_URL = url;
-        this.ash = new ApiSessionHash(url, verboseLevel);
-        ash.set(username,password);
+        this.sessionHash = new ApiSessionHash(url, verboseLevel);
+        sessionHash.set(username, password);
     }
 
+    /**
+     * Sets crendetial and automatically connect to the service using provided credentials
+     * @param username
+     * @param password
+     * @return
+     */
     public boolean setCredentials(String username, String password) {
-        return ash.set(username,password);
+        return sessionHash.set(username,password);
     }
 
     public boolean checkCredentials() {
-        return ash.checkCredentials();
+        return sessionHash.checkCredentials();
     }
 
     public boolean checkCredentials(String username, String password) {
-        return ash.checkCredentials(username, password);
+        return sessionHash.checkCredentials(username, password);
     }
 
     public String getSessionHash() throws Exception {
-        return ash.getSessionHash();
+        return sessionHash.getSessionHash();
     }
 
     public void setVerboseLevel( int level ) {
@@ -123,7 +135,7 @@ public class OpenmlConnector implements Serializable {
      * server down, etc.
      */
     public Authenticate authenticate() throws Exception {
-        return ash.openmlAuthenticate();
+        return sessionHash.openmlAuthenticate();
     }
 
     /**
@@ -134,7 +146,7 @@ public class OpenmlConnector implements Serializable {
      * server down, etc.
      */
     public Data listData() throws Exception {
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data", "", ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data", "", sessionHash, verboseLevel );
         if( apiResult instanceof Data){
             return (Data) apiResult;
         } else {
@@ -168,7 +180,7 @@ public class OpenmlConnector implements Serializable {
             return (DataSetDescription) XstreamXmlMapping.getInstance().fromXML( dsdString );
         }
 
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.description", "&data_id=" + did, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.description", "&data_id=" + did, sessionHash, verboseLevel );
         if( apiResult instanceof DataSetDescription){
             if( Settings.CACHE_ALLOWED ) { Caching.cache( apiResult, "datadescription", did ); }
             return (DataSetDescription) apiResult;
@@ -179,7 +191,7 @@ public class OpenmlConnector implements Serializable {
 
     public DataTag dataTag( int id, String tag ) throws Exception {
         String qs = "&data_id=" + id + "&tag=" + tag;
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.tag", qs, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.tag", qs, sessionHash, verboseLevel );
         if( apiResult instanceof DataTag){
             return (DataTag) apiResult;
         } else {
@@ -196,7 +208,7 @@ public class OpenmlConnector implements Serializable {
      * server down, etc.
      */
     public DataFeature dataFeatures( int did ) throws Exception {
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.features", "&data_id=" + did, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.features", "&data_id=" + did, sessionHash, verboseLevel );
         if( apiResult instanceof DataFeature){
             return (DataFeature) apiResult;
         } else {
@@ -213,7 +225,7 @@ public class OpenmlConnector implements Serializable {
      * server down, etc.
      */
     public DataQuality dataQuality( int did ) throws Exception {
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.qualities", "&data_id=" + did, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.qualities", "&data_id=" + did, sessionHash, verboseLevel );
         if( apiResult instanceof DataQuality){
             return (DataQuality) apiResult;
         } else {
@@ -238,7 +250,7 @@ public class OpenmlConnector implements Serializable {
         if( interval_end   != null ) { queryString += "&interval_end=" + interval_end; }
         if( interval_size  != null ) { queryString += "&interval_size=" + interval_size; }
 
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.qualities", queryString, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.qualities", queryString, sessionHash, verboseLevel );
 
         if( apiResult instanceof DataQuality){
             return (DataQuality) apiResult;
@@ -255,7 +267,7 @@ public class OpenmlConnector implements Serializable {
             System.out.println( Conversion.fileToString(description) + "\n==========\n" );
         }
 
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.features.upload", "", params, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.features.upload", "", params, sessionHash, verboseLevel );
         if( apiResult instanceof DataFeatureUpload){
             return (DataFeatureUpload) apiResult;
         } else {
@@ -267,7 +279,7 @@ public class OpenmlConnector implements Serializable {
         MultipartEntity params = new MultipartEntity();
         params.addPart("description", new FileBody(description));
 
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.qualities.upload", "", params, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.qualities.upload", "", params, sessionHash, verboseLevel );
         if( apiResult instanceof DataQualityUpload){
             return (DataQualityUpload) apiResult;
         } else {
@@ -276,7 +288,7 @@ public class OpenmlConnector implements Serializable {
     }
 
     public DataQualityList listDataQuality() throws Exception {
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.qualities.list", "", ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.qualities.list", "", sessionHash, verboseLevel );
         if( apiResult instanceof DataQualityList){
             return (DataQualityList) apiResult;
         } else {
@@ -291,7 +303,7 @@ public class OpenmlConnector implements Serializable {
      * server down, etc.
      */
     public Implementation getImplementation(int implementation_id) throws Exception {
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.implementation.get", "&implementation_id=" + implementation_id, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.implementation.get", "&implementation_id=" + implementation_id, sessionHash, verboseLevel );
         if( apiResult instanceof Implementation){
             return (Implementation) apiResult;
         } else {
@@ -301,7 +313,7 @@ public class OpenmlConnector implements Serializable {
 
     public ImplementationTag tagImplementation( int id, String tag ) throws Exception {
         String qs = "&implementation_id=" + id + "&tag=" + tag;
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.implementation.tag", qs, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.implementation.tag", qs, sessionHash, verboseLevel );
         if( apiResult instanceof ImplementationTag){
             return (ImplementationTag) apiResult;
         } else {
@@ -317,7 +329,7 @@ public class OpenmlConnector implements Serializable {
     public ImplementationOwned verifyImplementationOwnership() throws Exception {
         MultipartEntity params = new MultipartEntity();
 
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.implementation.owned", "", params, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.implementation.owned", "", params, sessionHash, verboseLevel );
         if( apiResult instanceof ImplementationOwned){
             return (ImplementationOwned) apiResult;
         } else {
@@ -335,7 +347,7 @@ public class OpenmlConnector implements Serializable {
         MultipartEntity params = new MultipartEntity();
         params.addPart("implementation_id",new StringBody(""+id));
 
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.implementation.delete", "", params, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.implementation.delete", "", params, sessionHash, verboseLevel );
         if( apiResult instanceof ImplementationDelete){
             return (ImplementationDelete) apiResult;
         } else {
@@ -352,7 +364,7 @@ public class OpenmlConnector implements Serializable {
      * server down, etc.
      */
     public ImplementationExists implementationExists( String name, String external_version ) throws Exception {
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.implementation.exists", "&name=" + name + "&external_version=" + external_version, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.implementation.exists", "&name=" + name + "&external_version=" + external_version, sessionHash, verboseLevel );
         if( apiResult instanceof ImplementationExists){
             return (ImplementationExists) apiResult;
         } else {
@@ -367,7 +379,7 @@ public class OpenmlConnector implements Serializable {
      * @throws Exception
      */
     public Tasks listTasks( int task_type_id ) throws Exception {
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.tasks", "&task_type_id=" + task_type_id, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.tasks", "&task_type_id=" + task_type_id, sessionHash, verboseLevel );
         if( apiResult instanceof Tasks){
             return (Tasks) apiResult;
         } else {
@@ -387,7 +399,7 @@ public class OpenmlConnector implements Serializable {
             return (Task) XstreamXmlMapping.getInstance().fromXML( taskXml );
         }
 
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.task.get", "&task_id=" + task_id, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.task.get", "&task_id=" + task_id, sessionHash, verboseLevel );
         if( apiResult instanceof Task){
             if( Settings.CACHE_ALLOWED ) { Caching.cache( apiResult, "task", task_id ); }
             return (Task) apiResult;
@@ -398,7 +410,7 @@ public class OpenmlConnector implements Serializable {
 
     public TaskTag tagTask( int id, String tag ) throws Exception {
         String qs = "&task_id=" + id + "&tag=" + tag;
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.task.tag", qs, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.task.tag", qs, sessionHash, verboseLevel );
         if( apiResult instanceof TaskTag){
             return (TaskTag) apiResult;
         } else {
@@ -407,7 +419,7 @@ public class OpenmlConnector implements Serializable {
     }
 
     public TaskEvaluations taskEvaluations( int task_id ) throws Exception {
-        Object apiResult = HttpConnector.doApiRequest( API_URL, "openml.task.evaluations", "&task_id=" + task_id, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest( API_URL, "openml.task.evaluations", "&task_id=" + task_id, sessionHash, verboseLevel );
         if( apiResult instanceof TaskEvaluations) {
             return (TaskEvaluations) apiResult;
         } else {
@@ -421,7 +433,7 @@ public class OpenmlConnector implements Serializable {
         if( interval_end   != null ) { queryString += "&interval_end=" + interval_end; }
         if( interval_size  != null ) { queryString += "&interval_size=" + interval_size; }
 
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.task.evaluations", queryString, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.task.evaluations", queryString, sessionHash, verboseLevel );
         if( apiResult instanceof TaskEvaluations){
             return (TaskEvaluations) apiResult;
         } else {
@@ -441,7 +453,7 @@ public class OpenmlConnector implements Serializable {
         params.addPart("description", new FileBody(description));
         if( dataset != null) params.addPart("dataset", new FileBody(dataset));
 
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.upload", "", params, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.upload", "", params, sessionHash, verboseLevel );
         if( apiResult instanceof UploadDataSet){
             return (UploadDataSet) apiResult;
         } else {
@@ -487,7 +499,7 @@ public class OpenmlConnector implements Serializable {
         if(binary != null)
             params.addPart("binary", new FileBody(binary));
 
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.implementation.upload", "", params, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.implementation.upload", "", params, sessionHash, verboseLevel );
         if( apiResult instanceof UploadImplementation){
             return (UploadImplementation) apiResult;
         } else {
@@ -515,7 +527,7 @@ public class OpenmlConnector implements Serializable {
         for( String s : output_files.keySet() ) {
             params.addPart(s,new FileBody(output_files.get(s)));
         }
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.run.upload", "", params, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.run.upload", "", params, sessionHash, verboseLevel );
         if( apiResult instanceof UploadRun){
             return (UploadRun) apiResult;
         } else {
@@ -525,7 +537,7 @@ public class OpenmlConnector implements Serializable {
 
     public RunTag tagRun( int id, String tag ) throws Exception {
         String qs = "&run_id=" + id + "&tag=" + tag;
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.run.tag", qs, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.run.tag", qs, sessionHash, verboseLevel );
         if( apiResult instanceof RunTag){
             return (RunTag) apiResult;
         } else {
@@ -537,7 +549,7 @@ public class OpenmlConnector implements Serializable {
         MultipartEntity params = new MultipartEntity();
         params.addPart("description", new FileBody(description));
 
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.run.evaluate", "", params, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.run.evaluate", "", params, sessionHash, verboseLevel );
         if( apiResult instanceof RunEvaluate){
             return (RunEvaluate) apiResult;
         } else {
@@ -546,7 +558,7 @@ public class OpenmlConnector implements Serializable {
     }
 
     public Run getRun(int runId) throws Exception {
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.run.get", "&run_id=" + runId, ash, verboseLevel);
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.run.get", "&run_id=" + runId, sessionHash, verboseLevel);
         if( apiResult instanceof Run){
             return (Run) apiResult;
         } else {
@@ -564,7 +576,7 @@ public class OpenmlConnector implements Serializable {
         MultipartEntity params = new MultipartEntity();
         params.addPart("run_id",new StringBody(""+id));
 
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.run.delete", "", params, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.run.delete", "", params, sessionHash, verboseLevel );
         if( apiResult instanceof RunDelete){
             return (RunDelete) apiResult;
         } else {
@@ -576,7 +588,7 @@ public class OpenmlConnector implements Serializable {
         MultipartEntity params = new MultipartEntity();
         params.addPart("run_id", new StringBody(""+run_id));
 
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.run.reset", "", params, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.run.reset", "", params, sessionHash, verboseLevel );
         if( apiResult instanceof RunReset){
             return (RunReset) apiResult;
         } else {
@@ -591,7 +603,7 @@ public class OpenmlConnector implements Serializable {
         }
         params.addPart("file", new FileBody(file));
 
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.file.upload", "", params, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.file.upload", "", params, sessionHash, verboseLevel );
         if( apiResult instanceof FileUpload){
             return (FileUpload) apiResult;
         } else {
@@ -601,7 +613,7 @@ public class OpenmlConnector implements Serializable {
 
     public SetupTag setupTag( int id, String tag ) throws Exception {
         String qs = "&setup_id=" + id + "&tag=" + tag;
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.setup.tag", qs, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.setup.tag", qs, sessionHash, verboseLevel );
         if( apiResult instanceof SetupTag){
             return (SetupTag) apiResult;
         } else {
@@ -619,7 +631,7 @@ public class OpenmlConnector implements Serializable {
      * server down, no tasks available for this workbench.
      */
     public Job jobGet( String workbench, String task_type_id ) throws Exception {
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.job.get", "&workbench=" + workbench + "&task_type_id=" + task_type_id, ash, verboseLevel );
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.job.get", "&workbench=" + workbench + "&task_type_id=" + task_type_id, sessionHash, verboseLevel );
         if( apiResult instanceof Job ){
             return (Job) apiResult;
         } else {
@@ -663,7 +675,7 @@ public class OpenmlConnector implements Serializable {
 
     public URL getOpenmlFileUrl( int id, String filename ) throws Exception {
         if( filename == null ) filename = "file";
-        String suffix = "?session_hash=" + ash.getSessionHash();
+        String suffix = "?session_hash=" + sessionHash.getSessionHash();
         return new URL( API_URL + "data/download/" + id + "/" + filename + suffix );
     }
 }
