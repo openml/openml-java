@@ -19,7 +19,7 @@ public class TestAuthentication {
 	public void loginSucces() {
 		try {
 			OpenmlConnector con = new OpenmlConnector(server, username, password);
-			Authenticate auth = con.openmlAuthenticate();
+			Authenticate auth = con.authenticate();
 			long validUntil = DateParser.mysqlDateToTimeStamp(auth.getValidUntil(),auth.getTimezone());
 			Assert.assertTrue( validUntil > new Date().getTime() + Constants.DEFAULT_TIME_MARGIN );
 		} catch (Exception e) {

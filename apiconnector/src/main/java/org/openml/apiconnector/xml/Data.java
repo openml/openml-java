@@ -37,6 +37,16 @@ public class Data {
 		private int did;
 		private String status;
 		private Quality[] qualities;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        private String name;
 		
 		public int getDid() {
 			return did;
