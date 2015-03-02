@@ -200,7 +200,7 @@ public class OpenmlConnector implements Serializable {
     }
 
     public LicencesList listLicences() throws Exception {
-        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.licences", "", ash, verboseLevel);
+        Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.licences", "", sessionHash, verboseLevel);
         if (apiResult instanceof LicencesList) {
             return (LicencesList) apiResult;
         } else {
