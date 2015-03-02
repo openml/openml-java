@@ -30,6 +30,7 @@ import org.openml.apiconnector.xml.DataTag;
 import org.openml.apiconnector.xml.EvaluationScore;
 import org.openml.apiconnector.xml.FileUpload;
 import org.openml.apiconnector.xml.ImplementationTag;
+import org.openml.apiconnector.xml.LicencesList;
 import org.openml.apiconnector.xml.RunDelete;
 import org.openml.apiconnector.xml.RunEvaluate;
 import org.openml.apiconnector.xml.RunEvaluation;
@@ -79,7 +80,7 @@ public class XstreamXmlMapping {
 		// Data.DataSet
 		xstream.alias("oml:dataset", Data.DataSet.class);
 		xstream.aliasField("oml:did", Data.DataSet.class, "did");
-		xstream.aliasField("oml:state", Data.DataSet.class, "state");
+		xstream.aliasField("oml:status", Data.DataSet.class, "status");
 		
 		xstream.addImplicitCollection(Data.DataSet.class, "qualities", "oml:quality", Data.DataSet.Quality.class);
 		xstream.useAttributeFor(Data.DataSet.Quality.class, "name");
@@ -171,6 +172,12 @@ public class XstreamXmlMapping {
 		// data delete
 		xstream.alias("oml:data_delete", DataDelete.class);
 		xstream.aliasField("oml:id", DataDelete.class, "id");
+		
+		// data licences list
+        xstream.alias("oml:data_licences", LicencesList.class);
+        xstream.aliasAttribute(LicencesList.class, "oml", "xmlns:oml");
+        xstream.aliasField("oml:licences", LicencesList.class, "licences");
+        xstream.addImplicitCollection(LicencesList.Licences.class, "licences", "oml:licence", String.class);
 		
 		// implementation 
 		xstream.alias("oml:implementation", Implementation.class);
