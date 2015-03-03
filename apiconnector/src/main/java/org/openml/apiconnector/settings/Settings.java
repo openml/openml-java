@@ -29,7 +29,7 @@ public class Settings {
 	/**
 	 * The directory where cache files are saved. 
 	 */
-	public static final String CACHE_DIRECTORY = Constants.OPENML_DIRECTORY + "/cache/";
+	public static String CACHE_DIRECTORY = Constants.OPENML_DIRECTORY + "/cache/";
 	/**
 	 * Whether caching is allowed. Keep value to true.
 	 */

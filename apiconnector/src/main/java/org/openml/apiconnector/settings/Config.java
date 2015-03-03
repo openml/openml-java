@@ -60,6 +60,17 @@ public class Config implements Serializable {
 		process( Arrays.asList( config.split(";") ) );
 	}
 	
+	public void updateStaticSettings() {
+		if( get("cache_allowed") != null ) {
+			if( get("cache_allowed").equals("false") ) {
+				Settings.CACHE_ALLOWED = false;
+			}
+		}
+		if( get("cache_directory") != null ) {
+			Settings.CACHE_DIRECTORY = config.get("cache_directory");
+		}
+	}
+	
 	/**
 	 * @param f The location (absolute or relative) where the config
 	 * file can be found. 

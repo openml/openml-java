@@ -117,6 +117,9 @@ public class Run {
 	}
 	
 	public EvaluationScore[] getOutputEvaluation() {
+		if( output_data == null ) {
+			return null;
+		}
 		return output_data.evaluation;
 	}
 	
