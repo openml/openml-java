@@ -344,6 +344,8 @@ public class XstreamXmlMapping {
 		xstream.addImplicitCollection(Run.class, "tag", "oml:tag", String.class);
 		
 		xstream.aliasField("oml:task_id", Run.class, "task_id");
+		xstream.aliasField("oml:run_id", Run.class, "run_id");
+		xstream.aliasField("oml:uploader", Run.class, "uploader");
 		xstream.aliasField("oml:implementation_id", Run.class, "implementation_id");
 		xstream.aliasField("oml:error_message", Run.class, "error_message");
 		xstream.aliasField("oml:setup_string", Run.class, "setup_string");
@@ -355,11 +357,17 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:value", Run.Parameter_setting.class, "value");
 		
 		xstream.addImplicitCollection( Run.Data.class, "dataset", "oml:dataset", Run.Data.Dataset.class);
+		xstream.addImplicitCollection( Run.Data.class, "file", "oml:file", Run.Data.File.class);
 		xstream.addImplicitCollection( Run.Data.class, "evaluation", "oml:evaluation", EvaluationScore.class);
 
 		xstream.aliasField("oml:did", Run.Data.Dataset.class, "did");
 		xstream.aliasField("oml:name", Run.Data.Dataset.class, "name");
 		xstream.aliasField("oml:url", Run.Data.Dataset.class, "url");
+		
+		xstream.aliasField("oml:did", Run.Data.File.class, "did");
+		xstream.aliasField("oml:file_id", Run.Data.File.class, "file_id");
+		xstream.aliasField("oml:name", Run.Data.File.class, "name");
+		xstream.aliasField("oml:url", Run.Data.File.class, "url");
 
 		xstream.aliasField("oml:did", EvaluationScore.class, "did");
 		xstream.aliasField("oml:name", EvaluationScore.class, "function"); // TODO: inconsistency? change?

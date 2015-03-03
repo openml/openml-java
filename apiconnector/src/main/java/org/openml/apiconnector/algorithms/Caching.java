@@ -10,6 +10,15 @@ import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 public class Caching {
 	
+	public static void cache( String s, String type, int identifier ) throws IOException {
+		String directoryPath = Settings.CACHE_DIRECTORY + "/" + type;
+		File directory = new File( directoryPath );
+		directory.mkdirs();
+		BufferedWriter bw = new BufferedWriter( new FileWriter( new File( directory.getAbsolutePath() + "/" + identifier ) ) );
+		bw.append( s );
+		bw.close();
+	}
+	
 	public static void cache( Object o, String type, int identifier ) throws IOException {
 		String directoryPath = Settings.CACHE_DIRECTORY + "/" + type;
 		File directory = new File( directoryPath );
@@ -17,6 +26,11 @@ public class Caching {
 		BufferedWriter bw = new BufferedWriter( new FileWriter( new File( directory.getAbsolutePath() + "/" + identifier ) ) );
 		bw.append( XstreamXmlMapping.getInstance().toXML(o) );
 		bw.close();
+	}
+	
+	public static boolean in_cache( String type, int identifier ) {
+		File check = new File(Settings.CACHE_DIRECTORY + "/" + type + "/" + identifier);
+		return check.exists();
 	}
 	
 	public static File cached( String type, int identifier ) throws IOException {

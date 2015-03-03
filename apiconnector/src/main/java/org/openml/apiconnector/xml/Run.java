@@ -23,11 +23,14 @@ import java.util.Arrays;
 
 import org.openml.apiconnector.algorithms.MathHelper;
 import org.openml.apiconnector.settings.Constants;
+import org.openml.apiconnector.xml.Run.Data.File;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class Run {
 
 	private final String oml = Constants.OPENML_XMLNS;
+	private int run_id;
+	private int uploader;
 	private int task_id;
 	private int implementation_id;
 	private String setup_string;
@@ -53,6 +56,14 @@ public class Run {
 		return oml;
 	}
 
+	public int getRun_id() {
+		return run_id;
+	}
+
+	public int getUploader() {
+		return uploader;
+	}
+	
 	public int getTask_id() {
 		return task_id;
 	}
@@ -108,6 +119,10 @@ public class Run {
 	public EvaluationScore[] getOutputEvaluation() {
 		return output_data.evaluation;
 	}
+	
+	public File[] getOutputFile() {
+		return output_data.file;
+	}
 
 	public static class Parameter_setting {
 		private String name;
@@ -138,7 +153,9 @@ public class Run {
 	
 	public static class Data {
 		private Dataset[] dataset;
+		private File[] file;
 		private EvaluationScore[] evaluation;
+		
 		
 		public Data( ) {
 			dataset = new Dataset[0];
@@ -149,6 +166,10 @@ public class Run {
 			return dataset;
 		}
 
+		public File[] file() {
+			return file;
+		}
+		
 		public EvaluationScore[] getEvaluation() {
 			return evaluation;
 		}
@@ -182,6 +203,26 @@ public class Run {
 			
 			public int getDid() {
 				return did;
+			}
+			public String getName() {
+				return name;
+			}
+			public String getUrl() {
+				return url;
+			}
+		}
+		
+		public static class File {
+			private Integer did;
+			private Integer file_id;
+			private String name;
+			private String url;
+			
+			public int getDid() {
+				return did;
+			}
+			public int getFileId() {
+				return file_id;
 			}
 			public String getName() {
 				return name;

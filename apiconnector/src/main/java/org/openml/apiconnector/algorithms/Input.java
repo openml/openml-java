@@ -21,10 +21,14 @@ package org.openml.apiconnector.algorithms;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
+
+import org.openml.apiconnector.io.OpenmlConnector;
 
 public class Input {
 
@@ -34,6 +38,19 @@ public class Input {
 		urlConnection.setConnectTimeout(1000);
 		urlConnection.setReadTimeout(30000);
 		return new InputStreamReader( urlConnection.getInputStream() );
+	}
+	
+	// same as above, with difference that it can make use of cached files. 
+	public static Reader getURL( Integer file_id, OpenmlConnector openml ) throws Exception {
+		if( Caching.in_cache("file", file_id)) {
+			return new FileReader( Caching.cached("file", file_id) );
+		} else {
+			URL url = openml.getOpenmlFileUrl(file_id, "predictions");
+			URLConnection urlConnection = url.openConnection();
+			urlConnection.setConnectTimeout(1000);
+			urlConnection.setReadTimeout(30000);
+			return new InputStreamReader( urlConnection.getInputStream() );
+		}
 	}
 	
 	public static InputStreamReader getFile( String filename ) throws IOException {

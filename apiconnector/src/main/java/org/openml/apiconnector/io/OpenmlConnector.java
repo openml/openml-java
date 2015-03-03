@@ -123,6 +123,10 @@ public class OpenmlConnector implements Serializable {
 	public void setVerboseLevel(int level) {
 		verboseLevel = level;
 	}
+	
+	public int getVerboselevel() {
+		return verboseLevel;
+	}
 
 	/**
 	 * Returns the URL to which api calls are made
