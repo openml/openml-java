@@ -23,10 +23,11 @@ public class HttpConnector implements Serializable {
 
 	public static final String API_PART = "rest_api/";
 	
+	public static XStream xstreamClient = XstreamXmlMapping.getInstance();
+	
 	private static final long serialVersionUID = -8589069573065947493L;
 	
 	public static Object doApiRequest( String url, String function, String queryString, MultipartEntity entity, ApiSessionHash ash, int apiVerboseLevel ) throws Exception {
-		XStream xstream = XstreamXmlMapping.getInstance();
 		
 		if( ash != null ) {
 			if( entity == null ) {
@@ -64,7 +65,7 @@ public class HttpConnector implements Serializable {
 			System.out.println("===== REQUEST URI: " + requestUri + " (Content Length: "+contentLength+") =====\n" + result + "\n=====\n");
 		}
 		
-		Object apiResult = xstream.fromXML(result);
+		Object apiResult = xstreamClient.fromXML(result);
 		if(apiResult instanceof ApiError) {
 			ApiError apiError = (ApiError) apiResult;
 			String message = apiError.getMessage();

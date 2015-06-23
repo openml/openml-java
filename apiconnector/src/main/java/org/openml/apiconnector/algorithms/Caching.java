@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.openml.apiconnector.io.HttpConnector;
 import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
@@ -24,7 +25,7 @@ public class Caching {
 		File directory = new File( directoryPath );
 		directory.mkdirs();
 		BufferedWriter bw = new BufferedWriter( new FileWriter( new File( directory.getAbsolutePath() + "/" + identifier ) ) );
-		bw.append( XstreamXmlMapping.getInstance().toXML(o) );
+		bw.append( HttpConnector.xstreamClient.toXML(o) );
 		bw.close();
 	}
 	

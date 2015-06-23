@@ -38,9 +38,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
-import org.openml.apiconnector.xstream.XstreamXmlMapping;
-
-import com.thoughtworks.xstream.XStream;
 
 public class OpenmlConnector implements Serializable {
 	private static final long serialVersionUID = 7362620508675762264L;
@@ -196,7 +193,7 @@ public class OpenmlConnector implements Serializable {
 	public DataSetDescription dataDescription(int did) throws Exception {
 		if (Settings.LOCAL_OPERATIONS) {
 			String dsdString = Conversion.fileToString(Caching.cached("datadescription", did));
-			return (DataSetDescription) XstreamXmlMapping.getInstance().fromXML(dsdString);
+			return (DataSetDescription) HttpConnector.xstreamClient.fromXML(dsdString);
 		}
 
 		Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.data.description", "&data_id=" + did,
@@ -487,7 +484,7 @@ public class OpenmlConnector implements Serializable {
 	public Task taskGet(int task_id) throws Exception {
 		if (Settings.LOCAL_OPERATIONS) {
 			String taskXml = Conversion.fileToString(Caching.cached("task", task_id));
-			return (Task) XstreamXmlMapping.getInstance().fromXML(taskXml);
+			return (Task) HttpConnector.xstreamClient.fromXML(taskXml);
 		}
 
 		Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.task.get", "&task_id=" + task_id, sessionHash,
@@ -570,24 +567,6 @@ public class OpenmlConnector implements Serializable {
 		} else {
 			throw new DataFormatException("Casting Api Object to UploadDataSet");
 		}
-	}
-
-	/**
-	 * @param description
-	 *            - A DataSetDescription describing the data. Should contain the
-	 *            url field.
-	 * @param dataset
-	 *            - The actual dataset. Preferably in ARFF format, but almost
-	 *            everything is OK.
-	 * @return UploadDataSet - An object containing information on the data
-	 *         upload.
-	 * @throws Exception
-	 *             - Can be: API Error (see documentation at openml.org), server
-	 *             down, etc.
-	 */
-	public UploadDataSet dataUpload(DataSetDescription description, File dataset) throws Exception {
-		XStream xstream = XstreamXmlMapping.getInstance();
-		return dataUpload(Conversion.stringToTempFile(xstream.toXML(description), "description", "xml"), dataset);
 	}
 
 	/**

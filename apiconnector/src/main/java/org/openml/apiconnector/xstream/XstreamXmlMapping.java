@@ -56,6 +56,8 @@ import org.openml.apiconnector.xml.UploadRun;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
+import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import com.thoughtworks.xstream.io.naming.NoNameCoder;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -68,8 +70,8 @@ public class XstreamXmlMapping {
 	 * @return XStream - An XStream instance capable of mapping XML objects and
 	 * OpenmlApiConnector Objects to each other. 
 	 */
-	public static XStream getInstance() {
-		XStream xstream = new XStream(new DomDriver("UFT-8", new NoNameCoder()));
+	public static XStream getInstance(ClassLoaderReference clr) {
+		XStream xstream = new XStream(null,new DomDriver("UFT-8", new NoNameCoder()),clr);
 		xstream.ignoreUnknownElements();
 		
 		// data
@@ -432,5 +434,9 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:id", RunTag.class, "id");
 		
 		return xstream;
+	}
+	
+	public static XStream getInstance() {
+		return getInstance(new ClassLoaderReference(new CompositeClassLoader()));
 	}
 }
