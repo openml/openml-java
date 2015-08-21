@@ -74,7 +74,7 @@ public class OpenmlConnector implements Serializable {
 	 * Creates a default OpenML Connector with authentication
 	 * 
 	 * @param username
-	 *            Username that will be used to log into OenMl API
+	 *            Username that will be used to log into OpenML API
 	 * @param password
 	 *            Password that will be used to log into OpenML API
 	 */
@@ -685,8 +685,7 @@ public class OpenmlConnector implements Serializable {
 	/**
 	 * @param id
 	 *            - The numeric id of the run to be deleted.
-	 * @return ImplementationDelete - An object containing the id of the deleted
-	 *         implementation
+	 * @return RunDelete - An object containing the id of the deleted run
 	 * @throws Exception
 	 *             - Can be: API Error (see documentation at openml.org), server
 	 *             down, etc.
@@ -740,6 +739,29 @@ public class OpenmlConnector implements Serializable {
 			return (SetupTag) apiResult;
 		} else {
 			throw new DataFormatException("Casting Api Object to SetupTag");
+		}
+	}
+	
+
+	/**
+	 * @param id
+	 *            - The numeric id of the setup to be deleted.
+	 * @return SetupDelete - An object containing the id of the deleted
+	 *         setup
+	 * @throws Exception
+	 *             - Can be: API Error (see documentation at openml.org), server
+	 *             down, etc.
+	 */
+	public SetupDelete setupDelete(int id) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("setup_id", new StringBody("" + id));
+
+		Object apiResult = HttpConnector.doApiRequest(API_URL, "openml.setup.delete", "", params, sessionHash,
+				verboseLevel);
+		if (apiResult instanceof SetupDelete) {
+			return (SetupDelete) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to SetupDelete");
 		}
 	}
 

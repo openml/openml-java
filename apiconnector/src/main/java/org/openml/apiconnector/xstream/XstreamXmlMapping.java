@@ -45,6 +45,7 @@ import org.openml.apiconnector.xml.Job;
 import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.RunReset;
 import org.openml.apiconnector.xml.RunTag;
+import org.openml.apiconnector.xml.SetupDelete;
 import org.openml.apiconnector.xml.SetupTag;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskEvaluations;
@@ -416,6 +417,10 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:run_id", RunEvaluation.class, "run_id");
 		xstream.aliasField("oml:error", RunEvaluation.class, "error");
 		xstream.addImplicitCollection(RunEvaluation.class, "evaluation", "oml:evaluation", EvaluationScore.class);
+
+		// delete setup
+		xstream.alias("oml:setup_delete", SetupDelete.class);
+		xstream.aliasField("oml:id", SetupDelete.class, "id");
 		
 		// data tag
 		xstream.alias("oml:data_tag", DataTag.class);
