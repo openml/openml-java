@@ -92,8 +92,16 @@ public class Implementation {
 		return fullName;
 	}
 	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public String getExternal_version() {
 		return external_version;
+	}
+	
+	public void setExternal_version(String external_version) {
+		this.external_version = external_version;
 	}
 
 	public Integer getUploader() {
@@ -114,6 +122,10 @@ public class Implementation {
 
 	public String getDescription() {
 		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String[] getCreator() {
@@ -215,10 +227,16 @@ public class Implementation {
 		throw new Exception("Subimplementation not present.");
 	}
 	
-	public void addComponent( String identifier, Implementation implementation ) {
+	public void addComponent( String identifier, Implementation implementation, boolean updateName ) {
 		Component c = new Component( identifier, implementation );
 		this.component = ArrayUtils.addAll( this.component, c );
-		this.name += "_" + implementation.getLastName();
+		if (updateName) {
+			this.name += "_" + implementation.getLastName();
+		}
+	}
+	
+	public void addComponent( String identifier, Implementation implementation ) {
+		addComponent(identifier, implementation, true);
 	}
 	
 	public boolean parameter_exists( String name ) {
