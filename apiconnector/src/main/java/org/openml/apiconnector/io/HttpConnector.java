@@ -9,6 +9,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
@@ -20,35 +21,21 @@ import org.openml.apiconnector.xstream.XstreamXmlMapping;
 import com.thoughtworks.xstream.XStream;
 
 public class HttpConnector implements Serializable {
-
-	public static final String API_PART = "rest_api/";
 	
 	public static XStream xstreamClient = XstreamXmlMapping.getInstance();
 	
 	private static final long serialVersionUID = -8589069573065947493L;
 	
-	public static Object doApiRequest( String url, String function, String queryString, MultipartEntity entity, ApiSessionHash ash, int apiVerboseLevel ) throws Exception {
-		
-		if( ash != null ) {
-			if( entity == null ) {
-				entity = new MultipartEntity();
-			}
-			entity.addPart("session_hash", new StringBody( ash.getSessionHash() ) );
-		}
+	public static Object doApiRequest( String url, MultipartEntity entity, String ash, int apiVerboseLevel ) throws Exception {
+		entity.addPart("session_hash", new StringBody( ash ) );
 		
 		String result = "";
 		HttpClient httpclient = new DefaultHttpClient();
-		String requestUri = url + API_PART + "?f=" + function;
-		if( queryString != null ) {
-			requestUri += queryString;
-		}
+		
 		long contentLength = 0;
 		try {
-            HttpPost httppost = new HttpPost( requestUri );
-            
-            if(entity != null) {
-            	httppost.setEntity(entity);
-            }
+			HttpPost httppost = new HttpPost( url );
+            httppost.setEntity(entity);
             
             HttpResponse response = httpclient.execute(httppost);
             HttpEntity resEntity = response.getEntity();
@@ -62,7 +49,7 @@ public class HttpConnector implements Serializable {
             try { httpclient.getConnectionManager().shutdown(); } catch (Exception ignore) {}
         }
 		if(apiVerboseLevel >= Constants.VERBOSE_LEVEL_XML) {
-			System.out.println("===== REQUEST URI: " + requestUri + " (Content Length: "+contentLength+") =====\n" + result + "\n=====\n");
+			System.out.println("===== REQUEST URI: " + url + " (Content Length: "+contentLength+") =====\n" + result + "\n=====\n");
 		}
 		
 		Object apiResult = xstreamClient.fromXML(result);
@@ -77,8 +64,45 @@ public class HttpConnector implements Serializable {
 		return apiResult;
 	}
 	
-	public static Object doApiRequest(String url, String function, String queryString, ApiSessionHash ash, int apiVerboseLevel) throws Exception {
-		return doApiRequest(url, function, queryString, null, ash, apiVerboseLevel);
+	public static Object doApiRequest(String url, String ash, int apiVerboseLevel) throws Exception {
+		return doApiRequest(url, new MultipartEntity(), ash, apiVerboseLevel);
+	}
+	
+	public static Object doApiDelete(String url, String ash, int apiVerboseLevel) throws Exception {
+		String result = "";
+		HttpClient httpclient = new DefaultHttpClient();
+		// TODO: integrate ??
+		long contentLength = 0;
+		try {
+			HttpDelete httpdelete = new HttpDelete(url + "?session_hash=" + ash );
+            
+            HttpResponse response = httpclient.execute(httpdelete);
+            HttpEntity resEntity = response.getEntity();
+            if (resEntity != null) {
+            	result = httpEntitiToString(resEntity);
+                contentLength = resEntity.getContentLength();
+            } else {
+            	throw new Exception("An exception has occured while reading data input stream. ");
+            }
+		} finally {
+            try { httpclient.getConnectionManager().shutdown(); } catch (Exception ignore) {}
+        }
+		
+		if(apiVerboseLevel >= Constants.VERBOSE_LEVEL_XML) {
+			System.out.println("===== REQUEST URI: " + url + " (Content Length: "+contentLength+") =====\n" + result + "\n=====\n");
+		}
+		
+		
+		Object apiResult = xstreamClient.fromXML(result);
+		if(apiResult instanceof ApiError) {
+			ApiError apiError = (ApiError) apiResult;
+			String message = apiError.getMessage();
+			if( apiError.getAdditional_information() != null ) {
+				message += ": " + apiError.getAdditional_information();
+			}
+			throw new ApiException( Integer.parseInt( apiError.getCode() ), message );
+		}
+		return apiResult;
 	}
 	
 	private static String httpEntitiToString(HttpEntity resEntity) throws IOException {
