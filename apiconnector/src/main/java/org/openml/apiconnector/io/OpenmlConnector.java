@@ -24,11 +24,13 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Map;
 import java.util.zip.DataFormatException;
 
 import org.json.JSONObject;
 import org.openml.apiconnector.algorithms.Caching;
 import org.openml.apiconnector.algorithms.Conversion;
+import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xml.*;
 import org.apache.commons.io.FileUtils;
@@ -95,7 +97,7 @@ public class OpenmlConnector implements Serializable {
 	 *             - Can be: API Error (see documentation at openml.org), server
 	 *             down, etc.
 	 */
-	public DataSetDescription data_get(int did) throws Exception {
+	public DataSetDescription dataGet(int did) throws Exception {
 		if (Settings.LOCAL_OPERATIONS) {
 			String dsdString = Conversion.fileToString(Caching.cached("datadescription", did));
 			return (DataSetDescription) HttpConnector.xstreamClient.fromXML(dsdString);
@@ -112,7 +114,7 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-	public UploadDataSet data_upload(File description, File dataset) throws Exception {
+	public UploadDataSet dataUpload(File description, File dataset) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
 		if (dataset != null) {
@@ -127,7 +129,7 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-	public DataDelete data_delete(int did) throws Exception {
+	public DataDelete dataDelete(int did) throws Exception {
 		Object apiResult = HttpConnector.doApiDelete(API_URL + "data/" + did, session_hash, verboseLevel);
 		if (apiResult instanceof DataDelete) {
 			return (DataDelete) apiResult;
@@ -148,7 +150,407 @@ public class OpenmlConnector implements Serializable {
 			throw new DataFormatException("Casting Api Object to DataTag");
 		}
 	}
+	
 
+
+	/**
+	 * Retrieves the features of a specified data set.
+	 * 
+	 * @param did
+	 *            - The data_id of the data features to download.
+	 * @return DataFeatures - An object containing the features of the data
+	 * @throws Exception
+	 *             - Can be: API Error (see documentation at openml.org), server
+	 *             down, etc.
+	 */
+	public DataFeature dataFeatures(int did) throws Exception {
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "data/features/" + did, session_hash, verboseLevel);
+		if (apiResult instanceof DataFeature) {
+			return (DataFeature) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to DataFeature");
+		}
+	}
+
+	/**
+	 * Retrieves the qualities (meta-features) of a specified data set.
+	 * 
+	 * @param did
+	 *            - The data_id of the data features to download.
+	 * @return DataFeatures - An object containing the qualities of the data
+	 * @throws Exception
+	 *             - Can be: API Error (see documentation at openml.org), server
+	 *             down, etc.
+	 */
+	public DataQuality dataQualities(int did) throws Exception {
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "data/qualities/" + did, session_hash, verboseLevel);
+		
+		if (apiResult instanceof DataQuality) {
+			return (DataQuality) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to DataQuality");
+		}
+	}
+	
+
+	public DataFeatureUpload dataFeaturesUpload(File description) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("description", new FileBody(description));
+
+		if (verboseLevel >= Constants.VERBOSE_LEVEL_ARFF) {
+			System.out.println(Conversion.fileToString(description) + "\n==========\n");
+		}
+
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "features/", params, session_hash, verboseLevel);
+		
+		if (apiResult instanceof DataFeatureUpload) {
+			return (DataFeatureUpload) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to DataFeatureUpload");
+		}
+	}
+
+	public DataQualityUpload dataQualitiesUpload(File description) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("description", new FileBody(description));
+
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "qualities/", params, session_hash, verboseLevel);
+		if (apiResult instanceof DataQualityUpload) {
+			return (DataQualityUpload) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to DataQualityUpload");
+		}
+	}
+
+	public DataQualityList dataQualitiesList() throws Exception {
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "data/qualities/list", session_hash, verboseLevel);
+		if (apiResult instanceof DataQualityList) {
+			return (DataQualityList) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to DataQualityList");
+		}
+	}
+	
+	/**
+	 * @param task_id
+	 *            - The numeric id of the task to be obtained.
+	 * @return Task - An object describing the task
+	 * @throws Exception
+	 *             - Can be: API Error (see documentation at openml.org), server
+	 *             down, etc.
+	 */
+	public Task taskGet(int task_id) throws Exception {
+		if (Settings.LOCAL_OPERATIONS) {
+			String taskXml = Conversion.fileToString(Caching.cached("task", task_id));
+			return (Task) HttpConnector.xstreamClient.fromXML(taskXml);
+		}
+
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "task/" + task_id, session_hash, verboseLevel);
+		if (apiResult instanceof Task) {
+			if (Settings.CACHE_ALLOWED) {
+				Caching.cache(apiResult, "task", task_id);
+			}
+			return (Task) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to Task");
+		}
+	}
+	
+	public TaskTag taskTag(int id, String tag) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("flow_id", new StringBody("" + id));
+		params.addPart("tag", new StringBody(tag));
+		
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "task/tag", params, session_hash, verboseLevel);
+		
+		if (apiResult instanceof TaskTag) {
+			return (TaskTag) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to TaskTag");
+		}
+	}
+	
+	public Implementation implementationGet(int flow_id) throws Exception {
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "flow/" + flow_id, session_hash, verboseLevel);
+		if (apiResult instanceof Implementation) {
+			return (Implementation) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to Implementation");
+		}
+	}
+
+	public ImplementationTag implementationTag(int id, String tag) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("flow_id", new StringBody("" + id));
+		params.addPart("tag", new StringBody(tag));
+		
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "flow/tag", params, session_hash, verboseLevel);
+		
+		if (apiResult instanceof ImplementationTag) {
+			return (ImplementationTag) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to ImplementationTag");
+		}
+	}
+	
+	/**
+	 * @return ImplementationOwned - An object containing all implementation_ids
+	 *         that are owned by the current user.
+	 * @throws Exception
+	 *             - Can be: API Error (see documentation at openml.org), server
+	 *             down, etc.
+	 */
+	public ImplementationOwned implementationOwned() throws Exception {
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "flow/owned", session_hash, verboseLevel);
+		if (apiResult instanceof ImplementationOwned) {
+			return (ImplementationOwned) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to ImplementationOwned");
+		}
+	}
+	/**
+	 * @param id
+	 *            - The numeric id of the implementation to be deleted.
+	 * @return ImplementationDelete - An object containing the id of the deleted
+	 *         implementation
+	 * @throws Exception
+	 *             - Can be: API Error (see documentation at openml.org), server
+	 *             down, etc.
+	 */
+	public ImplementationDelete implementationDelete(int id) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("implementation_id", new StringBody("" + id));
+
+		Object apiResult = HttpConnector.doApiDelete(API_URL + "flow/" + id, session_hash, verboseLevel);
+		if (apiResult instanceof ImplementationDelete) {
+			return (ImplementationDelete) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to ImplementationDelete");
+		}
+	}
+	
+
+	/**
+	 * @param name
+	 *            - The name of the implementation to be checked
+	 * @param external_version
+	 *            - The external version (workbench version). If not a proper
+	 *            revision number is available, it is recommended to use a MD5
+	 *            hash of the source code.
+	 * @return ImplementationExists - An object describing whether this
+	 *         implementation is already known on the server.
+	 * @throws Exception
+	 *             - Can be: API Error (see documentation at openml.org), server
+	 *             down, etc.
+	 */
+	public ImplementationExists implementationExists(String name, String external_version) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("name", new StringBody(name));
+		params.addPart("external_version", new StringBody(external_version));
+		
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "flow/exists", params, session_hash, verboseLevel);
+		if (apiResult instanceof ImplementationExists) {
+			return (ImplementationExists) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to ImplementationExists");
+		}
+	}
+	/**
+	 * @param description
+	 *            - An XML file describing the implementation. See documentation
+	 *            at openml.org.
+	 * @param binary
+	 *            - A file containing the implementation binary.
+	 * @param source
+	 *            - A file containing the implementation source.
+	 * @return UploadImplementation - An object containing information on the
+	 *         implementation upload.
+	 * @throws Exception
+	 *             - Can be: API Error (see documentation at openml.org), server
+	 *             down, etc.
+	 */
+	public UploadImplementation implementationUpload(File description, File binary, File source) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("description", new FileBody(description));
+		if (source != null)
+			params.addPart("source", new FileBody(source));
+		if (binary != null)
+			params.addPart("binary", new FileBody(binary));
+
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "flow", params, session_hash, verboseLevel);
+		if (apiResult instanceof UploadImplementation) {
+			return (UploadImplementation) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to UploadImplementation");
+		}
+	}
+	
+
+	/**
+	 * @param description
+	 *            - An XML file describing the run. See documentation at
+	 *            openml.org.
+	 * @param output_files
+	 *            - A Map<String,File> containing all relevant output files. Key
+	 *            "predictions" usually contains the predictions that were
+	 *            generated by this run.
+	 * @return UploadRun - An object containing information on the
+	 *         implementation upload.
+	 * @throws Exception
+	 *             - Can be: API Error (see documentation at openml.org), server
+	 *             down, etc.
+	 */
+	public UploadRun runUpload(File description, Map<String, File> output_files) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		if (verboseLevel >= Constants.VERBOSE_LEVEL_ARFF) {
+			System.out.println(Conversion.fileToString(output_files.get("predictions")) + "\n==========\n");
+		}
+		if (verboseLevel >= Constants.VERBOSE_LEVEL_XML) {
+			System.out.println(Conversion.fileToString(description) + "\n==========");
+		}
+		params.addPart("description", new FileBody(description));
+		for (String s : output_files.keySet()) {
+			params.addPart(s, new FileBody(output_files.get(s)));
+		}
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "run/", params, session_hash, verboseLevel);
+		if (apiResult instanceof UploadRun) {
+			return (UploadRun) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to UploadRun");
+		}
+	}
+
+	public RunTag runTag(int id, String tag) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("run_id", new StringBody("" + id));
+		params.addPart("tag", new StringBody(tag));
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "run/tag", params, session_hash, verboseLevel);
+		if (apiResult instanceof RunTag) {
+			return (RunTag) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to RunTag");
+		}
+	}
+
+	public RunEvaluate runEvaluate(File description) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("description", new FileBody(description));
+
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "run/evaluate", params, session_hash, verboseLevel);
+		if (apiResult instanceof RunEvaluate) {
+			return (RunEvaluate) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to RunEvaluate");
+		}
+	}
+
+	public Run runGet(int runId) throws Exception {
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "run/" + runId, session_hash, verboseLevel);
+		if (apiResult instanceof Run) {
+			return (Run) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to Task");
+		}
+	}
+
+	/**
+	 * @param id
+	 *            - The numeric id of the run to be deleted.
+	 * @return RunDelete - An object containing the id of the deleted run
+	 * @throws Exception
+	 *             - Can be: API Error (see documentation at openml.org), server
+	 *             down, etc.
+	 */
+	public RunDelete runDelete(int id) throws Exception {
+		Object apiResult = HttpConnector.doApiDelete(API_URL + "run/" + id, session_hash, verboseLevel);
+		if (apiResult instanceof RunDelete) {
+			return (RunDelete) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to RunDelete");
+		}
+	}
+
+	public RunReset runReset(int run_id) throws Exception {
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "run/reset/" + run_id, session_hash, verboseLevel);
+		if (apiResult instanceof RunReset) {
+			return (RunReset) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to RunReset");
+		}
+	}
+
+	public SetupTag setupTag(int id, String tag) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("setup_id", new StringBody("" + id));
+		params.addPart("tag", new StringBody(tag));
+		
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "setup/tag", session_hash, verboseLevel);
+		if (apiResult instanceof SetupTag) {
+			return (SetupTag) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to SetupTag");
+		}
+	}
+
+	/**
+	 * @param id
+	 *            - The numeric id of the setup to be deleted.
+	 * @return SetupDelete - An object containing the id of the deleted
+	 *         setup
+	 * @throws Exception
+	 *             - Can be: API Error (see documentation at openml.org), server
+	 *             down, etc.
+	 */
+	public SetupDelete setupDelete(int id) throws Exception {
+		Object apiResult = HttpConnector.doApiDelete(API_URL + "setup/" + id, session_hash, verboseLevel);
+		if (apiResult instanceof SetupDelete) {
+			return (SetupDelete) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to SetupDelete");
+		}
+	}
+	
+	public FileUpload fileUpload(File file) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		if (verboseLevel >= Constants.VERBOSE_LEVEL_ARFF) {
+			System.out.println(Conversion.fileToString(file) + "\n==========\n");
+		}
+		params.addPart("file", new FileBody(file));
+
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "file/upload", params, session_hash, verboseLevel);
+		if (apiResult instanceof FileUpload) {
+			return (FileUpload) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to UploadFile");
+		}
+	}
+
+	/**
+	 * @param workbench
+	 *            - The workbench that will execute the task.
+	 * @param task_type_id
+	 *            - The task type id that the workbench should execute. Weka
+	 *            generally performs Supervised Classification tasks, whereas
+	 *            MOA performs Data Stream tasks. For task id's, please see
+	 *            openml.org.
+	 * @return Job - An object describing the task to be executed
+	 * @throws Exception
+	 *             - Can be: API Error (see documentation at openml.org), server
+	 *             down, no tasks available for this workbench.
+	 */
+	public Job jobRequest(String workbench, String task_type_id) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("workbencg", new StringBody(workbench));
+		params.addPart("task_type_id", new StringBody(task_type_id));
+		
+		Object apiResult = HttpConnector.doApiRequest(API_URL + "job/request", params, session_hash, verboseLevel);
+		if (apiResult instanceof Job) {
+			return (Job) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to Job");
+		}
+	}
+	
 	/**
 	 * @param sql
 	 *            - The query to be executed
@@ -172,7 +574,7 @@ public class OpenmlConnector implements Serializable {
 		String result = IOUtils.toString(new URL(url));
 		return result;
 	}
-
+ 
 	/**
 	 * @param url
 	 *            - The URL to obtain

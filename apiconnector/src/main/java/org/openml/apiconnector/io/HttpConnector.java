@@ -49,7 +49,7 @@ public class HttpConnector implements Serializable {
             try { httpclient.getConnectionManager().shutdown(); } catch (Exception ignore) {}
         }
 		if(apiVerboseLevel >= Constants.VERBOSE_LEVEL_XML) {
-			System.out.println("===== REQUEST URI: " + url + " (Content Length: "+contentLength+") =====\n" + result + "\n=====\n");
+			System.out.println("===== REQUEST URI (POST): " + url + " (Content Length: "+contentLength+") =====\n" + result + "\n=====\n");
 		}
 		
 		Object apiResult = xstreamClient.fromXML(result);
@@ -89,7 +89,7 @@ public class HttpConnector implements Serializable {
         }
 		
 		if(apiVerboseLevel >= Constants.VERBOSE_LEVEL_XML) {
-			System.out.println("===== REQUEST URI: " + url + " (Content Length: "+contentLength+") =====\n" + result + "\n=====\n");
+			System.out.println("===== REQUEST URI (DELETE): " + url + " (Content Length: "+contentLength+") =====\n" + result + "\n=====\n");
 		}
 		
 		

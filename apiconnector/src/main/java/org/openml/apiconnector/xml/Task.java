@@ -148,7 +148,7 @@ public class Task implements Serializable {
 			
 			public DataSetDescription getDataSetDescription( OpenmlConnector apiconnector ) throws Exception {
 				if(dsdCache == null) {
-					dsdCache = apiconnector.data_get(data_set_id);
+					dsdCache = apiconnector.dataGet(data_set_id);
 				}
 				return dsdCache;
 			}
