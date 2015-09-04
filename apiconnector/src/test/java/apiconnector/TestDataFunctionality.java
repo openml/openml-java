@@ -21,46 +21,84 @@ package apiconnector;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+
 import org.junit.Test;
+import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.OpenmlConnector;
+import org.openml.apiconnector.xml.DataDelete;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataSetDescription;
+import org.openml.apiconnector.xml.UploadDataSet;
+import org.openml.apiconnector.xstream.XstreamXmlMapping;
+
+import com.thoughtworks.xstream.XStream;
 
 
 public class TestDataFunctionality {
+	private static final String data_file = "C:\\data\\iris.arff";
+	private static final int probe = 61;
 
-	private static final String username = "janvanrijn@gmail.com";
-	private static final String password = "Feyenoord2002";
-	private static final String server = "http://localhost/openexpdb_v2/";
+	private static final String url = "http://www.openml.org/";
+	private static final String session_hash = "d488d8afd93b32331cf6ea9d7003d4c3";
+	private static final OpenmlConnector client = new OpenmlConnector(url,session_hash);
+	private static final XStream xstream = XstreamXmlMapping.getInstance();
 	
-	/**
-	 * Queries all data id's, chooses one of those and obtains its 
-	 * data set description, features and qualities. 
-	 */
+	
 	@Test
 	public void testApiDataDownload() {
-		OpenmlConnector apiconnector = new OpenmlConnector(server,username,password);
+		
 		
 		try {
-			/*Data d = apiconnector.openmlData();
+			DataSetDescription dsd = client.dataGet( probe );
+			DataFeature features = client.dataFeatures( probe );
+			DataQuality qualities = client.dataQualities( probe );
 			
-			System.err.println( XstreamXmlMapping.getInstance().toXML(d) );
+			File tempDsd = Conversion.stringToTempFile(xstream.toXML(dsd), "data", "xml");
+			File tempXsd = client.getXSD("openml.data.upload");
 			
-			DataSet[] allDataIds = d.getData();
-			System.err.println( "LENGTH: " + allDataIds.length );
+			System.out.println(Conversion.fileToString(tempXsd));
 			
-			DataSet toCheck = allDataIds[Math.abs(r.nextInt() % allDataIds.length)];*/
-			int probe = 1170;
-			
-			DataSetDescription dsd = apiconnector.dataDescription( probe );
-			DataFeature features = apiconnector.dataFeatures( probe );
-			DataQuality qualities = apiconnector.dataQualities( probe );
+			assertTrue(Conversion.validateXML(tempDsd, tempXsd));
 			
 			// very easy checks, should all pass
 			assertTrue( dsd.getId() == probe );
 			assertTrue( features.getFeatures().length > 0 );
 			assertTrue( qualities.getQualities().length > 0 );
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Test failed: " + e.getMessage());
+		}
+	}
+
+	@Test
+	public void testApiUploadDownload() {
+		client.setVerboseLevel(2);
+		try {
+			DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
+			String dsdXML = xstream.toXML(dsd);
+			File description = Conversion.stringToTempFile(dsdXML, "test-data", "arff");
+			System.out.println(dsdXML);
+			UploadDataSet ud = client.dataUpload(description, new File(data_file));
+			System.out.println(xstream.toXML(ud));
+			
+			client.dataTag(ud.getId(), "testTag");
+			
+			DataDelete dd = client.dataDelete(ud.getId());
+			
+			assertTrue( ud.getId() == dd.get_id() );
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Test failed: " + e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testApiAdditional() {
+		try {
+			client.dataQualitiesList();
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Test failed: " + e.getMessage());

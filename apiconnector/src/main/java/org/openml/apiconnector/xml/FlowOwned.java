@@ -19,10 +19,10 @@
  */
 package org.openml.apiconnector.xml;
 
-public class UploadImplementation {
-	private int id;
-
-	public int getId() {
+public class FlowOwned {
+	private Integer[] id;
+	
+	public Integer[] getIds() {
 		return id;
 	}
 }

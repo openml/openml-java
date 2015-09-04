@@ -19,10 +19,21 @@
  */
 package org.openml.apiconnector.xml;
 
-public class ImplementationDelete {
-	private Integer id;
+import org.openml.apiconnector.settings.Constants;
+
+public class FlowExists {
+	private final String oml = Constants.OPENML_XMLNS;
 	
-	public Integer getId() {
+	private boolean exists;
+	private int id;
+	
+	public String getOml() {
+		return oml;
+	}
+	public boolean exists() {
+		return exists;
+	}
+	public int getId() {
 		return id;
 	}
 }

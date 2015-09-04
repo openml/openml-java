@@ -5,7 +5,7 @@ import org.openml.apiconnector.algorithms.MathHelper;
 public class EvaluationScore {
 
 	private final String function;
-	private final String implementation;
+	private final String flow;
 	
 	private final String value;
 	private final Double stdev;
@@ -19,10 +19,10 @@ public class EvaluationScore {
 	private final Integer interval_start;
 	private final Integer interval_end;
 	
-	public EvaluationScore(String implementation, String function,
+	public EvaluationScore(String flow, String function,
 			String value, Double stdev, String array_data) {
 		super();
-		this.implementation = implementation;
+		this.flow = flow;
 		this.function = function;
 		this.value = value;
 		this.stdev = stdev;
@@ -37,10 +37,10 @@ public class EvaluationScore {
 		this.interval_end = null;
 	}
 
-	public EvaluationScore(String implementation, String function,
+	public EvaluationScore(String flow, String function,
 			String value, String array_data, Integer repeat, Integer fold) {
 		super();
-		this.implementation = implementation;
+		this.flow = flow;
 		this.function = function;
 		this.value = value;
 		this.array_data = array_data;
@@ -55,11 +55,11 @@ public class EvaluationScore {
 		this.stdev = null;
 	}
 
-	public EvaluationScore(String implementation, String function,
+	public EvaluationScore(String flow, String function,
 			String value, String array_data, Integer repeat, Integer fold,
 			Integer sample, Integer sample_size) {
 		super();
-		this.implementation = implementation;
+		this.flow = flow;
 		this.function = function;
 		this.value = value;
 		this.array_data = array_data;
@@ -74,11 +74,11 @@ public class EvaluationScore {
 		this.stdev = null;
 	}
 
-	public EvaluationScore(String implementation, String function,
+	public EvaluationScore(String flow, String function,
 			String value, String array_data, Integer interval_start,
 			Integer interval_end, boolean dummy ) {
 		super();
-		this.implementation = implementation;
+		this.flow = flow;
 		this.function = function;
 		this.value = value;
 		this.array_data = array_data;
@@ -93,8 +93,8 @@ public class EvaluationScore {
 		this.stdev = null;
 	}
 
-	public String getImplementation() {
-		return implementation;
+	public String getFlow() {
+		return flow;
 	}
 
 	public String getFunction() {
@@ -142,7 +142,7 @@ public class EvaluationScore {
 	}
 	
 	public boolean isSame( EvaluationScore other ) {
-		return equalStrings( implementation, other.getImplementation() ) && 
+		return equalStrings( flow, other.getFlow() ) && 
 			equalStrings( function, other.getFunction() ) && 
 			equalIntegers( fold, other.getFold() ) && 
 			equalIntegers( repeat, other.getRepeat() ) && 
@@ -171,7 +171,7 @@ public class EvaluationScore {
 		if( interval_start != null ) sb.append( ", interval_start " + interval_start );
 		if( sb.length() == 0 ) sb.append( ", GLOBAL" );
 		
-		return function + " (" + implementation + ") - [" + sb.toString().substring( 2 ) + "]";
+		return function + " (" + flow + ") - [" + sb.toString().substring( 2 ) + "]";
 	}
 	
 	private static boolean equalStrings( String s1, String s2 ) {

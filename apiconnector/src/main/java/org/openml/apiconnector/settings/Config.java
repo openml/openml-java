@@ -104,15 +104,8 @@ public class Config implements Serializable {
 	/**
 	 * @return The username specified in the config file
 	 */
-	public String getUsername() {
-		return get("username");
-	}
-	
-	/**
-	 * @return The password specified in the config file
-	 */
-	public String getPassword() {
-		return get("password");
+	public String getApiKey() {
+		return get("api_key");
 	}
 	
 	/**

@@ -44,10 +44,10 @@ public class TaskEvaluations {
 	public class Evaluation {
 		private int run_id;
 		private int setup_id;
-		private int implementation_id;
+		private int flow_id;
 		private Integer interval_start;
 		private Integer interval_end;
-		private String implementation;
+		private String flow;
 		private Measure[] measure;
 		
 		public int getRun_id() {
@@ -58,12 +58,12 @@ public class TaskEvaluations {
 			return setup_id;
 		}
 
-		public int getImplementation_id() {
-			return implementation_id;
+		public int getFlow_id() {
+			return flow_id;
 		}
 
-		public String getImplementation() {
-			return implementation;
+		public String getFlow() {
+			return flow;
 		}
 
 		public Measure[] getMeasures() {
@@ -83,7 +83,7 @@ public class TaskEvaluations {
 				if( m.getName().equals( name ) )
 					return m.getValue();
 			}
-			throw new Exception("Could not field specified measure for implementation: " + implementation_id + "(" + implementation + ") - " + name);
+			throw new Exception("Could not field specified measure for flow: " + flow_id + "(" + flow + ") - " + name);
 		}
 
 		public class Measure {

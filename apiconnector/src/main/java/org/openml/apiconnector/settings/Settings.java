@@ -25,7 +25,7 @@ public class Settings {
 	 * The webserver to which request are done. ends with tailing slash. 
 	 * (Api suffix will be added by ApiConnector)
 	 */
-	public static final String BASE_URL = "http://www.openml.org/api_new/v1/";
+	public static final String BASE_URL = "http://www.openml.org/";
 	/**
 	 * The directory where cache files are saved. 
 	 */

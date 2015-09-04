@@ -29,18 +29,17 @@ import org.openml.apiconnector.xml.DataQualityUpload;
 import org.openml.apiconnector.xml.DataTag;
 import org.openml.apiconnector.xml.EvaluationScore;
 import org.openml.apiconnector.xml.FileUpload;
-import org.openml.apiconnector.xml.ImplementationTag;
-import org.openml.apiconnector.xml.LicencesList;
+import org.openml.apiconnector.xml.FlowTag;
 import org.openml.apiconnector.xml.RunDelete;
 import org.openml.apiconnector.xml.RunEvaluate;
 import org.openml.apiconnector.xml.RunEvaluation;
-import org.openml.apiconnector.xml.ImplementationDelete;
-import org.openml.apiconnector.xml.ImplementationExists;
-import org.openml.apiconnector.xml.ImplementationOwned;
+import org.openml.apiconnector.xml.FlowDelete;
+import org.openml.apiconnector.xml.FlowExists;
+import org.openml.apiconnector.xml.FlowOwned;
 import org.openml.apiconnector.xml.Authenticate;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.ApiError;
-import org.openml.apiconnector.xml.Implementation;
+import org.openml.apiconnector.xml.Flow;
 import org.openml.apiconnector.xml.Job;
 import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.RunReset;
@@ -52,7 +51,7 @@ import org.openml.apiconnector.xml.TaskEvaluations;
 import org.openml.apiconnector.xml.TaskTag;
 import org.openml.apiconnector.xml.Tasks;
 import org.openml.apiconnector.xml.UploadDataSet;
-import org.openml.apiconnector.xml.UploadImplementation;
+import org.openml.apiconnector.xml.UploadFlow;
 import org.openml.apiconnector.xml.UploadRun;
 
 import com.thoughtworks.xstream.XStream;
@@ -176,79 +175,73 @@ public class XstreamXmlMapping {
 		xstream.alias("oml:data_delete", DataDelete.class);
 		xstream.aliasField("oml:id", DataDelete.class, "id");
 		
-		// data licences list
-        xstream.alias("oml:data_licences", LicencesList.class);
-        xstream.aliasAttribute(LicencesList.class, "oml", "xmlns:oml");
-        xstream.aliasField("oml:licences", LicencesList.class, "licences");
-        xstream.addImplicitCollection(LicencesList.Licences.class, "licences", "oml:licence", String.class);
+		// flow 
+		xstream.alias("oml:flow", Flow.class);
+		xstream.aliasAttribute(Flow.class, "oml", "xmlns:oml");
 		
-		// implementation 
-		xstream.alias("oml:implementation", Implementation.class);
-		xstream.aliasAttribute(Implementation.class, "oml", "xmlns:oml");
+		xstream.addImplicitCollection(Flow.class, "creator", "oml:creator", String.class);
+		xstream.addImplicitCollection(Flow.class, "contributor", "oml:contributor", String.class);
+		xstream.addImplicitCollection(Flow.class, "bibliographical_reference", "oml:bibliographical_reference", Flow.Bibliographical_reference.class);
+		xstream.addImplicitCollection(Flow.class, "parameter", "oml:parameter", Flow.Parameter.class);
+		xstream.addImplicitCollection(Flow.class, "component", "oml:component", Flow.Component.class);
+		xstream.addImplicitCollection(Flow.class, "tag", "oml:tag", String.class);
 		
-		xstream.addImplicitCollection(Implementation.class, "creator", "oml:creator", String.class);
-		xstream.addImplicitCollection(Implementation.class, "contributor", "oml:contributor", String.class);
-		xstream.addImplicitCollection(Implementation.class, "bibliographical_reference", "oml:bibliographical_reference", Implementation.Bibliographical_reference.class);
-		xstream.addImplicitCollection(Implementation.class, "parameter", "oml:parameter", Implementation.Parameter.class);
-		xstream.addImplicitCollection(Implementation.class, "component", "oml:component", Implementation.Component.class);
-		xstream.addImplicitCollection(Implementation.class, "tag", "oml:tag", String.class);
+		xstream.aliasField("oml:id", Flow.class, "id");
+		xstream.aliasField("oml:fullName", Flow.class, "fullName");
+		xstream.aliasField("oml:name", Flow.class, "name");
+		xstream.aliasField("oml:version", Flow.class, "version");
+		xstream.aliasField("oml:external_version", Flow.class, "external_version");
+		xstream.aliasField("oml:uploader", Flow.class, "uploader");
+		xstream.aliasField("oml:upload_date", Flow.class, "upload_date");
+		xstream.aliasField("oml:description", Flow.class, "description");
+		xstream.aliasField("oml:licence", Flow.class, "licence");
+		xstream.aliasField("oml:language", Flow.class, "language");
+		xstream.aliasField("oml:full_description", Flow.class, "full_description");
+		xstream.aliasField("oml:installation_notes", Flow.class, "installation_notes");
+		xstream.aliasField("oml:dependencies", Flow.class, "dependencies");
 		
-		xstream.aliasField("oml:id", Implementation.class, "id");
-		xstream.aliasField("oml:fullName", Implementation.class, "fullName");
-		xstream.aliasField("oml:name", Implementation.class, "name");
-		xstream.aliasField("oml:version", Implementation.class, "version");
-		xstream.aliasField("oml:external_version", Implementation.class, "external_version");
-		xstream.aliasField("oml:uploader", Implementation.class, "uploader");
-		xstream.aliasField("oml:upload_date", Implementation.class, "upload_date");
-		xstream.aliasField("oml:description", Implementation.class, "description");
-		xstream.aliasField("oml:licence", Implementation.class, "licence");
-		xstream.aliasField("oml:language", Implementation.class, "language");
-		xstream.aliasField("oml:full_description", Implementation.class, "full_description");
-		xstream.aliasField("oml:installation_notes", Implementation.class, "installation_notes");
-		xstream.aliasField("oml:dependencies", Implementation.class, "dependencies");
+		xstream.aliasField("oml:source_url", Flow.class, "source_url");
+		xstream.aliasField("oml:source_format", Flow.class, "source_format");
+		xstream.aliasField("oml:source_md5", Flow.class, "source_md5");
 		
-		xstream.aliasField("oml:source_url", Implementation.class, "source_url");
-		xstream.aliasField("oml:source_format", Implementation.class, "source_format");
-		xstream.aliasField("oml:source_md5", Implementation.class, "source_md5");
+		xstream.aliasField("oml:binary_url", Flow.class, "binary_url");
+		xstream.aliasField("oml:binary_format", Flow.class, "binary_format");
+		xstream.aliasField("oml:binary_md5", Flow.class, "binary_md5");
 		
-		xstream.aliasField("oml:binary_url", Implementation.class, "binary_url");
-		xstream.aliasField("oml:binary_format", Implementation.class, "binary_format");
-		xstream.aliasField("oml:binary_md5", Implementation.class, "binary_md5");
-		
-		// implementation component
-		xstream.alias("oml:implementation_component", Implementation.Component.class);
-		xstream.aliasField("oml:identifier", Implementation.Component.class, "identifier");
-		xstream.aliasField("oml:implementation", Implementation.Component.class, "implementation");
+		// flow component
+		xstream.alias("oml:flow_component", Flow.Component.class);
+		xstream.aliasField("oml:identifier", Flow.Component.class, "identifier");
+		xstream.aliasField("oml:flow", Flow.Component.class, "flow");
 		
 		// bibliographical reference
-		xstream.alias("oml:bibliographical_reference", Implementation.Bibliographical_reference.class);
-		xstream.aliasField("oml:citation", Implementation.Bibliographical_reference.class, "citation");
-		xstream.aliasField("oml:url", Implementation.Bibliographical_reference.class, "url");
+		xstream.alias("oml:bibliographical_reference", Flow.Bibliographical_reference.class);
+		xstream.aliasField("oml:citation", Flow.Bibliographical_reference.class, "citation");
+		xstream.aliasField("oml:url", Flow.Bibliographical_reference.class, "url");
 		
 		// parameter
-		xstream.alias("oml:parameter", Implementation.Parameter.class);
-		xstream.aliasField("oml:name", Implementation.Parameter.class, "name");
-		xstream.aliasField("oml:data_type", Implementation.Parameter.class, "data_type");
-		xstream.aliasField("oml:default_value", Implementation.Parameter.class, "default_value");
-		xstream.aliasField("oml:description", Implementation.Parameter.class, "description");
+		xstream.alias("oml:parameter", Flow.Parameter.class);
+		xstream.aliasField("oml:name", Flow.Parameter.class, "name");
+		xstream.aliasField("oml:data_type", Flow.Parameter.class, "data_type");
+		xstream.aliasField("oml:default_value", Flow.Parameter.class, "default_value");
+		xstream.aliasField("oml:description", Flow.Parameter.class, "description");
 		
-		// upload implementation
-		xstream.alias("oml:upload_implementation", UploadImplementation.class);
-		xstream.aliasField("oml:id", UploadImplementation.class, "id");
+		// upload flow
+		xstream.alias("oml:upload_flow", UploadFlow.class);
+		xstream.aliasField("oml:id", UploadFlow.class, "id");
 		
-		// owned implementation
-		xstream.addImplicitCollection(ImplementationOwned.class, "id", "oml:id", Integer.class);
-		xstream.alias("oml:implementation_owned", ImplementationOwned.class);
-		xstream.aliasField("oml:id", ImplementationOwned.class, "id");
+		// owned flow
+		xstream.addImplicitCollection(FlowOwned.class, "id", "oml:id", Integer.class);
+		xstream.alias("oml:flow_owned", FlowOwned.class);
+		xstream.aliasField("oml:id", FlowOwned.class, "id");
 		
-		// delete implementation
-		xstream.alias("oml:implementation_delete", ImplementationDelete.class);
-		xstream.aliasField("oml:id", ImplementationDelete.class, "id");
+		// delete flow
+		xstream.alias("oml:flow_delete", FlowDelete.class);
+		xstream.aliasField("oml:id", FlowDelete.class, "id");
 		
-		// implementation exists
-		xstream.alias("oml:implementation_exists", ImplementationExists.class);
-		xstream.aliasField("oml:exists", ImplementationExists.class, "exists");
-		xstream.aliasField("oml:id", ImplementationExists.class, "id");
+		// flow exists
+		xstream.alias("oml:flow_exists", FlowExists.class);
+		xstream.aliasField("oml:exists", FlowExists.class, "exists");
+		xstream.aliasField("oml:id", FlowExists.class, "id");
 		
 		// generic error
 		xstream.alias("oml:error", ApiError.class);
@@ -316,8 +309,8 @@ public class XstreamXmlMapping {
 		xstream.addImplicitCollection(TaskEvaluations.class, "evaluation", "oml:evaluation", TaskEvaluations.Evaluation.class);
 		xstream.aliasField("oml:run_id",TaskEvaluations.Evaluation.class, "run_id");
 		xstream.aliasField("oml:setup_id",TaskEvaluations.Evaluation.class, "setup_id");
-		xstream.aliasField("oml:implementation_id",TaskEvaluations.Evaluation.class,"implementation_id");
-		xstream.aliasField("oml:implementation",TaskEvaluations.Evaluation.class,"implementation");
+		xstream.aliasField("oml:flow_id",TaskEvaluations.Evaluation.class,"flow_id");
+		xstream.aliasField("oml:flow",TaskEvaluations.Evaluation.class,"flow");
 		xstream.useAttributeFor(TaskEvaluations.Evaluation.class, "interval_start");
 		xstream.useAttributeFor(TaskEvaluations.Evaluation.class, "interval_end");
 		
@@ -349,7 +342,7 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:task_id", Run.class, "task_id");
 		xstream.aliasField("oml:run_id", Run.class, "run_id");
 		xstream.aliasField("oml:uploader", Run.class, "uploader");
-		xstream.aliasField("oml:implementation_id", Run.class, "implementation_id");
+		xstream.aliasField("oml:flow_id", Run.class, "flow_id");
 		xstream.aliasField("oml:error_message", Run.class, "error_message");
 		xstream.aliasField("oml:setup_string", Run.class, "setup_string");
 		xstream.aliasField("oml:input_data", Run.class, "input_data");
@@ -374,7 +367,7 @@ public class XstreamXmlMapping {
 
 		xstream.aliasField("oml:did", EvaluationScore.class, "did");
 		xstream.aliasField("oml:name", EvaluationScore.class, "function"); // TODO: inconsistency? change?
-		xstream.aliasField("oml:implementation", EvaluationScore.class, "implementation");
+		xstream.aliasField("oml:flow", EvaluationScore.class, "flow");
 		xstream.aliasField("oml:value", EvaluationScore.class, "value");
 		xstream.aliasField("oml:array_data", EvaluationScore.class, "array_data");
 		xstream.aliasField("oml:sample_size", EvaluationScore.class, "sample_size");
@@ -425,9 +418,9 @@ public class XstreamXmlMapping {
 		// data tag
 		xstream.alias("oml:data_tag", DataTag.class);
 		xstream.aliasField("oml:id", DataTag.class, "id");
-		// implementation tag
-		xstream.alias("oml:implementation_tag", ImplementationTag.class);
-		xstream.aliasField("oml:id", ImplementationTag.class, "id");
+		// flow tag
+		xstream.alias("oml:flow_tag", FlowTag.class);
+		xstream.aliasField("oml:id", FlowTag.class, "id");
 		// setup tag
 		xstream.alias("oml:setup_tag", SetupTag.class);
 		xstream.aliasField("oml:id", SetupTag.class, "id");

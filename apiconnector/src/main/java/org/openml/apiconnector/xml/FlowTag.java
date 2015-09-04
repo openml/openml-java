@@ -1,6 +1,6 @@
 package org.openml.apiconnector.xml;
 
-public class ImplementationTag {
+public class FlowTag {
 	private Integer id;
 
 	public Integer get_id() {

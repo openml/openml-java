@@ -24,7 +24,7 @@ import java.util.Arrays;
 import org.openml.apiconnector.settings.Constants;
 import org.apache.commons.lang3.ArrayUtils;
 
-public class Implementation {
+public class Flow {
 	private final String oml = Constants.OPENML_XMLNS;
 	
 	private Integer id;
@@ -54,7 +54,7 @@ public class Implementation {
 	private String source_md5;
 	private String binary_md5;
 
-	public Implementation(String name, String external_version, String description, String language, String dependencies ) {
+	public Flow(String name, String external_version, String description, String language, String dependencies ) {
 		this.name = name;
 		this.external_version = external_version;
 		this.description = description;
@@ -62,7 +62,7 @@ public class Implementation {
 		this.dependencies = dependencies;
 	}
 
-	public Implementation(String name, String external_version, String description,
+	public Flow(String name, String external_version, String description,
 			String[] creator, String[] contributor, String licence,
 			String language, String full_description,
 			String installation_notes, String dependencies, String[] tag) {
@@ -219,7 +219,7 @@ public class Implementation {
 		this.parameter = ArrayUtils.addAll( this.parameter, p );
 	}
 	
-	public Implementation getComponentByName( String name ) throws Exception {
+	public Flow getComponentByName( String name ) throws Exception {
 		for( Component c : getComponent() ) {
 			if( c.getImplementation().getName().equals( name ) )
 				return c.getImplementation();
@@ -227,7 +227,7 @@ public class Implementation {
 		throw new Exception("Subimplementation not present.");
 	}
 	
-	public void addComponent( String identifier, Implementation implementation, boolean updateName ) {
+	public void addComponent( String identifier, Flow implementation, boolean updateName ) {
 		Component c = new Component( identifier, implementation );
 		this.component = ArrayUtils.addAll( this.component, c );
 		if (updateName) {
@@ -235,7 +235,7 @@ public class Implementation {
 		}
 	}
 	
-	public void addComponent( String identifier, Implementation implementation ) {
+	public void addComponent( String identifier, Flow implementation ) {
 		addComponent(identifier, implementation, true);
 	}
 	
@@ -250,7 +250,7 @@ public class Implementation {
 		return false;
 	}
 	
-	public Implementation getSubImplementation( String identifier ) throws Exception {
+	public Flow getSubImplementation( String identifier ) throws Exception {
 		if( component != null ) {
 			for( Component p : component ) {
 				if( p.identifier.equals(identifier)) {
@@ -312,9 +312,9 @@ public class Implementation {
 	
 	public static class Component {
 		private String identifier;
-		private Implementation implementation;
+		private Flow implementation;
 		
-		public Component( String identifier, Implementation implementation ) {
+		public Component( String identifier, Flow implementation ) {
 			this.identifier = identifier;
 			this.implementation = implementation;
 		}
@@ -323,7 +323,7 @@ public class Implementation {
 			return identifier;
 		}
 
-		public Implementation getImplementation() {
+		public Flow getImplementation() {
 			return implementation;
 		}
 	}

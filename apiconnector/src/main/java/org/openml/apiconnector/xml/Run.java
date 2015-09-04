@@ -32,7 +32,7 @@ public class Run {
 	private int run_id;
 	private int uploader;
 	private int task_id;
-	private int implementation_id;
+	private int flow_id;
 	private String setup_string;
 	private String error_message;
 	private Parameter_setting[] parameter_settings;
@@ -40,9 +40,9 @@ public class Run {
 	private Data input_data;
 	private Data output_data;
 	
-	public Run( int task_id, String error_message, int implementation_id, String setup_string, Parameter_setting[] parameter_settings, String[] tags ) {
+	public Run( int task_id, String error_message, int flow_id, String setup_string, Parameter_setting[] parameter_settings, String[] tags ) {
 		this.task_id = task_id;
-		this.implementation_id = implementation_id;
+		this.flow_id = flow_id;
 		this.setup_string = setup_string;
 		this.error_message = error_message;
 		this.parameter_settings = parameter_settings;
@@ -68,8 +68,8 @@ public class Run {
 		return task_id;
 	}
 
-	public int getImplementation_id() {
-		return implementation_id;
+	public int getFlow_id() {
+		return flow_id;
 	}
 	
 	public String getError_message() {
@@ -107,13 +107,13 @@ public class Run {
 	}
 	
 	public void addOutputEvaluation( String name, Integer repeat, Integer fold, 
-			Integer sample, String implementation, Double value ) {
-		output_data.addEvaluation(name, repeat, fold, sample, implementation, value);
+			Integer sample, String flow, Double value ) {
+		output_data.addEvaluation(name, repeat, fold, sample, flow, value);
 	}
 	
-	public void addOutputEvaluation( String name, String implementation,
+	public void addOutputEvaluation( String name, String flow,
 			Double value, String array_data ) {
-		output_data.addEvaluation( name, implementation, value, array_data);
+		output_data.addEvaluation( name, flow, value, array_data);
 	}
 	
 	public EvaluationScore[] getOutputEvaluation() {
@@ -183,14 +183,14 @@ public class Run {
 		}
 		
 		public void addEvaluation( String name, Integer repeat, Integer fold, 
-					Integer sample, String implementation, Double value ) {
-			EvaluationScore e = new EvaluationScore( implementation, name, MathHelper.defaultDecimalFormat.format( value ), null, repeat, fold, sample, null );
+					Integer sample, String flow, Double value ) {
+			EvaluationScore e = new EvaluationScore( flow, name, MathHelper.defaultDecimalFormat.format( value ), null, repeat, fold, sample, null );
 			evaluation = ArrayUtils.addAll( evaluation, e );
 		}
 		
-		public void addEvaluation( String name, String implementation,
+		public void addEvaluation( String name, String flow,
 				Double value, String array_data ) {
-			EvaluationScore e = new EvaluationScore( implementation, name, ( value != null ) ? MathHelper.defaultDecimalFormat.format( value ) : null, null, array_data);
+			EvaluationScore e = new EvaluationScore( flow, name, ( value != null ) ? MathHelper.defaultDecimalFormat.format( value ) : null, null, array_data);
 			evaluation = ArrayUtils.addAll( evaluation, e );
 		}
 

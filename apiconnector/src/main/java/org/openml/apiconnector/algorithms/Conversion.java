@@ -27,6 +27,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
+import org.xml.sax.SAXException;
+
 public class Conversion {
 
 	/**
@@ -88,5 +97,18 @@ public class Conversion {
 	
 	public static void log( String status, String action, String message, PrintStream writer ) {
 		writer.println( "["+DateParser.humanReadable.format( System.currentTimeMillis() )+"] ["+status+"] ["+action+"] " + message );
+	}
+	
+	public static boolean validateXML(File xml, File xsd) throws SAXException, IOException {
+		Source xmlFile = new StreamSource(xml);
+		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		Schema schema = schemaFactory.newSchema(xsd);
+		Validator validator = schema.newValidator();
+		try {
+		  validator.validate(xmlFile);
+		  return true;
+		} catch (SAXException e) {
+		  return false;
+		}
 	}
 }

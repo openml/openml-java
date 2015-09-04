@@ -27,7 +27,7 @@ public class HttpConnector implements Serializable {
 	private static final long serialVersionUID = -8589069573065947493L;
 	
 	public static Object doApiRequest( String url, MultipartEntity entity, String ash, int apiVerboseLevel ) throws Exception {
-		entity.addPart("session_hash", new StringBody( ash ) );
+		entity.addPart("api_key", new StringBody( ash ) );
 		
 		String result = "";
 		HttpClient httpclient = new DefaultHttpClient();
@@ -74,7 +74,7 @@ public class HttpConnector implements Serializable {
 		// TODO: integrate ??
 		long contentLength = 0;
 		try {
-			HttpDelete httpdelete = new HttpDelete(url + "?session_hash=" + ash );
+			HttpDelete httpdelete = new HttpDelete(url + "?api_key=" + ash );
             
             HttpResponse response = httpclient.execute(httpdelete);
             HttpEntity resEntity = response.getEntity();
