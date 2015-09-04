@@ -312,11 +312,11 @@ public class Flow {
 	
 	public static class Component {
 		private String identifier;
-		private Flow implementation;
+		private Flow flow;
 		
-		public Component( String identifier, Flow implementation ) {
+		public Component( String identifier, Flow flow ) {
 			this.identifier = identifier;
-			this.implementation = implementation;
+			this.flow = flow;
 		}
 
 		public String getIdentifier() {
@@ -324,7 +324,7 @@ public class Flow {
 		}
 
 		public Flow getImplementation() {
-			return implementation;
+			return flow;
 		}
 	}
 }

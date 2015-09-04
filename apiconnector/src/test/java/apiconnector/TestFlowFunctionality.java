@@ -42,7 +42,7 @@ public class TestFlowFunctionality {
 		client.setVerboseLevel(1);
 		try {
 			Flow created = new Flow("test", "test", "test should be deleted", "english", "UnitTest");
-			
+			created.addComponent("B", new Flow("test2", "test2", "test should be deleted", "english", "UnitTest") );
 			String flowXML = xstream.toXML(created);
 			
 			System.out.println(flowXML);
@@ -51,7 +51,7 @@ public class TestFlowFunctionality {
 			
 			UploadFlow uf = client.flowUpload(f, f, f);
 			
-			client.flowTag(uf.getId(), "testTag");
+		//	client.flowTag(uf.getId(), "testTag"); // TODO: flow tag properly
 			
 			FlowDelete fd = client.flowDelete(uf.getId());
 			
