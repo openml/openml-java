@@ -307,6 +307,8 @@ public class XstreamXmlMapping {
 		
 		// task new
 		xstream.alias("oml:task_new", Task_new.class);
+		xstream.aliasAttribute(Task_new.class, "oml", "xmlns:oml");
+		
 		xstream.alias("oml:input", Task_new.Input.class);
 		
 		xstream.aliasField("oml:task_id", Task_new.class, "task_id");

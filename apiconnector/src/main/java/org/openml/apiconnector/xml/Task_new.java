@@ -2,9 +2,12 @@ package org.openml.apiconnector.xml;
 
 import java.io.Serializable;
 
+import org.openml.apiconnector.settings.Constants;
+
 public class Task_new implements Serializable {
 	
 	private static final long serialVersionUID = -313419200748747105L;
+	private final String oml = Constants.OPENML_XMLNS;
 	private Integer task_id;
 	private Integer task_type_id;
 	private Input[] inputs;
@@ -13,6 +16,10 @@ public class Task_new implements Serializable {
 		this.task_id = task_id;
 		this.task_type_id = task_type_id;
 		this.inputs = inputs;
+	}
+	
+	public String getOml() {
+		return oml;
 	}
 	
 	public Integer getTask_id() {
