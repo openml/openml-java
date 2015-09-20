@@ -269,6 +269,20 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+
+	
+	public UploadTask taskUpload(File description) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("description", new FileBody(description));
+		
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "task/", params, session_hash, verboseLevel);
+		if (apiResult instanceof UploadTask) {
+			return (UploadTask) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to UploadTask");
+		}
+	}
+	
 	public TaskTag taskTag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("flow_id", new StringBody("" + id));

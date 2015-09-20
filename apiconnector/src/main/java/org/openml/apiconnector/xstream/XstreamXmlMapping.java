@@ -49,10 +49,12 @@ import org.openml.apiconnector.xml.SetupTag;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskEvaluations;
 import org.openml.apiconnector.xml.TaskTag;
+import org.openml.apiconnector.xml.Task_new;
 import org.openml.apiconnector.xml.Tasks;
 import org.openml.apiconnector.xml.UploadDataSet;
 import org.openml.apiconnector.xml.UploadFlow;
 import org.openml.apiconnector.xml.UploadRun;
+import org.openml.apiconnector.xml.UploadTask;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
@@ -297,7 +299,23 @@ public class XstreamXmlMapping {
 		xstream.useAttributeFor(Task.Output.Predictions.Feature.class, "type");
 		
 		xstream.registerConverter(new ToAttributedValueConverter(Task.Input.Estimation_procedure.Parameter.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
+		
 
+		// upload task
+		xstream.alias("oml:upload_task", UploadTask.class);
+		xstream.aliasField("oml:id", UploadTask.class, "id");
+		
+		// task new
+		xstream.alias("oml:task_new", Task_new.class);
+		xstream.alias("oml:input", Task_new.Input.class);
+		
+		xstream.aliasField("oml:task_id", Task_new.class, "task_id");
+		xstream.aliasField("oml:task_type_id", Task_new.class, "task_type_id");
+		xstream.addImplicitCollection(Task_new.class, "inputs", "oml:input", Task_new.Input.class);
+		
+		xstream.useAttributeFor(Task_new.Input.class, "name");
+		xstream.registerConverter(new ToAttributedValueConverter(Task_new.Input.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
+		
 		// task evaluation
 		xstream.alias("oml:task_evaluations", TaskEvaluations.class );
 		xstream.aliasField("oml:task_id", TaskEvaluations.class, "task_id");
