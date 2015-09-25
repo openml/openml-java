@@ -111,6 +111,7 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:upload_date", DataSetDescription.class, "upload_date");
 		xstream.aliasField("oml:licence", DataSetDescription.class, "licence");
 		xstream.aliasField("oml:url", DataSetDescription.class, "url");
+		xstream.aliasField("oml:file_id", DataSetDescription.class, "file_id");
 		xstream.aliasField("oml:row_id_attribute", DataSetDescription.class, "row_id_attribute");
 		xstream.aliasField("oml:default_target_attribute", DataSetDescription.class, "default_target_attribute");
 		xstream.aliasField("oml:visibility", DataSetDescription.class, "visibility");

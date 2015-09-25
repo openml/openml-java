@@ -43,6 +43,7 @@ public class DataSetDescription implements Serializable {
 	private String language;
 	private String licence;
 	private String url;
+	private Integer file_id;
 	private String row_id_attribute;
 	private String default_target_attribute;
 	private String[] ignore_attribute;
@@ -195,6 +196,10 @@ public class DataSetDescription implements Serializable {
 	public void unsetUrl() {
 		this.url = null;
 	}
+	
+	public int getFile_id() {
+		return file_id;
+	}
 
 	public String getRow_id_attribute() {
 		return row_id_attribute;
@@ -230,10 +235,10 @@ public class DataSetDescription implements Serializable {
 		return md5_checksum;
 	}
 	
-	public File getDataset( String session_hash ) throws Exception {
+	public File getDataset( String api_key ) throws Exception {
 		// for privacy settings
 		String url_suffix = "";
-		if( session_hash != null ) { url_suffix = "?session_hash=" + session_hash; }
+		if( api_key != null ) { url_suffix = "?api_key=" + api_key; }
 		
 		if( dataset_cache == null ) 
 			dataset_cache = ArffHelper.downloadAndCache( "dataset", getId(), getUrl() + url_suffix, getMd5_checksum() );

@@ -29,8 +29,7 @@ import java.net.URLConnection;
 
 public class Input {
 
-	public static InputStreamReader getURL( String sUrl ) throws IOException {
-		URL url = new URL( sUrl );
+	public static InputStreamReader getURL( URL url ) throws IOException {
 		URLConnection urlConnection = url.openConnection();
 		urlConnection.setConnectTimeout(1000);
 		urlConnection.setReadTimeout(30000);
