@@ -398,11 +398,7 @@ public class OpenmlConnector implements Serializable {
 	 *             down, etc.
 	 */
 	public FlowExists flowExists(String name, String external_version) throws Exception {
-		MultipartEntity params = new MultipartEntity();
-		params.addPart("name", new StringBody(name));
-		params.addPart("external_version", new StringBody(external_version));
-		
-		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "flow/exists", params, getApiKey(), verboseLevel);
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "flow/exists/" + name + "/" + external_version, getApiKey(), verboseLevel);
 		if (apiResult instanceof FlowExists) {
 			return (FlowExists) apiResult;
 		} else {
