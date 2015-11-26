@@ -47,6 +47,7 @@ import org.openml.apiconnector.xml.RunTag;
 import org.openml.apiconnector.xml.SetupDelete;
 import org.openml.apiconnector.xml.SetupTag;
 import org.openml.apiconnector.xml.Task;
+import org.openml.apiconnector.xml.TaskDelete;
 import org.openml.apiconnector.xml.TaskEvaluations;
 import org.openml.apiconnector.xml.TaskTag;
 import org.openml.apiconnector.xml.Task_new;
@@ -352,6 +353,10 @@ public class XstreamXmlMapping {
 		xstream.useAttributeFor(Tasks.Task.Quality.class, "name");
 		xstream.registerConverter(new ToAttributedValueConverter(Tasks.Task.Quality.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
 		
+
+		// task delete
+		xstream.alias("oml:task_delete", TaskDelete.class);
+		xstream.aliasField("oml:id", TaskDelete.class, "id");
 		
 		
 		// run

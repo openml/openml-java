@@ -296,7 +296,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-
+	public TaskDelete taskDelete(int task_id) throws Exception {
+		Object apiResult = HttpConnector.doApiDelete(OPENML_URL + API_PART + "task/" + task_id, getApiKey(), verboseLevel);
+		if (apiResult instanceof TaskDelete) {
+			return (TaskDelete) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to TaskDelete");
+		}
+	}
 	
 	public UploadTask taskUpload(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
@@ -609,8 +616,15 @@ public class OpenmlConnector implements Serializable {
 	 * @throws Exception
 	 */
 	public JSONObject freeQuery(String sql) throws Exception {
-		return new JSONObject(getStringFromUrl(OPENML_URL + "api_query/?q=" + URLEncoder.encode(sql, "ISO-8859-1")
-				+ "&hash=" + getApiKey()));
+		
+		String res = getStringFromUrl(OPENML_URL + "api_query/?q=" + URLEncoder.encode(sql, "ISO-8859-1")
+				+ "&hash=" + getApiKey());
+		
+		if (verboseLevel >= Constants.VERBOSE_LEVEL_XML) {
+			System.out.println(res + "\n==========\n");
+		}
+		
+		return new JSONObject(res);
 	}
 
 	/**
