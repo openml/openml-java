@@ -319,7 +319,7 @@ public class OpenmlConnector implements Serializable {
 	
 	public TaskTag taskTag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
-		params.addPart("flow_id", new StringBody("" + id));
+		params.addPart("task_id", new StringBody("" + id));
 		params.addPart("tag", new StringBody(tag));
 		
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "task/tag", params, getApiKey(), verboseLevel);
@@ -541,7 +541,7 @@ public class OpenmlConnector implements Serializable {
 		params.addPart("setup_id", new StringBody("" + id));
 		params.addPart("tag", new StringBody(tag));
 		
-		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "setup/tag", getApiKey(), verboseLevel);
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "setup/tag", params, getApiKey(), verboseLevel);
 		if (apiResult instanceof SetupTag) {
 			return (SetupTag) apiResult;
 		} else {
