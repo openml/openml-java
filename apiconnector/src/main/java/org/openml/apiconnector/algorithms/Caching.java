@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import org.openml.apiconnector.io.HttpConnector;
 import org.openml.apiconnector.settings.Settings;
-import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 public class Caching {
 	

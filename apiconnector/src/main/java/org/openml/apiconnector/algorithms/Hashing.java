@@ -22,9 +22,12 @@ package org.openml.apiconnector.algorithms;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import org.apache.commons.codec.digest.DigestUtils;
 
 public class Hashing {
 
@@ -55,7 +58,7 @@ public class Hashing {
 	 * @throws IOException
 	 */
 	public static String md5(File input) throws IOException {
-		FileInputStream fis = new FileInputStream(input);
-		return org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
+		InputStream fis = new FileInputStream(input);
+		return DigestUtils.md5Hex(fis);
 	}
 }
