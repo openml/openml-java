@@ -597,7 +597,7 @@ public class OpenmlConnector implements Serializable {
 	 */
 	public Job jobRequest(String workbench, String task_type_id) throws Exception {
 		MultipartEntity params = new MultipartEntity();
-		params.addPart("workbencg", new StringBody(workbench));
+		params.addPart("workbench", new StringBody(workbench));
 		params.addPart("task_type_id", new StringBody(task_type_id));
 		
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "job/request", params, getApiKey(), verboseLevel);
