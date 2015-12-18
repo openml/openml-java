@@ -379,10 +379,16 @@ public class OpenmlConnector implements Serializable {
 	 *             down, etc.
 	 */
 	public FlowDelete flowDelete(int id) throws Exception {
-		MultipartEntity params = new MultipartEntity();
-		params.addPart("implementation_id", new StringBody("" + id));
-
 		Object apiResult = HttpConnector.doApiDelete(OPENML_URL + API_PART + "flow/" + id, getApiKey(), verboseLevel);
+		if (apiResult instanceof FlowDelete) {
+			return (FlowDelete) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to ImplementationDelete");
+		}
+	}
+	
+	public FlowDelete flowForceDelete(int id) throws Exception {
+		Object apiResult = HttpConnector.doApiDelete(OPENML_URL + API_PART + "flow/" + id + "/force", getApiKey(), verboseLevel);
 		if (apiResult instanceof FlowDelete) {
 			return (FlowDelete) apiResult;
 		} else {

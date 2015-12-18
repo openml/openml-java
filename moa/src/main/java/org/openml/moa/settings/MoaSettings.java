@@ -4,6 +4,6 @@ import moa.core.Globals;
 
 public class MoaSettings {
 	
-	public static final String MOA_VERSION = Globals.versionString.replace(' ', '_');
+	public static final String MOA_VERSION = "Moa_" + Globals.versionString.replace(' ', '_');
 
 }
