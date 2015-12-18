@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.OpenmlConnector;
@@ -23,6 +25,7 @@ import moa.classifiers.Classifier;
 import moa.options.ClassOption;
 import moa.options.FileOption;
 import moa.options.FlagOption;
+import moa.options.ListOption;
 import moa.options.Option;
 import moa.options.WEKAClassOption;
 
@@ -48,15 +51,30 @@ public class MoaAlgorithm {
 		return ui.getId();
 	}
 	
-	public static ArrayList<Run.Parameter_setting> getOptions( Flow i, Option[] options ) {
+	public static ArrayList<Run.Parameter_setting> getOptions( Flow flow, Option[] options ) {
 		ArrayList<Run.Parameter_setting> result = new ArrayList<Run.Parameter_setting>();
 		for( Option option : options ) {
 			if( option instanceof FlagOption ) {
 				FlagOption o = (FlagOption) option;
-				result.add( new Parameter_setting(i.getId(), o.getCLIChar() + "", o.isSet() ? "true" : "false") );
+				result.add( new Parameter_setting(flow.getId(), o.getCLIChar() + "", o.isSet() ? "true" : "false") );
 			} else if( option instanceof FileOption ) {
 				// ignore file options
 				continue;
+			} else if (option instanceof ListOption) {
+				// TODO: do something better for subclassifiers
+				ListOption o = (ListOption) option;
+				List<String> values = new ArrayList<String>();
+				for (int i = 0; i < o.getList().length; i++) {
+					values.add(o.getList()[i].getValueAsCLIString());
+				}
+				Collections.sort(values);
+
+				String cliString = "";
+				for (String value : values) {
+					cliString += "," + value;
+				}
+				
+				result.add( new Parameter_setting(flow.getId(), option.getCLIChar() + "", cliString ) );
 			} else if( option instanceof ClassOption ) {
 				ClassOption o = (ClassOption) option;
 				if( o.getRequiredType().isAssignableFrom( Classifier.class ) ) {
@@ -64,27 +82,27 @@ public class MoaAlgorithm {
 						Classifier subclassifier = (Classifier) ClassOption.cliStringToObject( o.getValueAsCLIString(), o.getRequiredType(), null );
 						Flow subimplementation = create( subclassifier );
 						
-						result.addAll( getOptions( i.getComponentByName( subimplementation.getName() ), subclassifier.getOptions().getOptionArray() ) );
-						result.add( new Parameter_setting( i.getId(), option.getCLIChar() + "", subclassifier.getClass().getName() ) );
+						result.addAll( getOptions( flow.getComponentByName( subimplementation.getName() ), subclassifier.getOptions().getOptionArray() ) );
+						result.add( new Parameter_setting( flow.getId(), option.getCLIChar() + "", subclassifier.getClass().getName() ) );
 					} catch (Exception e) {
-						result.add( new Parameter_setting(i.getId(), option.getCLIChar() + "", option.getValueAsCLIString() ) );
+						result.add( new Parameter_setting(flow.getId(), option.getCLIChar() + "", option.getValueAsCLIString() ) );
 						e.printStackTrace(); 
 					}
 				} else {
-					result.add( new Parameter_setting(i.getId(), option.getCLIChar() + "", option.getValueAsCLIString() ) );
+					result.add( new Parameter_setting(flow.getId(), option.getCLIChar() + "", option.getValueAsCLIString() ) );
 				}
 			} else if( option instanceof WEKAClassOption ) {
 				try {
 					String[] params = Utils.splitOptions( option.getValueAsCLIString() );
 					Flow subimplementation = wekaSubimplementation( (WEKAClassOption) option );
-					result.addAll( WekaAlgorithm.getParameterSetting( params, i.getComponentByName( subimplementation.getName() ) ) );
-					result.add( new Parameter_setting( i.getId(), option.getCLIChar() + "", params[0] ) );
+					result.addAll( WekaAlgorithm.getParameterSetting( params, flow.getComponentByName( subimplementation.getName() ) ) );
+					result.add( new Parameter_setting( flow.getId(), option.getCLIChar() + "", params[0] ) );
 				} catch( Exception e ) {
-					result.add( new Parameter_setting(i.getId(), option.getCLIChar() + "", option.getValueAsCLIString() ) );
+					result.add( new Parameter_setting(flow.getId(), option.getCLIChar() + "", option.getValueAsCLIString() ) );
 					e.printStackTrace(); 
 				}
 			}else {
-				result.add( new Parameter_setting(i.getId(), option.getCLIChar() + "", option.getValueAsCLIString() ) );
+				result.add( new Parameter_setting(flow.getId(), option.getCLIChar() + "", option.getValueAsCLIString() ) );
 			}
 		}
 		

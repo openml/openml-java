@@ -1,7 +1,9 @@
 package org.openml.moa.settings;
 
-public class MoaSettings {
+import moa.core.Globals;
 
-	public static final String MOA_VERSION = "Moa_2014.11";
+public class MoaSettings {
 	
+	public static final String MOA_VERSION = Globals.versionString.replace(' ', '_');
+
 }
