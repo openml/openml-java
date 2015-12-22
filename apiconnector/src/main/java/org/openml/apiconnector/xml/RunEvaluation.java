@@ -28,6 +28,10 @@ public class RunEvaluation {
 		this.error = error;
 	}
 	
+	public void setWarning( String warning ) {
+		this.warning = warning;
+	}
+	
 	public String getOml() {
 		return oml;
 	}
