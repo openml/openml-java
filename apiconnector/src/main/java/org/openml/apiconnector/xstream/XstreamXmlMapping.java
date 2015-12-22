@@ -435,6 +435,7 @@ public class XstreamXmlMapping {
 		xstream.aliasAttribute(RunEvaluation.class, "oml", "xmlns:oml");
 		xstream.aliasField("oml:run_id", RunEvaluation.class, "run_id");
 		xstream.aliasField("oml:error", RunEvaluation.class, "error");
+		xstream.aliasField("oml:warning", RunEvaluation.class, "warning");
 		xstream.addImplicitCollection(RunEvaluation.class, "evaluation", "oml:evaluation", EvaluationScore.class);
 
 		// delete setup

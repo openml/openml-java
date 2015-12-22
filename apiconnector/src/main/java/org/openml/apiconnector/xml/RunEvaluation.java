@@ -8,6 +8,7 @@ public class RunEvaluation {
 	
 	private Integer run_id;
 	private String error;
+	private String warning;
 	private EvaluationScore[] evaluation;
 	
 	public RunEvaluation( int run_id ) {
@@ -37,6 +38,10 @@ public class RunEvaluation {
 
 	public String getError() {
 		return error;
+	}
+
+	public String getWarning() {
+		return warning;
 	}
 
 	public EvaluationScore[] getEvaluation_scores() {
