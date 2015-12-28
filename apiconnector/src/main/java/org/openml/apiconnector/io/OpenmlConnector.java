@@ -111,6 +111,7 @@ public class OpenmlConnector implements Serializable {
 	
 	public File getXSD(String name) throws IOException {
 		File file = File.createTempFile("name", "xsd");
+		file.deleteOnExit();
 		URL url = new URL(getApiUrl() + "xsd/" + name + "?api_key=" + getApiKey());
 		FileUtils.copyURLToFile(url, file);
 		return file;

@@ -74,7 +74,7 @@ public class MoaAlgorithm {
 					cliString += "," + value;
 				}
 				
-				result.add( new Parameter_setting(flow.getId(), option.getCLIChar() + "", cliString ) );
+				result.add( new Parameter_setting(flow.getId(), option.getCLIChar() + "", cliString.substring(1) ) );
 			} else if( option instanceof ClassOption ) {
 				ClassOption o = (ClassOption) option;
 				if( o.getRequiredType().isAssignableFrom( Classifier.class ) ) {
