@@ -42,13 +42,13 @@ import org.openml.apiconnector.xml.ApiError;
 import org.openml.apiconnector.xml.Flow;
 import org.openml.apiconnector.xml.Job;
 import org.openml.apiconnector.xml.Run;
+import org.openml.apiconnector.xml.RunList;
 import org.openml.apiconnector.xml.RunReset;
 import org.openml.apiconnector.xml.RunTag;
 import org.openml.apiconnector.xml.SetupDelete;
 import org.openml.apiconnector.xml.SetupTag;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskDelete;
-import org.openml.apiconnector.xml.TaskEvaluations;
 import org.openml.apiconnector.xml.TaskTag;
 import org.openml.apiconnector.xml.Task_new;
 import org.openml.apiconnector.xml.Tasks;
@@ -320,26 +320,6 @@ public class XstreamXmlMapping {
 		xstream.useAttributeFor(Task_new.Input.class, "name");
 		xstream.registerConverter(new ToAttributedValueConverter(Task_new.Input.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
 		
-		// task evaluation
-		xstream.alias("oml:task_evaluations", TaskEvaluations.class );
-		xstream.aliasField("oml:task_id", TaskEvaluations.class, "task_id");
-		xstream.aliasField("oml:task_name", TaskEvaluations.class, "task_name");
-		xstream.aliasField("oml:task_type_id", TaskEvaluations.class, "task_type_id");
-		xstream.aliasField("oml:input_data", TaskEvaluations.class, "input_data");
-		xstream.aliasField("oml:estimation_procedure", TaskEvaluations.class, "estimation_procedure");
-		
-		xstream.addImplicitCollection(TaskEvaluations.class, "evaluation", "oml:evaluation", TaskEvaluations.Evaluation.class);
-		xstream.aliasField("oml:run_id",TaskEvaluations.Evaluation.class, "run_id");
-		xstream.aliasField("oml:setup_id",TaskEvaluations.Evaluation.class, "setup_id");
-		xstream.aliasField("oml:flow_id",TaskEvaluations.Evaluation.class,"flow_id");
-		xstream.aliasField("oml:flow",TaskEvaluations.Evaluation.class,"flow");
-		xstream.useAttributeFor(TaskEvaluations.Evaluation.class, "interval_start");
-		xstream.useAttributeFor(TaskEvaluations.Evaluation.class, "interval_end");
-		
-		xstream.addImplicitCollection(TaskEvaluations.Evaluation.class, "measure", "oml:measure", TaskEvaluations.Evaluation.Measure.class);
-		xstream.useAttributeFor(TaskEvaluations.Evaluation.Measure.class, "name");
-		xstream.registerConverter(new ToAttributedValueConverter(TaskEvaluations.Evaluation.Measure.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
-		
 		// tasks (overview)
 		xstream.alias("oml:tasks", Tasks.class );
 		xstream.addImplicitCollection(Tasks.class, "task", "oml:task", Tasks.Task.class);
@@ -403,6 +383,18 @@ public class XstreamXmlMapping {
 		xstream.useAttributeFor(EvaluationScore.class, "sample");
 		xstream.useAttributeFor(EvaluationScore.class, "interval_start");
 		xstream.useAttributeFor(EvaluationScore.class, "interval_end");
+		
+		// run list
+		xstream.alias("oml:runs", RunList.class);
+		xstream.aliasAttribute(RunList.class, "oml", "xmlns:oml");
+		xstream.addImplicitCollection(RunList.class, "runs", "oml:run", RunList.Run.class);
+	//	xstream.aliasField("oml:run", RunList.class, "run");
+		
+		xstream.aliasField("oml:run_id", RunList.Run.class, "run_id");
+		xstream.aliasField("oml:task_id", RunList.Run.class, "task_id");
+		xstream.aliasField("oml:setup_id", RunList.Run.class, "setup_id");
+		xstream.aliasField("oml:uploader", RunList.Run.class, "uploader");
+		xstream.aliasField("oml:error_message", RunList.Run.class, "error_message");
 		
 		// upload run
 		xstream.alias("oml:upload_run", UploadRun.class);

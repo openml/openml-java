@@ -483,6 +483,24 @@ public class OpenmlConnector implements Serializable {
 			throw new DataFormatException("Casting Api Object to UploadRun");
 		}
 	}
+	
+	public RunList runList(Integer task_id, Integer setup_id) throws Exception {
+		String suffix = "";
+		
+		if (task_id != null) {
+			suffix += "/task/" + task_id;
+		}
+		if (setup_id != null) {
+			suffix += "/setup/" + setup_id;
+		}
+		
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "run/list" + suffix, getApiKey(), verboseLevel);
+		if (apiResult instanceof RunList) {
+			return (RunList) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to Task");
+		}
+	}
 
 	public RunTag runTag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
