@@ -24,20 +24,23 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.DataFormatException;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONObject;
 import org.openml.apiconnector.algorithms.Caching;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.settings.Settings;
+
 import org.openml.apiconnector.xml.*;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 
 public class OpenmlConnector implements Serializable {
 	private static final long serialVersionUID = 7362620508675762264L;
@@ -484,14 +487,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-	public RunList runList(Integer task_id, Integer setup_id) throws Exception {
+	public RunList runList(List<Integer> task_id, List<Integer> setup_id) throws Exception {
 		String suffix = "";
 		
 		if (task_id != null) {
-			suffix += "/task/" + task_id;
+			suffix += "/task/" + StringUtils.join(task_id, ',');
 		}
 		if (setup_id != null) {
-			suffix += "/setup/" + setup_id;
+			suffix += "/setup/" + StringUtils.join(setup_id, ',');
 		}
 		
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "run/list" + suffix, getApiKey(), verboseLevel);
