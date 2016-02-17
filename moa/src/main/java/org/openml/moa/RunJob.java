@@ -1,5 +1,8 @@
 package org.openml.moa;
 
+import java.util.Arrays;
+
+import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Config;
 import org.openml.apiconnector.settings.Settings;
@@ -16,7 +19,17 @@ public class RunJob {
 	public static void main( String[] args ) throws Exception {
 		int n;
 		int ttid;
-		Config c = new Config();
+		
+		String strN = Utils.getOption('N', args);
+		String strTtid = Utils.getOption('T', args);
+		String strConfig = Utils.getOption('C', args);
+		
+		Config c;
+		if (strConfig != null && strConfig.equals("") == false) {
+			c = new Config(strConfig);
+		} else {
+			c = new Config();
+		}
 		
 		if( c.getServer() != null ) {
 			apiconnector = new OpenmlConnector( c.getServer(), c.getApiKey() );
@@ -30,29 +43,33 @@ public class RunJob {
 			}
 		}
 		
-		String strN = Utils.getOption('N', args);
-		String strTtid = Utils.getOption('T', args);
-		
 		n = ( strN.equals("") ) ? 1 : Integer.parseInt(strN);
 		ttid = ( strTtid.equals("") ) ? 4 : Integer.parseInt(strTtid);
 		
 		for( int i = 0; i < n; ++i ) {
-			doTask(ttid);
+			doTask(ttid, c);
 		}
 	}
 	
-	public static void doTask(int ttid) {
+	public static void doTask(int ttid, Config config) {
 		try {
-			Job j = apiconnector.jobRequest( MoaSettings.MOA_VERSION, "" + ttid );
 			
-			System.err.println( "task: " + j.getTask_id() + "; learner: " + j.getLearner() );
+			String moaVersion = MoaSettings.MOA_VERSION;
 			
-			String[] taskArgs = new String[5];
+			Conversion.log( "OK", "Request Job", "Moa Version: " + moaVersion + "; ttid: " + ttid);
+			Job j = apiconnector.jobRequest( moaVersion, "" + ttid );
+			Conversion.log( "OK","Start Job","Task: " + j.getTask_id() + "; learner: " + j.getLearner() );
+			
+			String[] taskArgs = new String[7];
 			taskArgs[0] = "openml.OpenmlDataStreamClassification";
 			taskArgs[1] = "-l";
 			taskArgs[2] = "(" + j.getLearner() + ")";
 			taskArgs[3] = "-t";
 			taskArgs[4] = ""+j.getTask_id();
+			taskArgs[5] = "-c";
+			taskArgs[6] = config.toString().replace('\n', ';');
+			
+			Conversion.log("OK", "CMD", Arrays.toString(taskArgs));
 			
 			DoTask.main( taskArgs );
 		} catch( Exception e ) {

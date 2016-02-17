@@ -14,6 +14,7 @@ import org.openml.apiconnector.models.MetricScore;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Config;
+import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.xml.Task;
 
 import moa.classifiers.Classifier;
@@ -26,6 +27,7 @@ import moa.evaluation.LearningEvaluation;
 import moa.options.ClassOption;
 import moa.options.FileOption;
 import moa.options.IntOption;
+import moa.options.StringOption;
 import moa.streams.InstanceStream;
 import moa.streams.openml.OpenmlTaskReader;
 import moa.tasks.MainTask;
@@ -60,6 +62,13 @@ public class OpenmlDataStreamClassification extends MainTask {
 			"How many instances between samples of the learning performance.",
 			100000, 0, Integer.MAX_VALUE);
 
+	public StringOption openmlConfigOption = new StringOption("openmlConfig", 
+			'c', 
+			"A semi-colon separated string passing on OpenML config items" +
+			"Leave empty to use config file on disk (" + 
+					Constants.OPENML_DIRECTORY + "/openml.conf)", 
+			"");
+	
 	public FileOption dumpFileOption = new FileOption("dumpFile", 'd',
 			"File to append intermediate csv reslts to.", null, "csv", true);
 	
@@ -75,10 +84,16 @@ public class OpenmlDataStreamClassification extends MainTask {
 
 	@Override
 	protected Object doMainTask(TaskMonitor monitor, ObjectRepository repository) {
-		try {
-			config = new Config();
-		} catch (Exception e) { 
-			throw new RuntimeException("Error loading config file openml.conf. Please check whether it exists. " + e.getMessage() );
+		String configStr = openmlConfigOption.getValue();
+		
+		if (configStr != null && configStr != "") {
+			config = new Config(configStr);
+		} else {
+			try {
+				config = new Config();
+			} catch (Exception e) { 
+				throw new RuntimeException("Error loading config file openml.conf. Please check whether it exists. " + e.getMessage() );
+			}
 		}
 		
 		if( config.getServer() != null ) {
