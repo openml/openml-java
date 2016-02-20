@@ -1,17 +1,23 @@
 package moa.classifiers.meta;
 
 import weka.core.Instance;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import moa.classifiers.AbstractClassifier;
 import moa.classifiers.Classifier;
 import moa.core.Measurement;
 import moa.core.ObjectRepository;
 import moa.options.ClassOption;
-import moa.options.FloatOption;
+import moa.options.FlagOption;
+import moa.options.IntOption;
 import moa.options.ListOption;
 import moa.options.Option;
 import moa.tasks.TaskMonitor;
 
-public class WeightedEnsemble extends AbstractClassifier {
+public abstract class BlastAbstract extends AbstractClassifier {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -25,35 +31,46 @@ public class WeightedEnsemble extends AbstractClassifier {
                 new ClassOption("", ' ', "", Classifier.class, "lazy.kNN"),
                 new ClassOption("", ' ', "", Classifier.class, "trees.HoeffdingTree")},
            ',');
-
-	public FloatOption alphaOption = new FloatOption(
-            "alpha",
-            'a',
-            "The fading factor.",
-            0.99, 0, 1);
+	
+	public IntOption gracePerionOption = new IntOption(
+            "gracePeriod",
+            'g',
+            "How many instances before we reevalate the best classifier",
+            1, 1, Integer.MAX_VALUE);
+	
+	public IntOption activeClassifiersOption = new IntOption(
+			"activeClassifiers",
+			'k',
+			"The number of active classifiers (used for voting)",
+			1, 1, Integer.MAX_VALUE);
+	
+	public FlagOption weightClassifiersOption = new FlagOption(
+			"weightClassifiers", 
+			'p',
+			"Uses online performance estimation to weight the classifiers");
 	
 	protected Classifier[] ensemble;
     
     protected double[] historyTotal;
     
-    protected double aValue;
-    
     protected Integer instancesSeen;
+    
+    List<Integer> topK;
 	
 	@Override
 	public double[] getVotesForInstance(Instance inst) {
 		double[] votes = new double[inst.classAttribute().numValues()];
-	//	System.out.println(inst.classAttribute());
 		
-		for (int i = 0; i < ensemble.length; ++i) {
-			double[] memberVotes = normalize(ensemble[i].getVotesForInstance(inst));
-	//		System.out.println(ensemble[i].getCLICreationString(Classifier.class) + " - " +  Arrays.toString(memberVotes));
+		for (int i = 0; i < topK.size(); ++i) {
+			double[] memberVotes = normalize(ensemble[topK.get(i)].getVotesForInstance(inst));
+			double weight = 1.0;
 			
-			if (memberVotes.length <= votes.length) {
-				for (int j = 0; j < memberVotes.length; ++j) {
-					votes[j] += memberVotes[j] * historyTotal[i];
-				}
+			if (weightClassifiersOption.isSet()) {
+				weight = historyTotal[topK.get(i)];
 			}
+			
+			// make internal classifiers so-called "hard classifiers"
+			votes[maxIndex(memberVotes)] += 1.0 * weight;
 		}
 		
 		return votes;
@@ -75,25 +92,10 @@ public class WeightedEnsemble extends AbstractClassifier {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public void resetLearningImpl() {
-		this.historyTotal = new double[this.ensemble.length];
-		for (int i = 0; i < this.ensemble.length; ++i) {
-			this.historyTotal[i] = 1.0;
-		}
-		
-        this.instancesSeen = 0;
-        
-        for (int i = 0; i < this.ensemble.length; i++) {
-            this.ensemble[i].resetLearning();
-        }
-	}
 	
 	@Override
     public void prepareForUseImpl(TaskMonitor monitor,
             ObjectRepository repository) {
-		aValue = alphaOption.getValue();
 		
         Option[] learnerOptions = this.baselearnersOption.getList();
         this.ensemble = new Classifier[learnerOptions.length];
@@ -112,29 +114,25 @@ public class WeightedEnsemble extends AbstractClassifier {
             }
         }
         super.prepareForUseImpl(monitor, repository);
+        
+        topK = topK(historyTotal, activeClassifiersOption.getValue());
     }
-
-	@Override
-	public void trainOnInstanceImpl(Instance inst) {
+	
+	protected static List<Integer> topK(double[] scores, int k) {
+		double[] scoresWorking = Arrays.copyOf(scores, scores.length);
 		
-		for (int i = 0; i < this.ensemble.length; i++) {
-			
-			// Online Performance estimation
-			double[] votes = ensemble[i].getVotesForInstance(inst);
-			boolean correct = (maxIndex(votes) * 1.0 == inst.classValue());
-			
-			historyTotal[i] = historyTotal[i] * aValue;
-			if (correct) {
-				historyTotal[i] += 1;
-			}
-			
-            this.ensemble[i].trainOnInstance(inst);
-        }
+		List<Integer> topK = new ArrayList<Integer>();
 		
-		instancesSeen += 1;
+		for (int i = 0; i < k; ++i) {
+			int bestIdx = maxIndex(scoresWorking);
+			topK.add(bestIdx);
+			scoresWorking[bestIdx] = -1;
+		}
+		
+		return topK;
 	}
 	
-	private int maxIndex(double[] scores) {
+	protected static int maxIndex(double[] scores) {
 		int bestIdx = 0;
 		for (int i = 1; i < scores.length; ++i) {
 			if (scores[i] > scores[bestIdx]) {
@@ -144,7 +142,7 @@ public class WeightedEnsemble extends AbstractClassifier {
 		return bestIdx;
 	}
 	
-	private double[] normalize(double[] input) {
+	protected static double[] normalize(double[] input) {
 		double sum = 0.0;
 		for (int i = 0; i < input.length; ++i) {
 			sum += input[i];
@@ -153,6 +151,5 @@ public class WeightedEnsemble extends AbstractClassifier {
 			input[i] /= sum;
 		}
 		return input;
-		
 	}
 }

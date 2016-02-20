@@ -86,10 +86,12 @@ public class OpenmlDataStreamClassification extends MainTask {
 	protected Object doMainTask(TaskMonitor monitor, ObjectRepository repository) {
 		String configStr = openmlConfigOption.getValue();
 		
-		if (configStr != null && configStr != "") {
+		if (configStr != null && !configStr.equals("")) {
 			config = new Config(configStr);
+			System.err.println("A");
 		} else {
 			try {
+				System.err.println("B");
 				config = new Config();
 			} catch (Exception e) { 
 				throw new RuntimeException("Error loading config file openml.conf. Please check whether it exists. " + e.getMessage() );

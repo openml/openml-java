@@ -78,10 +78,14 @@ public class ResultListener {
 		
 		Map<String, File> output_files = new HashMap<String, File>();
 		output_files.put( "predictions", results );
-		
-		UploadRun ur = apiconnector.runUpload(descriptionXML, output_files );
-		Conversion.log( "OK", "Upload Result", "Result successfully uploaded, with rid " + ur.getRun_id() );
-		return true;
+		try {
+			UploadRun ur = apiconnector.runUpload(descriptionXML, output_files );
+			Conversion.log( "OK", "Upload Result", "Result successfully uploaded, with rid " + ur.getRun_id() );
+			return true;
+		} catch (Exception e) {
+			Conversion.log( "Error", "Upload Result", "Unable to upload: " + e.getMessage() );
+			return false;
+		}
 	}
 	
 	public void addPrediction( int row_id, double[] predictions, int correct ) throws IOException {

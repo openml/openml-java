@@ -684,9 +684,8 @@ public class OpenmlConnector implements Serializable {
 
 	public URL getOpenmlFileUrl(int id, String filename) throws Exception {
 		if (filename == null) {
-			filename = "file";
-		}
+			filename = "file"; }
 		String suffix = api_key == null ? "" : "?api_key=" + getApiKey();
-		return new URL(OPENML_URL + "data/download/" + id + "/" + filename + suffix);
+		return new URL(OPENML_URL + "data/download/" + id + "/" + URLEncoder.encode(filename, "UTF-8") +  suffix );
 	}
 }
