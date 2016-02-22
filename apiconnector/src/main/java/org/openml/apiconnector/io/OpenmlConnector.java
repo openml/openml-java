@@ -595,6 +595,20 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	public SetupDifferences setupDifferences(int setupA, int setupB, int task_id, int task_size, int differences) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("task_id", new StringBody("" + task_id));
+		params.addPart("task_size", new StringBody("" + task_size));
+		params.addPart("differences", new StringBody("" + differences));
+		
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "setup/differences/" + setupA + "/" + setupB, params, getApiKey(), verboseLevel);
+		if (apiResult instanceof SetupDifferences) {
+			return (SetupDifferences) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to SetupDelete");
+		}
+	}
+	
 	public FileUpload fileUpload(File file) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		if (verboseLevel >= Constants.VERBOSE_LEVEL_ARFF) {

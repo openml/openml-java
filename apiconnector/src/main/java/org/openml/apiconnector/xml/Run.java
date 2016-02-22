@@ -32,6 +32,7 @@ public class Run {
 	private int run_id;
 	private int uploader;
 	private int task_id;
+	private int setup_id;
 	private int flow_id;
 	private String setup_string;
 	private String error_message;
@@ -68,6 +69,10 @@ public class Run {
 		return task_id;
 	}
 
+	public int getSetup_id() {
+		return setup_id;
+	}
+	
 	public int getFlow_id() {
 		return flow_id;
 	}

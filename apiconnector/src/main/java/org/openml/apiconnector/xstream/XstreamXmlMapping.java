@@ -46,6 +46,7 @@ import org.openml.apiconnector.xml.RunList;
 import org.openml.apiconnector.xml.RunReset;
 import org.openml.apiconnector.xml.RunTag;
 import org.openml.apiconnector.xml.SetupDelete;
+import org.openml.apiconnector.xml.SetupDifferences;
 import org.openml.apiconnector.xml.SetupTag;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskDelete;
@@ -350,6 +351,7 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:uploader", Run.class, "uploader");
 		xstream.aliasField("oml:flow_id", Run.class, "flow_id");
 		xstream.aliasField("oml:error_message", Run.class, "error_message");
+		xstream.aliasField("oml:setup_id", Run.class, "setup_id");
 		xstream.aliasField("oml:setup_string", Run.class, "setup_string");
 		xstream.aliasField("oml:input_data", Run.class, "input_data");
 		xstream.aliasField("oml:output_data", Run.class, "output_data");
@@ -430,6 +432,18 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:warning", RunEvaluation.class, "warning");
 		xstream.addImplicitCollection(RunEvaluation.class, "evaluation", "oml:evaluation", EvaluationScore.class);
 
+		// setupDifferences
+		xstream.alias("oml:setup_differences", SetupDifferences.class);
+		xstream.aliasAttribute(RunList.class, "oml", "xmlns:oml");
+		xstream.addImplicitCollection(SetupDifferences.class, "tasks", "oml:task", SetupDifferences.Task.class);
+	//	xstream.aliasField("oml:run", RunList.class, "run");
+
+		xstream.aliasField("oml:setupA", SetupDifferences.Task.class, "setupA");
+		xstream.aliasField("oml:setupB", SetupDifferences.Task.class, "setupB");
+		xstream.aliasField("oml:task_id", SetupDifferences.Task.class, "task_id");
+		xstream.aliasField("oml:task_size", SetupDifferences.Task.class, "task_size");
+		xstream.aliasField("oml:differences", SetupDifferences.Task.class, "differences");
+		
 		// delete setup
 		xstream.alias("oml:setup_delete", SetupDelete.class);
 		xstream.aliasField("oml:id", SetupDelete.class, "id");
