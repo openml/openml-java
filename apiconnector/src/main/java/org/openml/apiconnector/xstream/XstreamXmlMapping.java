@@ -27,6 +27,7 @@ import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataQualityUpload;
 import org.openml.apiconnector.xml.DataTag;
+import org.openml.apiconnector.xml.EvaluationList;
 import org.openml.apiconnector.xml.EvaluationScore;
 import org.openml.apiconnector.xml.FileUpload;
 import org.openml.apiconnector.xml.FlowTag;
@@ -397,6 +398,19 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:setup_id", RunList.Run.class, "setup_id");
 		xstream.aliasField("oml:uploader", RunList.Run.class, "uploader");
 		xstream.aliasField("oml:error_message", RunList.Run.class, "error_message");
+
+		// evaluation list
+		xstream.alias("oml:evaluations", EvaluationList.class);
+		xstream.aliasAttribute(EvaluationList.class, "oml", "xmlns:oml");
+		xstream.addImplicitCollection(EvaluationList.class, "evaluation", "oml:evaluation", EvaluationList.Evaluation.class);
+	//	xstream.aliasField("oml:run", RunList.class, "run");
+		
+		xstream.aliasField("oml:run_id", EvaluationList.Evaluation.class, "run_id");
+		xstream.aliasField("oml:task_id", EvaluationList.Evaluation.class, "task_id");
+		xstream.aliasField("oml:setup_id", EvaluationList.Evaluation.class, "setup_id");
+		xstream.aliasField("oml:flow_id", EvaluationList.Evaluation.class, "flow_id");
+		xstream.aliasField("oml:function", EvaluationList.Evaluation.class, "function");
+		xstream.aliasField("oml:value", EvaluationList.Evaluation.class, "value");
 		
 		// upload run
 		xstream.alias("oml:upload_run", UploadRun.class);

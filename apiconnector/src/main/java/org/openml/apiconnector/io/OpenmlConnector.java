@@ -501,7 +501,25 @@ public class OpenmlConnector implements Serializable {
 		if (apiResult instanceof RunList) {
 			return (RunList) apiResult;
 		} else {
-			throw new DataFormatException("Casting Api Object to Task");
+			throw new DataFormatException("Casting Api Object to RunList");
+		}
+	}
+	
+	public EvaluationList evaluationList(List<Integer> task_id, List<Integer> setup_id) throws Exception {
+		String suffix = "";
+		
+		if (task_id != null) {
+			suffix += "/task/" + StringUtils.join(task_id, ',');
+		}
+		if (setup_id != null) {
+			suffix += "/setup/" + StringUtils.join(setup_id, ',');
+		}
+		
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "evaluation/list" + suffix, getApiKey(), verboseLevel);
+		if (apiResult instanceof EvaluationList) {
+			return (EvaluationList) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to EvaluationList");
 		}
 	}
 
@@ -605,7 +623,16 @@ public class OpenmlConnector implements Serializable {
 		if (apiResult instanceof SetupDifferences) {
 			return (SetupDifferences) apiResult;
 		} else {
-			throw new DataFormatException("Casting Api Object to SetupDelete");
+			throw new DataFormatException("Casting Api Object to SetupDifferences");
+		}
+	}
+	
+	public SetupDifferences setupDifferences(int setupA, int setupB, int task_id)  throws Exception {
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "setup/differences/" + setupA + "/" + setupB + "/" + task_id, getApiKey(), verboseLevel);
+		if (apiResult instanceof SetupDifferences) {
+			return (SetupDifferences) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to SetupDifferences");
 		}
 	}
 	
