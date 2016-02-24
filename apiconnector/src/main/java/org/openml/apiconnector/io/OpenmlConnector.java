@@ -505,7 +505,7 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-	public EvaluationList evaluationList(List<Integer> task_id, List<Integer> setup_id) throws Exception {
+	public EvaluationList evaluationList(List<Integer> task_id, List<Integer> setup_id, String function) throws Exception {
 		String suffix = "";
 		
 		if (task_id != null) {
@@ -513,6 +513,9 @@ public class OpenmlConnector implements Serializable {
 		}
 		if (setup_id != null) {
 			suffix += "/setup/" + StringUtils.join(setup_id, ',');
+		}
+		if (function != null) {
+			suffix += "/function/" + function;
 		}
 		
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "evaluation/list" + suffix, getApiKey(), verboseLevel);
