@@ -76,6 +76,21 @@ public class TaskInformation {
 		}
 		throw new Exception("Tasks estimation procedure does not contain \"number_folds\" (task_id="+t.getTask_id()+")");
 	}
+
+	/**
+	 * @param t - Input Task. 
+	 * @return The percentage (holdout set)
+	 * @throws Exception
+	 */
+	public static Integer getPercentage( Task t ) throws Exception {
+		Estimation_procedure ep = getEstimationProcedure(t);
+		for(int i = 0; i < ep.getParameters().length; ++i) {
+			if(ep.getParameters()[i].getName().equals("percentage") ) {
+				return Integer.parseInt(ep.getParameters()[i].getValue());
+			}
+		}
+		throw new Exception("Tasks estimation procedure does not contain \"percentage\" (task_id="+t.getTask_id()+")");
+	}
 	
 	/**
 	 * @param t - Input Task. 

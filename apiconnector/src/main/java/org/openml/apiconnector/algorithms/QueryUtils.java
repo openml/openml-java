@@ -35,6 +35,19 @@ public class QueryUtils {
 		return result[0];
 	}
 	
+	public static String getStringFromDatabase(OpenmlConnector apiconnector, String sql) throws Exception {
+		return (String) getRecordFromDatabase(apiconnector, sql).getString(0);
+	}
+	
+	public static JSONArray getRecordFromDatabase(OpenmlConnector apiconnector, String sql) throws Exception {
+		JSONArray runJson = (JSONArray) apiconnector.freeQuery(sql).get("data");
+		if (runJson.length() >= 1) {
+			return (JSONArray) runJson.get(0);
+		} else {
+			throw new Exception("record not found");
+		}
+	}
+	
 	public static Map<Integer,String> getMapFromDatabase(OpenmlConnector apiconnector, String sql) throws Exception {
 		Map<Integer,String> result = new HashMap<Integer, String>();
 		JSONArray runJson = (JSONArray) apiconnector.freeQuery(sql).get("data");
