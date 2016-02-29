@@ -630,8 +630,13 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-	public SetupDifferences setupDifferences(int setupA, int setupB, int task_id)  throws Exception {
-		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "setup/differences/" + setupA + "/" + setupB + "/" + task_id, getApiKey(), verboseLevel);
+	public SetupDifferences setupDifferences(Integer setupA, Integer setupB, Integer task_id)  throws Exception {
+		String suffix = setupA + "/" + setupB;
+		if (task_id != null) {
+			suffix += "/" + task_id;
+		}
+		
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "setup/differences/" + suffix, getApiKey(), verboseLevel);
 		if (apiResult instanceof SetupDifferences) {
 			return (SetupDifferences) apiResult;
 		} else {
