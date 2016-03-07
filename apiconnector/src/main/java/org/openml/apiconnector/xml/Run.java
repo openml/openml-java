@@ -29,8 +29,8 @@ import org.apache.commons.lang3.ArrayUtils;
 public class Run {
 
 	private final String oml = Constants.OPENML_XMLNS;
-	private int run_id;
-	private int uploader;
+	private Integer run_id;
+	private Integer uploader;
 	private int task_id;
 	private int setup_id;
 	private int flow_id;

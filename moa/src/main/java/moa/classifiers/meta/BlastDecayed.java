@@ -6,7 +6,11 @@ import moa.options.FloatOption;
 public class BlastDecayed extends BlastAbstract {
 	
 	private static final long serialVersionUID = 1L;
-
+	
+	private static final int MAX_TOLLERATED_TRAINING_ERRROS = 10000;
+	
+	private int trainingErrors;
+	
 	public FloatOption alphaOption = new FloatOption(
             "alpha",
             'a',
@@ -21,7 +25,7 @@ public class BlastDecayed extends BlastAbstract {
 		}
 		
         this.instancesSeen = 0;
-        
+        this.trainingErrors = 0;
         for (int i = 0; i < this.ensemble.length; i++) {
             this.ensemble[i].resetLearning();
         }
@@ -40,8 +44,16 @@ public class BlastDecayed extends BlastAbstract {
 			if (correct) {
 				historyTotal[i] += 1 - alphaOption.getValue();
 			}
-			
-            this.ensemble[i].trainOnInstance(inst);
+			try {
+				this.ensemble[i].trainOnInstance(inst);
+			} catch(RuntimeException e) {
+				this.trainingErrors += 1;
+				
+				if (trainingErrors > MAX_TOLLERATED_TRAINING_ERRROS) {
+					
+					throw new RuntimeException("Too much training errors! Latest: " + e.getMessage());
+				}
+			}
         }
 		
 		instancesSeen += 1;
