@@ -1,26 +1,18 @@
 package moa.classifiers.meta;
 
-import weka.core.Instance;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import moa.classifiers.AbstractClassifier;
 import moa.classifiers.Classifier;
-import moa.core.InstancesHeader;
 import moa.core.Measurement;
 import moa.core.ObjectRepository;
 import moa.options.ClassOption;
-import moa.options.FlagOption;
-import moa.options.IntOption;
 import moa.options.ListOption;
 import moa.options.Option;
 import moa.tasks.TaskMonitor;
+import weka.core.Instance;
 
-public abstract class BlastAbstract extends AbstractClassifier {
+public class MajorityVoteEnsemble extends AbstractClassifier {
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -1259164191416754435L;
 	
 	public ListOption baselearnersOption = new ListOption(
 			"baseClassifiers", 'b', "The classifiers the ensemble consists of.", 
@@ -33,58 +25,32 @@ public abstract class BlastAbstract extends AbstractClassifier {
                 new ClassOption("", ' ', "", Classifier.class, "trees.HoeffdingTree")},
            ',');
 	
-	public IntOption gracePerionOption = new IntOption(
-            "gracePeriod",
-            'g',
-            "How many instances before we reevalate the best classifier",
-            1, 1, Integer.MAX_VALUE);
-	
-	public IntOption activeClassifiersOption = new IntOption(
-			"activeClassifiers",
-			'k',
-			"The number of active classifiers (used for voting)",
-			1, 1, Integer.MAX_VALUE);
-	
-	public FlagOption weightClassifiersOption = new FlagOption(
-			"weightClassifiers", 
-			'p',
-			"Uses online performance estimation to weight the classifiers");
-	
 	protected Classifier[] ensemble;
     
-    protected double[] historyTotal;
-    
     protected Integer instancesSeen;
-    
-    List<Integer> topK;
+
+	@Override
+	public void resetLearningImpl() {
+        this.instancesSeen = 0;
+        
+        for (int i = 0; i < this.ensemble.length; i++) {
+            this.ensemble[i].resetLearning();
+        }
+	}
 	
 	@Override
 	public double[] getVotesForInstance(Instance inst) {
 		double[] votes = new double[inst.classAttribute().numValues()];
 		
-		for (int i = 0; i < topK.size(); ++i) {
-			double[] memberVotes = normalize(ensemble[topK.get(i)].getVotesForInstance(inst));
-			double weight = 1.0;
+		for (int i = 0; i < ensemble.length; ++i) {
+			double[] memberVotes = normalize(ensemble[i].getVotesForInstance(inst));
 			
-			if (weightClassifiersOption.isSet()) {
-				weight = historyTotal[topK.get(i)];
-			}
-			
-			// make internal classifiers so-called "hard classifiers"
-			votes[maxIndex(memberVotes)] += 1.0 * weight;
+			votes[maxIndex(memberVotes)] += 1.0;
 		}
 		
 		return votes;
 	}
 	
-	@Override
-    public void setModelContext(InstancesHeader ih) {
-        super.setModelContext(ih);
-        
-        for (int i = 0; i < this.ensemble.length; ++i) {
-			this.ensemble[i].setModelContext(ih);
-		}
-    }
 
 	@Override
 	public boolean isRandomizable() {
@@ -124,22 +90,16 @@ public abstract class BlastAbstract extends AbstractClassifier {
             }
         }
         super.prepareForUseImpl(monitor, repository);
-        
-        topK = topK(historyTotal, activeClassifiersOption.getValue());
     }
 	
-	protected static List<Integer> topK(double[] scores, int k) {
-		double[] scoresWorking = Arrays.copyOf(scores, scores.length);
+	@Override
+	public void trainOnInstanceImpl(Instance inst) {
 		
-		List<Integer> topK = new ArrayList<Integer>();
+		for (int i = 0; i < this.ensemble.length; i++) {
+            this.ensemble[i].trainOnInstance(inst);
+        }
 		
-		for (int i = 0; i < k; ++i) {
-			int bestIdx = maxIndex(scoresWorking);
-			topK.add(bestIdx);
-			scoresWorking[bestIdx] = -1;
-		}
-		
-		return topK;
+		instancesSeen += 1;
 	}
 	
 	protected static int maxIndex(double[] scores) {
