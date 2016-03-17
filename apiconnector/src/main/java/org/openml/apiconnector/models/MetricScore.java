@@ -106,7 +106,11 @@ public class MetricScore {
 		StringBuilder sb = new StringBuilder();
 		if( array != null ) {
 			for( Double d : array ) {
-				sb.append( "," + decimalFormat.format( d ) );
+				if (Double.isNaN(d)) {
+					sb.append( "," + 0.0D );
+				} else {
+					sb.append( "," + decimalFormat.format( d ) );
+				}
 			}
 			return "[" + sb.toString().substring( 1 ) + "]";
 		} else if( confusion_matrix != null ) {

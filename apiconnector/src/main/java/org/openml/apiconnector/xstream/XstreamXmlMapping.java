@@ -376,7 +376,9 @@ public class XstreamXmlMapping {
 
 		xstream.aliasField("oml:did", EvaluationScore.class, "did");
 		xstream.aliasField("oml:name", EvaluationScore.class, "function"); // TODO: inconsistency? change?
+
 		xstream.aliasField("oml:flow", EvaluationScore.class, "flow");
+		xstream.aliasField("oml:flow_id", EvaluationScore.class, "flow_id");
 		xstream.aliasField("oml:value", EvaluationScore.class, "value");
 		xstream.aliasField("oml:array_data", EvaluationScore.class, "array_data");
 		xstream.aliasField("oml:sample_size", EvaluationScore.class, "sample_size");
@@ -384,8 +386,6 @@ public class XstreamXmlMapping {
 		xstream.useAttributeFor(EvaluationScore.class, "repeat");
 		xstream.useAttributeFor(EvaluationScore.class, "fold");
 		xstream.useAttributeFor(EvaluationScore.class, "sample");
-		xstream.useAttributeFor(EvaluationScore.class, "interval_start");
-		xstream.useAttributeFor(EvaluationScore.class, "interval_end");
 		
 		// run list
 		xstream.alias("oml:runs", RunList.class);

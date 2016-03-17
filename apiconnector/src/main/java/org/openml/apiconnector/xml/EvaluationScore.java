@@ -5,6 +5,7 @@ import org.openml.apiconnector.algorithms.MathHelper;
 public class EvaluationScore {
 
 	private final String function;
+	private Integer flow_id;
 	private final String flow;
 	
 	private final String value;
@@ -15,9 +16,6 @@ public class EvaluationScore {
 	private final Integer fold;
 	private final Integer sample;
 	private Integer sample_size; /*not final*/
-	
-	private final Integer interval_start;
-	private final Integer interval_end;
 	
 	public EvaluationScore(String flow, String function,
 			String value, Double stdev, String array_data) {
@@ -33,8 +31,6 @@ public class EvaluationScore {
 		this.fold = null;
 		this.sample = null;
 		this.sample_size = null;
-		this.interval_start = null;
-		this.interval_end = null;
 	}
 
 	public EvaluationScore(String flow, String function,
@@ -50,8 +46,6 @@ public class EvaluationScore {
 		// unused
 		this.sample = null;
 		this.sample_size = null;
-		this.interval_start = null;
-		this.interval_end = null;
 		this.stdev = null;
 	}
 
@@ -69,30 +63,9 @@ public class EvaluationScore {
 		this.sample_size = sample_size;
 		
 		// unused
-		this.interval_start = null;
-		this.interval_end = null;
 		this.stdev = null;
 	}
-
-	public EvaluationScore(String flow, String function,
-			String value, String array_data, Integer interval_start,
-			Integer interval_end, boolean dummy ) {
-		super();
-		this.flow = flow;
-		this.function = function;
-		this.value = value;
-		this.array_data = array_data;
-		this.interval_start = interval_start;
-		this.interval_end = interval_end;
-		
-		// unused
-		this.repeat = null;
-		this.fold = null;
-		this.sample = null;
-		this.sample_size = null;
-		this.stdev = null;
-	}
-
+	
 	public String getFlow() {
 		return flow;
 	}
@@ -132,23 +105,13 @@ public class EvaluationScore {
 	public Integer getSample_size() {
 		return sample_size;
 	}
-
-	public Integer getInterval_start() {
-		return interval_start;
-	}
-
-	public Integer getInterval_end() {
-		return interval_end;
-	}
 	
 	public boolean isSame( EvaluationScore other ) {
 		return equalStrings( flow, other.getFlow() ) && 
 			equalStrings( function, other.getFunction() ) && 
 			equalIntegers( fold, other.getFold() ) && 
 			equalIntegers( repeat, other.getRepeat() ) && 
-			equalIntegers( sample, other.getSample() ) && 
-			equalIntegers( interval_start, other.getInterval_start() ) &&
-			equalIntegers( interval_end, other.getInterval_end() ); // do not compare on sample size, as this is just additional information
+			equalIntegers( sample, other.getSample() ); // do not compare on sample size, as this is just additional information
 	}
 	
 	public boolean sameValue( EvaluationScore other ) {
@@ -168,10 +131,9 @@ public class EvaluationScore {
 		if( repeat != null ) sb.append( ", repeat " + repeat );
 		if( fold != null ) sb.append( ", fold " + fold );
 		if( sample != null ) sb.append( ", sample " + sample );
-		if( interval_start != null ) sb.append( ", interval_start " + interval_start );
 		if( sb.length() == 0 ) sb.append( ", GLOBAL" );
 		
-		return function + " (" + flow + ") - [" + sb.toString().substring( 2 ) + "]";
+		return function + " (" + flow_id + "," + flow + ") - [" + sb.toString().substring( 2 ) + "]";
 	}
 	
 	private static boolean equalStrings( String s1, String s2 ) {
