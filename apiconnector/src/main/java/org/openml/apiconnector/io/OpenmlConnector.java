@@ -142,7 +142,7 @@ public class OpenmlConnector implements Serializable {
 	 *             down, etc.
 	 */
 	public DataSetDescription dataGet(int did) throws Exception {
-		if (Settings.LOCAL_OPERATIONS) {
+		if (Caching.in_cache("datadescription", did) || Settings.LOCAL_OPERATIONS) {
 			String dsdString = Conversion.fileToString(Caching.cached("datadescription", did));
 			return (DataSetDescription) HttpConnector.xstreamClient.fromXML(dsdString);
 		}
@@ -150,7 +150,11 @@ public class OpenmlConnector implements Serializable {
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "data/" + did, getApiKey(), verboseLevel);
 		if (apiResult instanceof DataSetDescription) {
 			if (Settings.CACHE_ALLOWED) {
-				Caching.cache(apiResult, "datadescription", did);
+				try {
+					Caching.cache(apiResult, "datadescription", did);
+				} catch(IOException e) {
+					Conversion.log("Warning", "DataGet", "Cache Store Exception: " + e.getMessage());
+				}
 			}
 			return (DataSetDescription) apiResult;
 		} else {
@@ -284,7 +288,7 @@ public class OpenmlConnector implements Serializable {
 	 *             down, etc.
 	 */
 	public Task taskGet(int task_id) throws Exception {
-		if (Settings.LOCAL_OPERATIONS) {
+		if (Caching.in_cache("task", task_id) || Settings.LOCAL_OPERATIONS) {
 			String taskXml = Conversion.fileToString(Caching.cached("task", task_id));
 			return (Task) HttpConnector.xstreamClient.fromXML(taskXml);
 		}
@@ -292,7 +296,11 @@ public class OpenmlConnector implements Serializable {
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "task/" + task_id, getApiKey(), verboseLevel);
 		if (apiResult instanceof Task) {
 			if (Settings.CACHE_ALLOWED) {
-				Caching.cache(apiResult, "task", task_id);
+				try {
+					Caching.cache(apiResult, "task", task_id);
+				} catch(IOException e) {
+					Conversion.log("Warning", "TaskGet", "Cache Store Exception: " + e.getMessage());
+				}
 			}
 			return (Task) apiResult;
 		} else {
