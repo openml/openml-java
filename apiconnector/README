@@ -1,0 +1,3 @@
+To compile using Maven (mvn): 
+
+mvn clean release:clean release:prepare release:perform
