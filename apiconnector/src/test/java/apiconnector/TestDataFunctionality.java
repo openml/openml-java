@@ -37,7 +37,7 @@ import com.thoughtworks.xstream.XStream;
 
 
 public class TestDataFunctionality {
-	private static final String data_file = "C:\\data\\iris.arff";
+	private static final String data_file = "/home/rijnjnvan/iris.arff";
 	private static final int probe = 61;
 
 	private static final String url = "http://www.openml.org/";
@@ -48,8 +48,6 @@ public class TestDataFunctionality {
 	
 	@Test
 	public void testApiDataDownload() {
-		
-		
 		try {
 			DataSetDescription dsd = client.dataGet( probe );
 			DataFeature features = client.dataFeatures( probe );
