@@ -20,7 +20,7 @@
 package org.openml.apiconnector.algorithms;
 
 public enum ParameterType {
-	FLAG("flag"), KERNEL("kernel"), BASELEARNER("baselearner"), OPTION("option");
+	FLAG("flag"), KERNEL("kernel"), BASELEARNER("baselearner"), OPTION("option"), ARRAY("array");
 
 	private String text;
 
