@@ -144,6 +144,7 @@ public class OpenmlConnector implements Serializable {
 	public DataSetDescription dataGet(int did) throws Exception {
 		if (Caching.in_cache("datadescription", did) || Settings.LOCAL_OPERATIONS) {
 			String dsdString = Conversion.fileToString(Caching.cached("datadescription", did));
+			Conversion.log("OK", "DataGet", "Got dataset from cache");
 			return (DataSetDescription) HttpConnector.xstreamClient.fromXML(dsdString);
 		}
 
