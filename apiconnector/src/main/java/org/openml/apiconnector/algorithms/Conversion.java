@@ -99,6 +99,10 @@ public class Conversion {
 		writer.println( "["+DateParser.humanReadable.format( System.currentTimeMillis() )+"] ["+status+"] ["+action+"] " + message );
 	}
 	
+	public static double percentage(int observation, int total) {
+		return ((double) observation / (double) total) * 100;
+	}
+	
 	public static boolean validateXML(File xml, File xsd) throws SAXException, IOException {
 		Source xmlFile = new StreamSource(xml);
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);

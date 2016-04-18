@@ -21,6 +21,7 @@ package org.openml.apiconnector.algorithms;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Settings;
@@ -37,31 +38,26 @@ public class ArffHelper {
 	 * @return A file pointer to the specified arff file.
 	 * @throws IOException
 	 */
-	public static File downloadAndCache( String type, int identifier, String url, String serverMd5 ) throws IOException {
-		File directory = new File( Settings.CACHE_DIRECTORY + type + "/" );
-		File file = new File( directory.getAbsolutePath() + "/" + identifier );
-		File dataset;
-		
-		if( file.exists() ) {
+	public static File downloadAndCache(String type, int identifier, String extension, String url, String serverMd5) throws IOException {
+		if(Caching.in_cache(type, identifier, extension)) {
+			File file = Caching.cached(type, identifier, extension);
 			String clientMd5 = Hashing.md5(file);
-			if( serverMd5 == null || clientMd5.equals( serverMd5.trim() ) ) {
-				Conversion.log( "INFO", "ARFF Cache", "Loaded " + type + " " + identifier + " from cache. " );
+			if(serverMd5 == null || clientMd5.equals( serverMd5.trim())) {
 				return file;
 			} else {
-				Conversion.log( "WARNING", "ARFF Cache", type + " " + identifier + " hash and cache not identical: \n- Client: " + clientMd5 + "\n- Server: " + serverMd5 );
+				Conversion.log("WARNING", "ARFF Cache", type + " " + identifier + " hash and cache not identical: \n- Client: " + clientMd5 + "\n- Server: " + serverMd5);
 			}
 		}
 		
 		if( Settings.LOCAL_OPERATIONS ) {
-			throw new IOException("Cache file of " + type + " #" + identifier + " not available, and only local operations are allowed. " );
+			throw new IOException("Cache file of " + type + " #" + identifier + " not available, and only local operations are allowed. ");
 		}
 		
+		File dataset;
 		if( Settings.CACHE_ALLOWED ) {
-			directory.mkdirs();
-			dataset = OpenmlConnector.getFileFromUrl( url, file.getAbsolutePath() );
-			Conversion.log( "INFO", "ARFF Cache", "Stored " + type + " " + identifier + " to cache. " );
+			dataset = Caching.cache(new URL(url), type, identifier, extension);
 		} else {
-			dataset = Conversion.stringToTempFile( OpenmlConnector.getStringFromUrl( url ), identifier + "", "arff" );
+			dataset = Conversion.stringToTempFile(OpenmlConnector.getStringFromUrl( url ), type + "_" + identifier + "", extension );
 		}
 		return dataset;
 	}

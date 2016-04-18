@@ -142,9 +142,8 @@ public class OpenmlConnector implements Serializable {
 	 *             down, etc.
 	 */
 	public DataSetDescription dataGet(int did) throws Exception {
-		if (Caching.in_cache("datadescription", did) || Settings.LOCAL_OPERATIONS) {
-			String dsdString = Conversion.fileToString(Caching.cached("datadescription", did));
-			Conversion.log("OK", "DataGet", "Got dataset from cache");
+		if (Caching.in_cache("datadescription", did, "xml") || Settings.LOCAL_OPERATIONS) {
+			String dsdString = Conversion.fileToString(Caching.cached("datadescription", did, "xml"));
 			return (DataSetDescription) HttpConnector.xstreamClient.fromXML(dsdString);
 		}
 
@@ -152,7 +151,7 @@ public class OpenmlConnector implements Serializable {
 		if (apiResult instanceof DataSetDescription) {
 			if (Settings.CACHE_ALLOWED) {
 				try {
-					Caching.cache(apiResult, "datadescription", did);
+					Caching.cache(apiResult, "datadescription", did, "xml");
 				} catch(IOException e) {
 					Conversion.log("Warning", "DataGet", "Cache Store Exception: " + e.getMessage());
 				}
@@ -289,8 +288,8 @@ public class OpenmlConnector implements Serializable {
 	 *             down, etc.
 	 */
 	public Task taskGet(int task_id) throws Exception {
-		if (Caching.in_cache("task", task_id) || Settings.LOCAL_OPERATIONS) {
-			String taskXml = Conversion.fileToString(Caching.cached("task", task_id));
+		if (Caching.in_cache("task", task_id, "xml") || Settings.LOCAL_OPERATIONS) {
+			String taskXml = Conversion.fileToString(Caching.cached("task", task_id, "xml"));
 			return (Task) HttpConnector.xstreamClient.fromXML(taskXml);
 		}
 
@@ -298,7 +297,7 @@ public class OpenmlConnector implements Serializable {
 		if (apiResult instanceof Task) {
 			if (Settings.CACHE_ALLOWED) {
 				try {
-					Caching.cache(apiResult, "task", task_id);
+					Caching.cache(apiResult, "task", task_id, "xml");
 				} catch(IOException e) {
 					Conversion.log("Warning", "TaskGet", "Cache Store Exception: " + e.getMessage());
 				}
@@ -734,9 +733,9 @@ public class OpenmlConnector implements Serializable {
 	 * @throws IOException
 	 *             - Can be: server down, etc.
 	 */
-	public static File getFileFromUrl(String url, String filepath) throws IOException {
+	public static File getFileFromUrl(URL url, String filepath) throws IOException {
 		File file = new File(filepath);
-		FileUtils.copyURLToFile(new URL(url), file);
+		FileUtils.copyURLToFile(url, file);
 		return file;
 	}
 

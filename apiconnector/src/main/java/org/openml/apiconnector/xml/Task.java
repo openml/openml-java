@@ -183,7 +183,7 @@ public class Task implements Serializable {
 						serverMd5 = OpenmlConnector.getStringFromUrl( getData_splits_url().replace("/get/", "/md5/") );
 					}
 					//	String identifier = getData_splits_url().substring( getData_splits_url().lastIndexOf('/') + 1 );
-					data_splits_cache = ArffHelper.downloadAndCache("splits", task_id, getData_splits_url(), serverMd5 );
+					data_splits_cache = ArffHelper.downloadAndCache("splits", task_id, "arff", getData_splits_url(), serverMd5 );
 				}
 				return data_splits_cache;
 			}

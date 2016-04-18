@@ -32,7 +32,7 @@ public class Run {
 	private Integer run_id;
 	private Integer uploader;
 	private int task_id;
-	private int setup_id;
+	private Integer setup_id;
 	private int flow_id;
 	private String setup_string;
 	private String error_message;

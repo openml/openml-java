@@ -98,7 +98,7 @@ public class DataQuality {
 
 		@Override
 		public String toString() {
-			return name;
+			return name+":"+value;
 		}
 	}
 }

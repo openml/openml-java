@@ -241,7 +241,7 @@ public class DataSetDescription implements Serializable {
 		if( api_key != null ) { url_suffix = "?api_key=" + api_key; }
 		
 		if( dataset_cache == null ) 
-			dataset_cache = ArffHelper.downloadAndCache( "dataset", getId(), getUrl() + url_suffix, getMd5_checksum() );
+			dataset_cache = ArffHelper.downloadAndCache( "dataset", getId(), getFormat(), getUrl() + url_suffix, getMd5_checksum() );
 		return dataset_cache;
 	}
 }
