@@ -30,12 +30,50 @@
       <email>j.n.van.rijn@liacs.leidenuniv.nl</email>
       <url>http://www.janvanrijn.eu</url>
       <organization>Leiden University, NL</organization>
-      <organizationUrl>http://www.liacs.nl/</organizationUrl>
+      <organizationUrl>http://liacs.leidenuniv.nl/</organizationUrl>
       <roles>
         <role>PhD Candidate</role>
       </roles>
     </developer>
   </developers>
+
+  
+  <scm>
+    <connection>scm:git:https://github.com/openml/java</connection>
+    <developerConnection>scm:git:https://github.com/openml/java</developerConnection>
+    <url>https://github.com/openml/java</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <profiles>
+    <profile>
+      <id>release-sign-artifacts</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <dependencies>
     <dependency>
@@ -100,6 +138,18 @@
             </includes>
             <disableXmlReport>true</disableXmlReport>
             <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          </configuration>
+        </plugin>
+        
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.5.3</version>
+          <configuration>
+            <useReleaseProfile>false</useReleaseProfile>
+            <localCheckout>true</localCheckout>
+            <pushChanges>true</pushChanges>
+            <commitByProject>true</commitByProject>
           </configuration>
         </plugin>
       </plugins>
