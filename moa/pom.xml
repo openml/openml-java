@@ -5,7 +5,7 @@
 
   <groupId>org.openml</groupId>
   <artifactId>openmlmoa</artifactId>
-  <version>0.9.1-SNAPSHOT</version>
+  <version>0.9.1</version>
   <packaging>jar</packaging>
 
   <name>OpenmlMOA</name>
@@ -48,7 +48,7 @@
     <connection>scm:git:https://github.com/openml/java</connection>
     <developerConnection>scm:git:https://github.com/openml/java</developerConnection>
     <url>https://github.com/openml/java</url>
-    <tag>HEAD</tag>
+    <tag>openmlmoa-0.9.1</tag>
   </scm>
 
   <profiles>
