@@ -546,6 +546,19 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+
+	public RunUntag runUntag(int id, String tag) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("run_id", new StringBody("" + id));
+		params.addPart("tag", new StringBody(tag));
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "run/untag", params, getApiKey(), verboseLevel);
+		if (apiResult instanceof RunUntag) {
+			return (RunUntag) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to RunUntag");
+		}
+	}
+
 	public RunEvaluate runEvaluate(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));

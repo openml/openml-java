@@ -46,6 +46,7 @@ import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.RunList;
 import org.openml.apiconnector.xml.RunReset;
 import org.openml.apiconnector.xml.RunTag;
+import org.openml.apiconnector.xml.RunUntag;
 import org.openml.apiconnector.xml.SetupDelete;
 import org.openml.apiconnector.xml.SetupDifferences;
 import org.openml.apiconnector.xml.SetupTag;
@@ -478,6 +479,9 @@ public class XstreamXmlMapping {
 		// run tag
 		xstream.alias("oml:run_tag", RunTag.class);
 		xstream.aliasField("oml:id", RunTag.class, "id");
+		// run untag
+		xstream.alias("oml:run_untag", RunUntag.class);
+		xstream.aliasField("oml:id", RunUntag.class, "id");
 		
 		return xstream;
 	}
