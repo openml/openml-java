@@ -27,10 +27,12 @@ import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataQualityUpload;
 import org.openml.apiconnector.xml.DataTag;
+import org.openml.apiconnector.xml.DataUntag;
 import org.openml.apiconnector.xml.EvaluationList;
 import org.openml.apiconnector.xml.EvaluationScore;
 import org.openml.apiconnector.xml.FileUpload;
 import org.openml.apiconnector.xml.FlowTag;
+import org.openml.apiconnector.xml.FlowUntag;
 import org.openml.apiconnector.xml.RunDelete;
 import org.openml.apiconnector.xml.RunEvaluate;
 import org.openml.apiconnector.xml.RunEvaluation;
@@ -50,9 +52,11 @@ import org.openml.apiconnector.xml.RunUntag;
 import org.openml.apiconnector.xml.SetupDelete;
 import org.openml.apiconnector.xml.SetupDifferences;
 import org.openml.apiconnector.xml.SetupTag;
+import org.openml.apiconnector.xml.SetupUntag;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskDelete;
 import org.openml.apiconnector.xml.TaskTag;
+import org.openml.apiconnector.xml.TaskUntag;
 import org.openml.apiconnector.xml.Task_new;
 import org.openml.apiconnector.xml.Tasks;
 import org.openml.apiconnector.xml.UploadDataSet;
@@ -467,15 +471,27 @@ public class XstreamXmlMapping {
 		// data tag
 		xstream.alias("oml:data_tag", DataTag.class);
 		xstream.aliasField("oml:id", DataTag.class, "id");
+		// data untag
+		xstream.alias("oml:data_untag", DataUntag.class);
+		xstream.aliasField("oml:id", DataUntag.class, "id");
 		// flow tag
 		xstream.alias("oml:flow_tag", FlowTag.class);
 		xstream.aliasField("oml:id", FlowTag.class, "id");
+		// flow untag
+		xstream.alias("oml:flow_untag", FlowUntag.class);
+		xstream.aliasField("oml:id", FlowUntag.class, "id");
 		// setup tag
 		xstream.alias("oml:setup_tag", SetupTag.class);
 		xstream.aliasField("oml:id", SetupTag.class, "id");
+		// setup untag
+		xstream.alias("oml:setup_untag", SetupUntag.class);
+		xstream.aliasField("oml:id", SetupUntag.class, "id");
 		// task tag
 		xstream.alias("oml:task_tag", TaskTag.class);
 		xstream.aliasField("oml:id", TaskTag.class, "id");
+		// task untag
+		xstream.alias("oml:task_untag", TaskUntag.class);
+		xstream.aliasField("oml:id", TaskUntag.class, "id");
 		// run tag
 		xstream.alias("oml:run_tag", RunTag.class);
 		xstream.aliasField("oml:id", RunTag.class, "id");

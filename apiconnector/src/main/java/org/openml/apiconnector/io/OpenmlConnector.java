@@ -199,6 +199,19 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	public DataUntag dataUntag(int id, String tag) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("data_id", new StringBody("" + id));
+		params.addPart("tag", new StringBody(tag));
+		
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "data/untag", params, getApiKey(), verboseLevel);
+		if (apiResult instanceof DataUntag) {
+			return (DataUntag) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to DataUntag");
+		}
+	}
+	
 
 
 	/**
@@ -343,6 +356,20 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	public TaskUntag taskUntag(int id, String tag) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("task_id", new StringBody("" + id));
+		params.addPart("tag", new StringBody(tag));
+		
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "task/untag", params, getApiKey(), verboseLevel);
+		
+		if (apiResult instanceof TaskUntag) {
+			return (TaskUntag) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to TaskUntag");
+		}
+	}
+	
 	public Flow flowGet(int flow_id) throws Exception {
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "flow/" + flow_id, getApiKey(), verboseLevel);
 		if (apiResult instanceof Flow) {
@@ -362,7 +389,21 @@ public class OpenmlConnector implements Serializable {
 		if (apiResult instanceof FlowTag) {
 			return (FlowTag) apiResult;
 		} else {
-			throw new DataFormatException("Casting Api Object to ImplementationTag");
+			throw new DataFormatException("Casting Api Object to FlowTag");
+		}
+	}
+
+	public FlowUntag flowUntag(int id, String tag) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("flow_id", new StringBody("" + id));
+		params.addPart("tag", new StringBody(tag));
+		
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "flow/untag", params, getApiKey(), verboseLevel);
+		
+		if (apiResult instanceof FlowUntag) {
+			return (FlowUntag) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to FlowUntag");
 		}
 	}
 	
@@ -616,6 +657,19 @@ public class OpenmlConnector implements Serializable {
 			return (SetupTag) apiResult;
 		} else {
 			throw new DataFormatException("Casting Api Object to SetupTag");
+		}
+	}
+
+	public SetupUntag setupUntag(int id, String tag) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("setup_id", new StringBody("" + id));
+		params.addPart("tag", new StringBody(tag));
+		
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "setup/untag", params, getApiKey(), verboseLevel);
+		if (apiResult instanceof SetupUntag) {
+			return (SetupUntag) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to SetupUntag");
 		}
 	}
 
