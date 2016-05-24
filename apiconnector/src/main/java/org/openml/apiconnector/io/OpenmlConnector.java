@@ -612,6 +612,18 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+	public RunTrace runTrace(File trace) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("trace", new FileBody(trace));
+
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "run/trace", params, getApiKey(), verboseLevel);
+		if (apiResult instanceof RunTrace) {
+			return (RunTrace) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to RunTrace");
+		}
+	}
+
 	public Run runGet(int runId) throws Exception {
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "run/" + runId, getApiKey(), verboseLevel);
 		if (apiResult instanceof Run) {

@@ -48,6 +48,7 @@ import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.RunList;
 import org.openml.apiconnector.xml.RunReset;
 import org.openml.apiconnector.xml.RunTag;
+import org.openml.apiconnector.xml.RunTrace;
 import org.openml.apiconnector.xml.RunUntag;
 import org.openml.apiconnector.xml.SetupDelete;
 import org.openml.apiconnector.xml.SetupDifferences;
@@ -59,6 +60,7 @@ import org.openml.apiconnector.xml.TaskTag;
 import org.openml.apiconnector.xml.TaskUntag;
 import org.openml.apiconnector.xml.Task_new;
 import org.openml.apiconnector.xml.Tasks;
+import org.openml.apiconnector.xml.Trace;
 import org.openml.apiconnector.xml.UploadDataSet;
 import org.openml.apiconnector.xml.UploadFlow;
 import org.openml.apiconnector.xml.UploadRun;
@@ -433,6 +435,10 @@ public class XstreamXmlMapping {
 		// run evaluate
 		xstream.alias("oml:run_evaluate", RunEvaluate.class);
 		xstream.aliasField("oml:run_id", RunEvaluate.class, "run_id");
+
+		// run trace
+		xstream.alias("oml:run_trace", RunTrace.class);
+		xstream.aliasField("oml:run_id", RunTrace.class, "run_id");
 		
 		// reset run
 		xstream.alias("oml:file_upload", FileUpload.class);
@@ -451,7 +457,20 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:error", RunEvaluation.class, "error");
 		xstream.aliasField("oml:warning", RunEvaluation.class, "warning");
 		xstream.addImplicitCollection(RunEvaluation.class, "evaluation", "oml:evaluation", EvaluationScore.class);
-
+		
+		// run trace
+		xstream.alias("oml:trace", Trace.class);
+		xstream.aliasAttribute(Trace.class, "oml", "xmlns:oml");
+		xstream.aliasField("oml:run_id", Trace.class, "run_id");
+		xstream.addImplicitCollection(Trace.class, "trace_iterations", "oml:trace_iteration", Trace.Trace_iteration.class);
+		
+		xstream.aliasField("oml:repeat", Trace.Trace_iteration.class, "repeat");
+		xstream.aliasField("oml:fold", Trace.Trace_iteration.class, "fold");
+		xstream.aliasField("oml:iteration", Trace.Trace_iteration.class, "iteration");
+		xstream.aliasField("oml:setup_string", Trace.Trace_iteration.class, "setup_string");
+		xstream.aliasField("oml:evaluation", Trace.Trace_iteration.class, "evaluation");
+		xstream.aliasField("oml:selected", Trace.Trace_iteration.class, "selected");
+		
 		// setupDifferences
 		xstream.alias("oml:setup_differences", SetupDifferences.class);
 		xstream.aliasAttribute(RunList.class, "oml", "xmlns:oml");
