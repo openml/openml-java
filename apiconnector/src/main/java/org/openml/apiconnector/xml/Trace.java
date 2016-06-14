@@ -19,6 +19,7 @@
  */
 package org.openml.apiconnector.xml;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.openml.apiconnector.settings.Constants;
 
 public class Trace {
@@ -27,9 +28,20 @@ public class Trace {
 	private Integer run_id;
 	private Trace_iteration[] trace_iterations;
 	
+
+	public Trace(Integer run_id) {
+		this.run_id = run_id;
+		this.trace_iterations = new Trace_iteration[0];
+	}
+	
 	public Trace(Integer run_id, Trace_iteration[] trace_iterations) {
 		this.run_id = run_id;
 		this.trace_iterations = trace_iterations;
+	}
+	
+
+	public void addIteration(Trace_iteration ti) {
+		trace_iterations = ArrayUtils.addAll(trace_iterations, ti);
 	}
 	
 	public Integer getRun_id() {
