@@ -216,7 +216,11 @@ public class Flow {
 
 	public void addParameter(String name, String data_type, String default_value, String description) {
 		Parameter p = new Parameter(name, data_type, default_value, description);
-		this.parameter = ArrayUtils.addAll( this.parameter, p );
+		this.parameter = ArrayUtils.addAll(this.parameter, p);
+	}
+	
+	public void addParameter(Parameter p) {
+		this.parameter = ArrayUtils.addAll(this.parameter, p);
 	}
 	
 	public Flow getComponentByName( String name ) throws Exception {

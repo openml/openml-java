@@ -292,11 +292,15 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:target_feature_left", Task.Input.Data_set.class, "target_feature_left");
 		xstream.aliasField("oml:target_feature_right", Task.Input.Data_set.class, "target_feature_right");
 		xstream.aliasField("oml:target_feature_event", Task.Input.Data_set.class, "target_feature_event");
+		xstream.aliasField("oml:target_value", Task.Input.Data_set.class, "target_value");
+		
 		xstream.aliasField("oml:data_set", Task.Input.class, "data_set");
 		xstream.aliasField("oml:type", Task.Input.Estimation_procedure.class, "type");
 		xstream.aliasField("oml:data_splits_url", Task.Input.Estimation_procedure.class, "data_splits_url");
 		xstream.aliasField("oml:estimation_procedure", Task.Input.class, "estimation_procedure");
 		xstream.aliasField("oml:evaluation_measure", Task.Input.Evaluation_measures.class, "evaluation_measure");
+		xstream.aliasField("oml:time_limit", Task.Input.class, "time_limit");
+		xstream.aliasField("oml:quality_measure", Task.Input.class, "quality_measure");
 		xstream.aliasField("oml:evaluation_measures", Task.Input.class, "evaluation_measures");
 		xstream.aliasField("oml:predictions", Task.Output.class, "predictions");
 		xstream.aliasField("oml:format", Task.Output.Predictions.class, "format");

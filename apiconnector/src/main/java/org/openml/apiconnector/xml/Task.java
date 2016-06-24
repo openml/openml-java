@@ -88,8 +88,10 @@ public class Task implements Serializable {
 		private String name;
 		private Data_set data_set;
 		private Estimation_procedure estimation_procedure;
-		String cost_matrix;
+		private String cost_matrix;
 		private Evaluation_measures evaluation_measures;
+		private Double time_limit;
+		private String quality_measure;
 		
 		public String getName() {
 			return name;
@@ -97,6 +99,14 @@ public class Task implements Serializable {
 
 		public Data_set getData_set() {
 			return data_set;
+		}
+		
+		public Double getTime_limit() {
+			return time_limit;
+		}
+		
+		public String getQuality_measure() {
+			return quality_measure;
 		}
 		
 		public double[][] getCost_Matrix() throws Exception {
@@ -123,6 +133,7 @@ public class Task implements Serializable {
 			private String target_feature_left;
 			private String target_feature_right;
 			private String target_feature_event;
+			private String target_value;
 			
 			// do not serialize
 			private DataSetDescription dsdCache;
@@ -144,6 +155,9 @@ public class Task implements Serializable {
 			}
 			public String getTarget_feature_event() {
 				return target_feature_event;
+			}
+			public String getTarget_value() {
+				return target_value;
 			}
 			
 			public DataSetDescription getDataSetDescription( OpenmlConnector apiconnector ) throws Exception {
