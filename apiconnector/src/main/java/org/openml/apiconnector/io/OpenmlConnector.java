@@ -659,6 +659,15 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+	public SetupParameters setupParameters(int setup_id) throws Exception {
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "setup/" + setup_id, getApiKey(), verboseLevel);
+		if (apiResult instanceof SetupParameters) {
+			return (SetupParameters) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to SetupParameters");
+		}
+	}
+
 	public SetupTag setupTag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("setup_id", new StringBody("" + id));
