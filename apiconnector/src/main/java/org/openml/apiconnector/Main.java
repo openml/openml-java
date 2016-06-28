@@ -22,10 +22,10 @@ package org.openml.apiconnector;
 public class Main {
 
 	public static void main( String[] args ) throws Exception {
-		System.out.println( "OpenmlConnector v1.0.x\n" );
-		System.out.println( "Licence: GNU General Public License v3");
-		System.out.println( "You should have received a copy of the GNU General Public License along\nwith this program.  If not, see <http://www.gnu.org/licenses/>\n" );
-		System.out.println( "Developed by: Jan N. van Rijn (j.n.van.rijn@liacs.leidenuniv.nl)\n");
-		System.out.println( "Usage: Include this library in your project\n");
+		System.out.println("OpenmlConnector v1.0.x\n" );
+		System.out.println("Licence: GNU General Public License v3");
+		System.out.println("You should have received a copy of the GNU General Public License along\nwith this program.  If not, see <http://www.gnu.org/licenses/>\n" );
+		System.out.println("Developed by: Jan N. van Rijn (j.n.van.rijn@liacs.leidenuniv.nl)\n");
+		System.out.println("Usage: Include this library in your project\n");
 	}
 }

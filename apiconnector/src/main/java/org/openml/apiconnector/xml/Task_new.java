@@ -11,11 +11,13 @@ public class Task_new implements Serializable {
 	private Integer task_id;
 	private Integer task_type_id;
 	private Input[] inputs;
+	private String[] tags;
 	
-	public Task_new(Integer task_id, Integer task_type_id, Input[] inputs) {
+	public Task_new(Integer task_id, Integer task_type_id, Input[] inputs, String[] tags) {
 		this.task_id = task_id;
 		this.task_type_id = task_type_id;
 		this.inputs = inputs;
+		this.tags = tags;
 	}
 	
 	public String getOml() {
@@ -32,6 +34,10 @@ public class Task_new implements Serializable {
 	
 	public Input[] getInput() {
 		return inputs;
+	}
+	
+	public String[] getTags() {
+		return tags;
 	}
 
 	public static class Input implements Serializable {

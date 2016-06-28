@@ -332,6 +332,7 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:task_id", Task_new.class, "task_id");
 		xstream.aliasField("oml:task_type_id", Task_new.class, "task_type_id");
 		xstream.addImplicitCollection(Task_new.class, "inputs", "oml:input", Task_new.Input.class);
+		xstream.addImplicitCollection(Task_new.class, "tags", "oml:tag", String.class);
 		
 		xstream.useAttributeFor(Task_new.Input.class, "name");
 		xstream.registerConverter(new ToAttributedValueConverter(Task_new.Input.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
