@@ -40,19 +40,21 @@ public class Run {
 	private String[] tag;
 	private Data input_data;
 	private Data output_data;
-	
-	public Run( int task_id, String error_message, int flow_id, String setup_string, Parameter_setting[] parameter_settings, String[] tags ) {
+
+	public Run(int task_id, String error_message, int flow_id,
+			String setup_string, Parameter_setting[] parameter_settings,
+			String[] tags) {
 		this.task_id = task_id;
 		this.flow_id = flow_id;
 		this.setup_string = setup_string;
 		this.error_message = error_message;
 		this.parameter_settings = parameter_settings;
-		
+
 		this.tag = tags;
 		this.output_data = new Data();
 		this.input_data = new Data();
 	}
-	
+
 	public String getOml() {
 		return oml;
 	}
@@ -64,7 +66,7 @@ public class Run {
 	public int getUploader() {
 		return uploader;
 	}
-	
+
 	public int getTask_id() {
 		return task_id;
 	}
@@ -72,62 +74,66 @@ public class Run {
 	public int getSetup_id() {
 		return setup_id;
 	}
-	
+
 	public int getFlow_id() {
 		return flow_id;
 	}
-	
+
 	public String getError_message() {
 		return error_message;
 	}
-	
+
 	public String getSetup_string() {
 		return setup_string;
 	}
-	
+
 	public String[] getTag() {
 		return tag;
 	}
-	
+
 	public Parameter_setting[] getParameter_settings() {
 		return parameter_settings;
 	}
 
-	public void addTag( String new_tag ) {
+	public void addTag(String new_tag) {
 		// check if tag is not already present
-		if( tag != null ) {
-			if( Arrays.asList(tag).contains(new_tag) == true ) {
+		if (tag != null) {
+			if (Arrays.asList(tag).contains(new_tag) == true) {
 				return;
 			}
 		}
-		tag = ArrayUtils.addAll( tag, new_tag );
+		tag = ArrayUtils.addAll(tag, new_tag);
 	}
-	
-	public void addInputData( String name, String url  ) {
-		input_data.addDataset( name, url );
+
+	public void addInputData(String name, String url) {
+		input_data.addDataset(name, url);
 	}
-	
-	public void addOutputData( String name, String url  ) {
-		output_data.addDataset( name, url );
+
+	public void addOutputData(String name, String url) {
+		output_data.addDataset(name, url);
 	}
-	
-	public void addOutputEvaluation( String name, Integer repeat, Integer fold, 
-			Integer sample, String flow, Double value ) {
+
+	public void addOutputEvaluation(String name, Integer repeat, Integer fold,
+			Integer sample, String flow, Double value) {
 		output_data.addEvaluation(name, repeat, fold, sample, flow, value);
 	}
-	
-	public void addOutputEvaluation( String name, String flow,
-			Double value, String array_data ) {
-		output_data.addEvaluation( name, flow, value, array_data);
+
+	public void addOutputEvaluation(String name, String flow, Double value,
+			String array_data) {
+		output_data.addEvaluation(name, flow, value, array_data);
 	}
-	
+
+	public void addOutputEvaluation(EvaluationScore e) {
+		output_data.addEvaluation(e);
+	}
+
 	public EvaluationScore[] getOutputEvaluation() {
-		if( output_data == null ) {
+		if (output_data == null) {
 			return null;
 		}
 		return output_data.evaluation;
 	}
-	
+
 	public File[] getOutputFile() {
 		return output_data.file;
 	}
@@ -136,40 +142,41 @@ public class Run {
 		private String name;
 		private String value;
 		private int component;
-		
+
 		public Parameter_setting(int component, String name, String value) {
 			this.name = name;
 			this.component = component;
 			this.value = value;
 		}
-		
+
 		public String getName() {
 			return name;
 		}
+
 		public int getComponent() {
 			return component;
 		}
+
 		public String getValue() {
 			return value;
 		}
-		
+
 		@Override
 		public String toString() {
 			return component + "_" + name + ": " + value;
 		}
 	}
-	
+
 	public static class Data {
 		private Dataset[] dataset;
 		private File[] file;
 		private EvaluationScore[] evaluation;
-		
-		
-		public Data( ) {
+
+		public Data() {
 			dataset = new Dataset[0];
 			evaluation = new EvaluationScore[0];
 		}
-		
+
 		public Dataset[] getDataset() {
 			return dataset;
 		}
@@ -177,64 +184,71 @@ public class Run {
 		public File[] file() {
 			return file;
 		}
-		
+
 		public EvaluationScore[] getEvaluation() {
 			return evaluation;
 		}
-		
-		public void addDataset( String name, String url ) {
-			Dataset d = new Dataset( name, url);
-			dataset = ArrayUtils.addAll( dataset, d );
+
+		public void addDataset(String name, String url) {
+			Dataset d = new Dataset(name, url);
+			dataset = ArrayUtils.addAll(dataset, d);
 		}
-		
-		public void addEvaluation( String name, Integer repeat, Integer fold, 
-					Integer sample, String flow, Double value ) {
-			EvaluationScore e = new EvaluationScore( flow, name, MathHelper.defaultDecimalFormat.format( value ), null, repeat, fold, sample, null );
-			evaluation = ArrayUtils.addAll( evaluation, e );
+
+		public void addEvaluation(String name, Integer repeat, Integer fold, Integer sample, String flow, Double value) {
+			EvaluationScore e = new EvaluationScore(flow, name, MathHelper.defaultDecimalFormat.format(value), null, repeat, fold, sample, null);
+			evaluation = ArrayUtils.addAll(evaluation, e);
 		}
-		
-		public void addEvaluation( String name, String flow,
-				Double value, String array_data ) {
-			EvaluationScore e = new EvaluationScore( flow, name, ( value != null ) ? MathHelper.defaultDecimalFormat.format( value ) : null, null, array_data);
-			evaluation = ArrayUtils.addAll( evaluation, e );
+
+		public void addEvaluation(String name, String flow, Double value, String array_data) {
+			EvaluationScore e = new EvaluationScore(flow, name, (value != null) ? MathHelper.defaultDecimalFormat.format(value) : null, null, array_data);
+			evaluation = ArrayUtils.addAll(evaluation, e);
+		}
+
+		public void addEvaluation(EvaluationScore score) {
+			evaluation = ArrayUtils.addAll(evaluation, score);
 		}
 
 		public static class Dataset {
 			private Integer did;
 			private String name;
 			private String url;
-			
-			public Dataset( String name, String url ) {
+
+			public Dataset(String name, String url) {
 				this.name = name;
 				this.url = url;
 			}
-			
+
 			public int getDid() {
 				return did;
 			}
+
 			public String getName() {
 				return name;
 			}
+
 			public String getUrl() {
 				return url;
 			}
 		}
-		
+
 		public static class File {
 			private Integer did;
 			private Integer file_id;
 			private String name;
 			private String url;
-			
+
 			public int getDid() {
 				return did;
 			}
+
 			public int getFileId() {
 				return file_id;
 			}
+
 			public String getName() {
 				return name;
 			}
+
 			public String getUrl() {
 				return url;
 			}
