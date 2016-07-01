@@ -58,8 +58,19 @@ public class OpenmlConnector implements Serializable {
 	
 	private boolean apiKeySet = false;
 	
+	/**
+	 * Creates a OpenML Connector with url and authentication
+	 * 
+	 * @param url - the openml server
+	 * @param api_key - the api key to authenticate with
+	 */
 	public OpenmlConnector(String url, String api_key) {
-		this.OPENML_URL = url;
+		if (url != null) {
+			this.OPENML_URL = url;
+		} else {
+			this.OPENML_URL = Settings.BASE_URL;
+		}
+		
 		this.api_key = api_key;
 		
 		if (api_key != null) {
@@ -69,6 +80,8 @@ public class OpenmlConnector implements Serializable {
 
 	/**
 	 * Creates a default OpenML Connector with authentication
+	 * 
+	 * api_key - the api key to authenticate with
 	 */
 	public OpenmlConnector(String api_key) {
 		this.OPENML_URL = Settings.BASE_URL;
@@ -78,12 +91,20 @@ public class OpenmlConnector implements Serializable {
 			this.apiKeySet = true;
 		}
 	}
-
+	
+	
+	/**
+	 * Creates a default OpenML Connector
+	 */
 	public OpenmlConnector() {
 		this.OPENML_URL = Settings.BASE_URL;
 		
 	}
 	
+
+	/**
+	 * Return the api key that is used to authenticate with
+	 */
 	public String getApiKey() {
 		if (this.apiKeySet) {
 			return api_key;
@@ -91,7 +112,12 @@ public class OpenmlConnector implements Serializable {
 			return null;
 		}
 	}
-	
+
+	/**
+	 * Updates the api key
+	 * 
+	 * api_key - the api key
+	 */
 	public void setApiKey(String api_key) {
 		this.api_key = api_key;
 		
@@ -100,6 +126,13 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+
+	/**
+	 * Sets the verbose level.
+	 * 
+	 * level - higher means more output. 
+	 * 			0 = none, 1 = communication with server, 2 = also files
+	 */
 	public void setVerboseLevel(int level) {
 		verboseLevel = level;
 	}
@@ -162,6 +195,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	/**
+	 * Uploads a new dataset
+	 * 
+	 * @param description - xml file describing the dataset, according to XSD
+	 * @param dataset - arff file representing the dataset. optional. 
+	 * @return The id under which the dataset was uploaded
+	 * @throws Exception
+	 */
 	public UploadDataSet dataUpload(File description, File dataset) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
@@ -177,6 +218,13 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	/**
+	 * Deletes a dataset from the server
+	 * 
+	 * @param did - The data id to be deleted
+	 * @return The id of the dataset that was deleted
+	 * @throws Exception
+	 */
 	public DataDelete dataDelete(int did) throws Exception {
 		Object apiResult = HttpConnector.doApiDelete(OPENML_URL + API_PART + "data/" + did, getApiKey(), verboseLevel);
 		if (apiResult instanceof DataDelete) {
@@ -186,6 +234,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	/**
+	 * Tags a dataset
+	 * 
+	 * @param id - the dataset to be tagged
+	 * @param tag - the tag to be used
+	 * @return
+	 * @throws Exception
+	 */
 	public DataTag dataTag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("data_id", new StringBody("" + id));
@@ -199,6 +255,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	/**
+	 * Untags a dataset
+	 * 
+	 * @param id - the id of the dataset
+	 * @param tag - the tag to be remoeved
+	 * @return
+	 * @throws Exception
+	 */
 	public DataUntag dataUntag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("data_id", new StringBody("" + id));
@@ -211,8 +275,6 @@ public class OpenmlConnector implements Serializable {
 			throw new DataFormatException("Casting Api Object to DataUntag");
 		}
 	}
-	
-
 
 	/**
 	 * Retrieves the features of a specified data set.
@@ -253,7 +315,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-
+	
+	/**
+	 * Uploads data features (requires admin account)
+	 * 
+	 * @param description - the features
+	 * @return
+	 * @throws Exception
+	 */
 	public DataFeatureUpload dataFeaturesUpload(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
@@ -271,6 +340,13 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+	/**
+	 * Uploads data qualities (requires admin account)
+	 * 
+	 * @param description - the qualitues (or meta-features)
+	 * @return
+	 * @throws Exception
+	 */
 	public DataQualityUpload dataQualitiesUpload(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
@@ -283,6 +359,12 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+	/**
+	 * Returns a list with all available data qualities. 
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	public DataQualityList dataQualitiesList() throws Exception {
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "data/qualities/list", getApiKey(), verboseLevel);
 		if (apiResult instanceof DataQualityList) {
@@ -321,6 +403,13 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	/**
+	 * Deletes a task
+	 * 
+	 * @param task_id - the task to be deleted
+	 * @return
+	 * @throws Exception
+	 */
 	public TaskDelete taskDelete(int task_id) throws Exception {
 		Object apiResult = HttpConnector.doApiDelete(OPENML_URL + API_PART + "task/" + task_id, getApiKey(), verboseLevel);
 		if (apiResult instanceof TaskDelete) {
@@ -330,6 +419,13 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	/**
+	 * Uploads a task
+	 * 
+	 * @param description - task description. 
+	 * @return
+	 * @throws Exception
+	 */
 	public UploadTask taskUpload(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
@@ -342,6 +438,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	/**
+	 * Tags a task
+	 * 
+	 * @param id - the task id
+	 * @param tag - the tag
+	 * @return
+	 * @throws Exception
+	 */
 	public TaskTag taskTag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("task_id", new StringBody("" + id));
@@ -356,6 +460,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	/**
+	 * Untags a task
+	 * 
+	 * @param id - the task id
+	 * @param tag - the tag to be removed
+	 * @return
+	 * @throws Exception
+	 */
 	public TaskUntag taskUntag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("task_id", new StringBody("" + id));
@@ -370,6 +482,13 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	/**
+	 * Flow description
+	 * 
+	 * @param flow_id - the id of the flow. 
+	 * @return
+	 * @throws Exception
+	 */
 	public Flow flowGet(int flow_id) throws Exception {
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "flow/" + flow_id, getApiKey(), verboseLevel);
 		if (apiResult instanceof Flow) {
@@ -379,6 +498,15 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+	
+	/**
+	 * Tags a flow.
+	 * 
+	 * @param id - the flow id
+	 * @param tag - the tag to be added to the flow
+	 * @return
+	 * @throws Exception
+	 */
 	public FlowTag flowTag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("flow_id", new StringBody("" + id));
@@ -393,6 +521,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+	/**
+	 * removes a tag from a flow
+	 * 
+	 * @param id - the flow id
+	 * @param tag - the tag to be removed
+	 * @return
+	 * @throws Exception
+	 */
 	public FlowUntag flowUntag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("flow_id", new StringBody("" + id));
@@ -408,6 +544,8 @@ public class OpenmlConnector implements Serializable {
 	}
 	
 	/**
+	 * Returns all flows of the logged in user
+	 * 
 	 * @return ImplementationOwned - An object containing all implementation_ids
 	 *         that are owned by the current user.
 	 * @throws Exception
@@ -423,6 +561,8 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	/**
+	 * Deletes a flow
+	 * 
 	 * @param id
 	 *            - The numeric id of the implementation to be deleted.
 	 * @return ImplementationDelete - An object containing the id of the deleted
@@ -451,6 +591,8 @@ public class OpenmlConnector implements Serializable {
 	
 
 	/**
+	 * Checks whether a flow exists, by name/external_version combination
+	 * 
 	 * @param name
 	 *            - The name of the implementation to be checked
 	 * @param external_version
@@ -471,7 +613,10 @@ public class OpenmlConnector implements Serializable {
 			throw new DataFormatException("Casting Api Object to ImplementationExists");
 		}
 	}
+	
 	/**
+	 * Uploads a flow
+	 * 
 	 * @param description
 	 *            - An XML file describing the implementation. See documentation
 	 *            at openml.org.
@@ -503,6 +648,8 @@ public class OpenmlConnector implements Serializable {
 	
 
 	/**
+	 * Uploads a run
+	 * 
 	 * @param description
 	 *            - An XML file describing the run. See documentation at
 	 *            openml.org.
@@ -536,6 +683,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	/**
+	 * Returns a list with run results. Must be restricted with tasks, setups or both. 
+	 * 
+	 * @param task_id - a list with task ids to include (null to not restrict on tasks)
+	 * @param setup_id - a list with setup ids to include (null to not restrict on setups)
+	 * @return
+	 * @throws Exception
+	 */
 	public RunList runList(List<Integer> task_id, List<Integer> setup_id) throws Exception {
 		String suffix = "";
 		
@@ -554,6 +709,15 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	/**
+	 * Returns a list with run results. Must be restricted with tasks, setups or both. 
+	 * 
+	 * @param task_id - a list with task ids to include (null to not restrict on tasks)
+	 * @param setup_id - a list with setup ids to include (null to not restrict on setups)
+	 * @param function - the evaluation measure interested in
+	 * @return
+	 * @throws Exception
+	 */
 	public EvaluationList evaluationList(List<Integer> task_id, List<Integer> setup_id, String function) throws Exception {
 		String suffix = "";
 		
@@ -575,6 +739,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+	/**
+	 * Tags a run
+	 * 
+	 * @param id - The run id
+	 * @param tag - The tag
+	 * @return
+	 * @throws Exception
+	 */
 	public RunTag runTag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("run_id", new StringBody("" + id));
@@ -588,6 +760,14 @@ public class OpenmlConnector implements Serializable {
 	}
 
 
+	/**
+	 * Removes a tag from a run
+	 * 
+	 * @param id - the run id
+	 * @param tag - the tag to be removed
+	 * @return
+	 * @throws Exception
+	 */
 	public RunUntag runUntag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("run_id", new StringBody("" + id));
@@ -600,6 +780,13 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+	/**
+	 * Stores evaluation measures of a run (admin rights required, typically executed by evaluation engine)
+	 * 
+	 * @param description - description file (complying to xsd)
+	 * @return
+	 * @throws Exception
+	 */
 	public RunEvaluate runEvaluate(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
@@ -612,6 +799,13 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+	/**
+	 * Stores trace results in the database, typically used when an internal parameter optimization loop was executed. (admin rights required, typically executed by evaluation engine)
+	 * 
+	 * @param trace - the trace description xml
+	 * @return
+	 * @throws Exception
+	 */
 	public RunTrace runTrace(File trace) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("trace", new FileBody(trace));
@@ -624,6 +818,13 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+	/**
+	 * Downloads run information
+	 * 
+	 * @param runId - the run id
+	 * @return
+	 * @throws Exception
+	 */
 	public Run runGet(int runId) throws Exception {
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "run/" + runId, getApiKey(), verboseLevel);
 		if (apiResult instanceof Run) {
@@ -634,6 +835,8 @@ public class OpenmlConnector implements Serializable {
 	}
 
 	/**
+	 * Deletes a run and all it's important components
+	 * 
 	 * @param id
 	 *            - The numeric id of the run to be deleted.
 	 * @return RunDelete - An object containing the id of the deleted run
@@ -650,6 +853,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+	
+	/**
+	 * Resets the evaluation of a run (admin right required)
+	 * 
+	 * @param run_id
+	 * @return
+	 * @throws Exception
+	 */
 	public RunReset runReset(int run_id) throws Exception {
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "run/reset/" + run_id, getApiKey(), verboseLevel);
 		if (apiResult instanceof RunReset) {
@@ -659,6 +870,13 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+	/**
+	 * A list with the parameter settings of a setup
+	 * 
+	 * @param setup_id
+	 * @return
+	 * @throws Exception
+	 */
 	public SetupParameters setupParameters(int setup_id) throws Exception {
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "setup/" + setup_id, getApiKey(), verboseLevel);
 		if (apiResult instanceof SetupParameters) {
@@ -668,6 +886,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+	/**
+	 * Tags a setup
+	 * 
+	 * @param id - the setup id
+	 * @param tag - the tag
+	 * @return
+	 * @throws Exception
+	 */
 	public SetupTag setupTag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("setup_id", new StringBody("" + id));
@@ -681,6 +907,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 
+	/**
+	 * Removes a tag from a setup
+	 * 
+	 * @param id - the setup id
+	 * @param tag - the tag to be removed
+	 * @return
+	 * @throws Exception
+	 */
 	public SetupUntag setupUntag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("setup_id", new StringBody("" + id));
@@ -695,6 +929,8 @@ public class OpenmlConnector implements Serializable {
 	}
 
 	/**
+	 * Deletes a setup. Only applicable when no runs are attached. 
+	 * 
 	 * @param id
 	 *            - The numeric id of the setup to be deleted.
 	 * @return SetupDelete - An object containing the id of the deleted
@@ -712,6 +948,17 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	/**
+	 * Returns a list of predictions on which two setups disagree
+	 * 
+	 * @param setupA - a setup id
+	 * @param setupB - a setup id
+	 * @param task_id - the task id
+	 * @param task_size - // TODO
+	 * @param differences // TODO
+	 * @return
+	 * @throws Exception
+	 */
 	public SetupDifferences setupDifferences(int setupA, int setupB, int task_id, int task_size, int differences) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("task_id", new StringBody("" + task_id));
@@ -725,7 +972,17 @@ public class OpenmlConnector implements Serializable {
 			throw new DataFormatException("Casting Api Object to SetupDifferences");
 		}
 	}
+
 	
+	/**
+	 * Returns a list of predictions on which two setups disagree
+	 * 
+	 * @param setupA - a setup id
+	 * @param setupB - a setup id
+	 * @param task_id - the task id
+	 * @return
+	 * @throws Exception
+	 */
 	public SetupDifferences setupDifferences(Integer setupA, Integer setupB, Integer task_id)  throws Exception {
 		String suffix = setupA + "/" + setupB;
 		if (task_id != null) {
@@ -756,6 +1013,8 @@ public class OpenmlConnector implements Serializable {
 	}
 
 	/**
+	 * Returns a scheduled job
+	 * 
 	 * @param workbench
 	 *            - The workbench that will execute the task.
 	 * @param task_type_id
@@ -782,6 +1041,8 @@ public class OpenmlConnector implements Serializable {
 	}
 	
 	/**
+	 * Does a free query to openml
+	 * 
 	 * @param sql
 	 *            - The query to be executed
 	 * @return An JSON object containing the result of the query, along with
@@ -813,6 +1074,8 @@ public class OpenmlConnector implements Serializable {
 	}
  
 	/**
+	 * Returns a file from the openml server
+	 * 
 	 * @param url
 	 *            - The URL to obtain
 	 * @param filepath
