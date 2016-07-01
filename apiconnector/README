@@ -1,3 +1,7 @@
 To compile using Maven (mvn): 
 
 mvn clean release:clean release:prepare release:perform
+
+To release on maven central, go to:
+
+https://oss.sonatype.org/
