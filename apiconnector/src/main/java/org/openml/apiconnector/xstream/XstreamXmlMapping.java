@@ -288,6 +288,8 @@ public class XstreamXmlMapping {
 		xstream.addImplicitCollection(Task.Output.Predictions.class, "features", "oml:feature", Task.Output.Predictions.Feature.class);
 		
 		xstream.aliasField("oml:task_id", Task.class, "task_id");
+		xstream.aliasField("oml:task_name", Task.class, "task_name");
+		xstream.aliasField("oml:task_type_id", Task.class, "task_type_id");
 		xstream.aliasField("oml:task_type", Task.class, "task_type");
 		xstream.aliasField("oml:data_set_id", Task.Input.Data_set.class, "data_set_id");
 		xstream.aliasField("oml:labeled_data_set_id", Task.Input.Data_set.class, "labeled_data_set_id");

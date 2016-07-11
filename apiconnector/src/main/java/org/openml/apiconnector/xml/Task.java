@@ -35,6 +35,8 @@ public class Task implements Serializable {
 	private final String oml = Constants.OPENML_XMLNS;
 	
 	private Integer task_id;
+	private String task_name;
+	private Integer task_type_id;
 	private String task_type;
 	private Input[] inputs;
 	private Output[] outputs;
@@ -47,7 +49,7 @@ public class Task implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Task " + getTask_id() + ": " + getTask_type();
+		return task_name;
 	}
 	
 	@Override
@@ -65,6 +67,14 @@ public class Task implements Serializable {
 
 	public Integer getTask_id() {
 		return task_id;
+	}
+
+	public String getTask_name() {
+		return task_name;
+	}
+
+	public Integer getTask_type_id() {
+		return task_type_id;
 	}
 
 	public String getTask_type() {
