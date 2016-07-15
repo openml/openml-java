@@ -800,17 +800,34 @@ public class OpenmlConnector implements Serializable {
 	}
 
 	/**
+	 * Uploads trace results in the database, typically used when an internal parameter optimization loop was executed. (admin rights required, typically executed by evaluation engine)
+	 * 
+	 * @param trace - the trace description xml
+	 * @return
+	 * @throws Exception
+	 */
+	public RunTraceUpload runTraceUpload(File trace) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("trace", new FileBody(trace));
+
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "run/trace", params, getApiKey(), verboseLevel);
+		if (apiResult instanceof RunTraceUpload) {
+			return (RunTraceUpload) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to RunTraceUpload");
+		}
+	}
+
+	/**
 	 * Stores trace results in the database, typically used when an internal parameter optimization loop was executed. (admin rights required, typically executed by evaluation engine)
 	 * 
 	 * @param trace - the trace description xml
 	 * @return
 	 * @throws Exception
 	 */
-	public RunTrace runTrace(File trace) throws Exception {
-		MultipartEntity params = new MultipartEntity();
-		params.addPart("trace", new FileBody(trace));
+	public RunTrace runTrace(int run_id) throws Exception {
 
-		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "run/trace", params, getApiKey(), verboseLevel);
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "run/trace/" + run_id, getApiKey(), verboseLevel);
 		if (apiResult instanceof RunTrace) {
 			return (RunTrace) apiResult;
 		} else {

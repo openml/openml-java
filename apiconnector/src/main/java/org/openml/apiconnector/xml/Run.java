@@ -34,6 +34,7 @@ public class Run {
 	private int task_id;
 	private Integer setup_id;
 	private int flow_id;
+	private String flow_name;
 	private String setup_string;
 	private String error_message;
 	private Parameter_setting[] parameter_settings;
@@ -77,6 +78,10 @@ public class Run {
 
 	public int getFlow_id() {
 		return flow_id;
+	}
+
+	public String getFlow_name() {
+		return flow_name;
 	}
 
 	public String getError_message() {

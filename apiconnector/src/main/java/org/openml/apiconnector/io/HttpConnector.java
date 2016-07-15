@@ -7,13 +7,13 @@ import java.io.StringWriter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.xml.ApiError;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
@@ -30,15 +30,15 @@ public class HttpConnector implements Serializable {
 		entity.addPart("api_key", new StringBody( ash ) );
 		
 		String result = "";
-		HttpClient httpclient = new DefaultHttpClient();
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		HttpPost httppost = new HttpPost( url );
+        httppost.setEntity(entity);
+        
+        CloseableHttpResponse response = httpclient.execute(httppost);
+        HttpEntity resEntity = response.getEntity();
 		
 		long contentLength = 0;
 		try {
-			HttpPost httppost = new HttpPost( url );
-            httppost.setEntity(entity);
-            
-            HttpResponse response = httpclient.execute(httppost);
-            HttpEntity resEntity = response.getEntity();
             if (resEntity != null) {
             	result = httpEntitiToString(resEntity);
                 contentLength = resEntity.getContentLength();
@@ -46,7 +46,7 @@ public class HttpConnector implements Serializable {
             	throw new Exception("An exception has occured while reading data input stream. ");
             }
 		} finally {
-            try { httpclient.getConnectionManager().shutdown(); } catch (Exception ignore) {}
+            try { response.close(); } catch (Exception ignore) {}
         }
 		if(apiVerboseLevel >= Constants.VERBOSE_LEVEL_XML) {
 			System.out.println("===== REQUEST URI (POST): " + url + " (Content Length: "+contentLength+") =====\n" + result + "\n=====\n");
@@ -70,13 +70,12 @@ public class HttpConnector implements Serializable {
 	
 	public static Object doApiDelete(String url, String ash, int apiVerboseLevel) throws Exception {
 		String result = "";
-		HttpClient httpclient = new DefaultHttpClient();
-		// TODO: integrate ??
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		HttpDelete httpdelete = new HttpDelete(url + "?api_key=" + ash );
+        
+        CloseableHttpResponse response = httpclient.execute(httpdelete);
 		long contentLength = 0;
 		try {
-			HttpDelete httpdelete = new HttpDelete(url + "?api_key=" + ash );
-            
-            HttpResponse response = httpclient.execute(httpdelete);
             HttpEntity resEntity = response.getEntity();
             if (resEntity != null) {
             	result = httpEntitiToString(resEntity);
@@ -85,7 +84,7 @@ public class HttpConnector implements Serializable {
             	throw new Exception("An exception has occured while reading data input stream. ");
             }
 		} finally {
-            try { httpclient.getConnectionManager().shutdown(); } catch (Exception ignore) {}
+            try { response.close(); } catch (Exception ignore) {}
         }
 		
 		if(apiVerboseLevel >= Constants.VERBOSE_LEVEL_XML) {
