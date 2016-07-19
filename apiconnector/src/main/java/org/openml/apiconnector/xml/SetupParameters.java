@@ -1,6 +1,8 @@
 package org.openml.apiconnector.xml;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.openml.apiconnector.settings.Constants;
 
@@ -21,6 +23,14 @@ public class SetupParameters {
 	
 	public Parameter[] getParameters() {
 		return parameters;
+	}
+	
+	public Map<String, String> getParametersAsMap() {
+		Map<String, String> res = new HashMap<String, String>();
+		for (Parameter p : parameters) {
+			res.put(p.getFull_name(), p.getValue());
+		}
+		return res;
 	}
 
 	@XStreamAlias("oml:parameter")

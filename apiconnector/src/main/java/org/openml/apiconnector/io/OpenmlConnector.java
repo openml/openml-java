@@ -890,6 +890,27 @@ public class OpenmlConnector implements Serializable {
 	/**
 	 * A list with the parameter settings of a setup
 	 * 
+	 * @param a file equivalent to run description, but only featuring the parts important to parameters
+	 * @return
+	 * @throws Exception
+	 */
+	public SetupExists setupExists(File description) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		if (verboseLevel >= Constants.VERBOSE_LEVEL_XML) {
+			System.out.println(Conversion.fileToString(description) + "\n==========");
+		}
+		params.addPart("description", new FileBody(description));
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "setup/exists", params, getApiKey(), verboseLevel);
+		if (apiResult instanceof SetupExists) {
+			return (SetupExists) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to SetupExists");
+		}
+	}
+	
+	/**
+	 * A list with the parameter settings of a setup
+	 * 
 	 * @param setup_id
 	 * @return
 	 * @throws Exception

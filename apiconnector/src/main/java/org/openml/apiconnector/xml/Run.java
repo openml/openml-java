@@ -31,7 +31,7 @@ public class Run {
 	private final String oml = Constants.OPENML_XMLNS;
 	private Integer run_id;
 	private Integer uploader;
-	private int task_id;
+	private Integer task_id;
 	private Integer setup_id;
 	private int flow_id;
 	private String flow_name;
@@ -42,7 +42,7 @@ public class Run {
 	private Data input_data;
 	private Data output_data;
 
-	public Run(int task_id, String error_message, int flow_id,
+	public Run(Integer task_id, String error_message, int flow_id,
 			String setup_string, Parameter_setting[] parameter_settings,
 			String[] tags) {
 		this.task_id = task_id;
@@ -146,9 +146,9 @@ public class Run {
 	public static class Parameter_setting {
 		private String name;
 		private String value;
-		private int component;
+		private Integer component;
 
-		public Parameter_setting(int component, String name, String value) {
+		public Parameter_setting(Integer component, String name, String value) {
 			this.name = name;
 			this.component = component;
 			this.value = value;

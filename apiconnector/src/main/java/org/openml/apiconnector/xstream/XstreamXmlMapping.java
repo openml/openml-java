@@ -52,6 +52,7 @@ import org.openml.apiconnector.xml.RunTraceUpload;
 import org.openml.apiconnector.xml.RunUntag;
 import org.openml.apiconnector.xml.SetupDelete;
 import org.openml.apiconnector.xml.SetupDifferences;
+import org.openml.apiconnector.xml.SetupExists;
 import org.openml.apiconnector.xml.SetupParameters;
 import org.openml.apiconnector.xml.SetupTag;
 import org.openml.apiconnector.xml.SetupUntag;
@@ -86,6 +87,7 @@ public class XstreamXmlMapping {
 	public static XStream getInstance(ClassLoaderReference clr) {
 		XStream xstream = new XStream(null,new DomDriver("UFT-8", new NoNameCoder()),clr);
 		xstream.processAnnotations(SetupParameters.class);
+		xstream.processAnnotations(SetupExists.class);
 		
 		xstream.ignoreUnknownElements();
 		

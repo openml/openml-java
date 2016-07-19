@@ -19,75 +19,86 @@
  */
 package org.openml.apiconnector.xml;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.openml.apiconnector.settings.Constants;
 
 public class DataQuality {
-	
+
 	private final String oml = Constants.OPENML_XMLNS;
 	private Integer did;
 	private String error;
 	private Quality[] qualities;
-	
-	public DataQuality( Integer did, Quality[] qualities ) {
+
+	public DataQuality(Integer did, Quality[] qualities) {
 		this.did = did;
 		this.qualities = qualities;
 	}
-	
-	public DataQuality( Integer did, String error ) {
+
+	public DataQuality(Integer did, String error) {
 		this.did = did;
 		this.error = error;
 	}
-	
+
 	public Integer getDid() {
 		return did;
 	}
-	
+
 	public String getError() {
 		return error;
 	}
-	
+
 	public Quality[] getQualities() {
 		return qualities;
 	}
-	
+
 	public String[] getQualityNames() {
 		String[] result = new String[qualities.length];
-		for( int i = 0; i < qualities.length; ++i ) {
+		for (int i = 0; i < qualities.length; ++i) {
 			result[i] = qualities[i].getName();
 		}
 		return result;
 	}
 	
+	public Map<String,String> getQualitiesMap() {
+		Map<String,String> qm = new HashMap<String, String>();
+		for (Quality q : qualities) {
+			qm.put(q.getName(), q.getValue());
+		}
+		return qm;
+	}
+
 	public String getOml() {
 		return oml;
 	}
-	
+
 	public static class Quality {
 		private String name;
 		private String value;
 		private Integer interval_start;
 		private Integer interval_end;
-		
-		public Quality( String name, String value ) {
+
+		public Quality(String name, String value) {
 			this.name = name;
 			this.value = value;
 		}
-		
-		public Quality( String name, String value, Integer intervat_start, Integer interval_end ) {
+
+		public Quality(String name, String value, Integer intervat_start, Integer interval_end) {
 			this.name = name;
 			this.value = value;
 			this.interval_start = intervat_start;
 			this.interval_end = interval_end;
 		}
-		
+
 		public String getName() {
 			return name;
 		}
-		
+
 		public String getValue() {
 			return value;
 		}
-		
+
 		public Integer getInterval_start() {
 			return interval_start;
 		}
@@ -98,7 +109,7 @@ public class DataQuality {
 
 		@Override
 		public String toString() {
-			return name+":"+value;
+			return name + ":" + value;
 		}
 	}
 }
