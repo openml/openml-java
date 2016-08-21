@@ -30,6 +30,17 @@ public class QueryUtils {
 		return result;
 	}
 
+	public static String[] getStringsFromDatabase(OpenmlConnector apiconnector, String sql) throws Exception {
+		JSONArray runJson = (JSONArray) apiconnector.freeQuery(sql).get("data");
+
+		String[] result = new String[runJson.length()];
+		for (int i = 0; i < runJson.length(); ++i) {
+			result[i] = ((JSONArray) runJson.get(i)).getString(0);
+		}
+
+		return result;
+	}
+
 	public static double getIntFromDatabase(OpenmlConnector apiconnector, String sql) throws Exception {
 		Integer[] result = getIdsFromDatabase(apiconnector, sql);
 		return result[0];
