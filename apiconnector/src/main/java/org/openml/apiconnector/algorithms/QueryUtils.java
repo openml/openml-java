@@ -70,4 +70,29 @@ public class QueryUtils {
 		
 		return result;
 	}
+	
+	public static Map<Integer, Map<Integer, Map<String, Double>>> getResultsMapFromDatabase(OpenmlConnector apiconnector, String sql) throws Exception {
+		Map<Integer, Map<Integer, Map<String, Double>>> result = new HashMap<Integer, Map<Integer, Map<String, Double>>>();
+		JSONArray runJson = (JSONArray) apiconnector.freeQuery(sql).get("data");
+		
+		for (int i = 0; i < runJson.length(); ++i) {
+			JSONArray row = ((JSONArray) runJson.get(i));
+			
+			Integer key1 = row.getInt(0);
+			Integer key2 = row.getInt(1);
+			String key3 = row.getString(2);
+			Double value = row.getDouble(3);
+			
+			if (result.containsKey(key1) == false) {
+				result.put(key1, new HashMap<Integer, Map<String,Double>>());
+			}
+			if (result.get(key1).containsKey(key2) == false) {
+				result.get(key1).put(key2, new HashMap<String,Double>());
+			}
+			
+			result.get(key1).get(key2).put(key3,value);
+		}
+		
+		return result;
+	}
 }
