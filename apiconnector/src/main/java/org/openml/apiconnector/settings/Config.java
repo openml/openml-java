@@ -109,6 +109,13 @@ public class Config implements Serializable {
 	}
 	
 	/**
+	 * @return Whether to build a model over full dataset in runs (takes time)
+	 */
+	public String getModelFullDataset() {
+		return get("model_full_dataset");
+	}
+	
+	/**
 	 * @return The server address specified in the config file
 	 */
 	public String getServer() {
