@@ -17,7 +17,7 @@ import com.thoughtworks.xstream.XStream;
 public class TestFlowFunctionality {
 	private static final int probe = 100;
 
-	private static final String url = "http://www.openml.org/";
+	private static final String url = "http://test.openml.org/";
 	private static final String session_hash = "d488d8afd93b32331cf6ea9d7003d4c3";
 	private static final OpenmlConnector client = new OpenmlConnector(url,session_hash);
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
@@ -41,7 +41,7 @@ public class TestFlowFunctionality {
 	public void testApiFlowUpload() {
 		client.setVerboseLevel(1);
 		try {
-			Flow created = new Flow("test", "test", "test should be deleted", "english", "UnitTest");
+			Flow created = new Flow("test2", "test", "test should be deleted", "english", "UnitTest");
 			created.addComponent("B", new Flow("test2", "test2", "test should be deleted", "english", "UnitTest") );
 			String flowXML = xstream.toXML(created);
 			
@@ -54,6 +54,35 @@ public class TestFlowFunctionality {
 		//	client.flowTag(uf.getId(), "testTag"); // TODO: flow tag properly
 			
 			FlowDelete fd = client.flowDelete(uf.getId());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Test failed: " + e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testApiFlowUploadDuplicate() {
+		try {
+			Flow created = new Flow("test2", "test", "test should be deleted", "english", "UnitTest");
+			created.addComponent("B", new Flow("test2", "test2", "test should be deleted", "english", "UnitTest") );
+			String flowXML = xstream.toXML(created);
+			
+			System.out.println(flowXML);
+			
+			File f = Conversion.stringToTempFile(flowXML, "test", "xml");
+			
+			UploadFlow uf = client.flowUpload(f, f, f);
+			
+			try {
+				UploadFlow uf2 = client.flowUpload(f, null, null);
+				
+				fail("Test failed, flow upload should have been blocked.");
+			} catch (Exception e) {
+				// we expect an exception
+				System.out.println(e.getMessage());
+			}
+			client.flowDelete(uf.getId());
 			
 		} catch (Exception e) {
 			e.printStackTrace();

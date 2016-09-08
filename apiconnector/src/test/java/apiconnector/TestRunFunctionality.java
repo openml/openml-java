@@ -20,7 +20,7 @@ public class TestRunFunctionality {
 	private static final int probe = 68;
 	private static final String predictions_path = "C:\\data\\predictions_68.arff";
 
-	private static final String url = "http://www.openml.org/";
+	private static final String url = "http://capa.win.tue.nl/";
 	private static final String session_hash = "d488d8afd93b32331cf6ea9d7003d4c3";
 	private static final OpenmlConnector client = new OpenmlConnector(url,session_hash);
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
