@@ -1066,9 +1066,22 @@ public class OpenmlConnector implements Serializable {
 	 *             down, no tasks available for this workbench.
 	 */
 	public Job jobRequest(String workbench, String task_type_id) throws Exception {
+		return jobRequest(workbench, task_type_id, null, null, null);
+	}
+	
+	public Job jobRequest(String workbench, String task_type_id, String task_tag, String setup_tag, Integer setup_id) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("workbench", new StringBody(workbench));
 		params.addPart("task_type_id", new StringBody(task_type_id));
+		if (task_tag != null) {
+			params.addPart("task_tag", new StringBody(task_tag));
+		}
+		if (setup_tag != null) {
+			params.addPart("setup_tag", new StringBody(setup_tag));
+		}
+		if (setup_id != null) {
+			params.addPart("setup_id", new StringBody(setup_id+""));
+		}
 		
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "job/request", params, getApiKey(), verboseLevel);
 		if (apiResult instanceof Job) {
