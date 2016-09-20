@@ -37,7 +37,7 @@ import com.thoughtworks.xstream.XStream;
 
 
 public class TestDataFunctionality {
-	private static final String data_file = "/home/rijnjnvan/iris.arff";
+	private static final String data_file = "/home/rijnjnvan/data/iris.arff";
 	private static final int probe = 61;
 
 	private static final String url = "http://capa.win.tue.nl/";
@@ -72,7 +72,7 @@ public class TestDataFunctionality {
 
 	@Test
 	public void testApiUploadDownload() {
-		client.setVerboseLevel(2);
+	//	client.setVerboseLevel(2);
 		try {
 			DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
 			String dsdXML = xstream.toXML(dsd);
