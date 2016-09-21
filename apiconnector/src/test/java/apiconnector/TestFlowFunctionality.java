@@ -1,5 +1,6 @@
 package apiconnector;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -21,15 +22,21 @@ public class TestFlowFunctionality {
 	private static final String session_hash = "d488d8afd93b32331cf6ea9d7003d4c3";
 	private static final OpenmlConnector client = new OpenmlConnector(url,session_hash);
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
-	
+	private static final String tag = "junittest";
 	
 	@Test
 	public void testApiFlowDownload() {
 		
 		try {
-			Flow download = client.flowGet(probe);
+			Flow flow = client.flowGet(probe);
+
+			File tempXml = Conversion.stringToTempFile(xstream.toXML(flow), "data", "xml");
+			File tempXsd = client.getXSD("openml.flow.upload");
 			
+			assertTrue(Conversion.validateXML(tempXml, tempXsd));
 			
+			// very easy checks, should all pass
+			assertTrue(flow.getId() == probe);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -51,9 +58,11 @@ public class TestFlowFunctionality {
 			
 			UploadFlow uf = client.flowUpload(f, f, f);
 			
-		//	client.flowTag(uf.getId(), "testTag"); // TODO: flow tag properly
+			client.flowTag(uf.getId(), tag); 
+			client.flowUntag(uf.getId(), tag);
 			
 			FlowDelete fd = client.flowDelete(uf.getId());
+			System.out.println(fd.getId());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -76,6 +85,7 @@ public class TestFlowFunctionality {
 			
 			try {
 				UploadFlow uf2 = client.flowUpload(f, null, null);
+				System.out.println(uf2.getId());
 				
 				fail("Test failed, flow upload should have been blocked.");
 			} catch (Exception e) {

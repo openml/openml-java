@@ -37,8 +37,9 @@ import com.thoughtworks.xstream.XStream;
 
 
 public class TestDataFunctionality {
-	private static final String data_file = "/home/rijnjnvan/data/iris.arff";
+	private static final String data_file = "data/iris.arff";
 	private static final int probe = 61;
+	private static final String tag = "junittest";
 
 	private static final String url = "http://capa.win.tue.nl/";
 	private static final String session_hash = "d488d8afd93b32331cf6ea9d7003d4c3";
@@ -49,14 +50,16 @@ public class TestDataFunctionality {
 	@Test
 	public void testApiDataDownload() {
 		try {
-			DataSetDescription dsd = client.dataGet( probe );
-			DataFeature features = client.dataFeatures( probe );
-			DataQuality qualities = client.dataQualities( probe );
+			DataSetDescription dsd = client.dataGet(probe);
+			DataFeature features = client.dataFeatures(probe);
+			DataQuality qualities = client.dataQualities(probe);
 			
 			File tempDsd = Conversion.stringToTempFile(xstream.toXML(dsd), "data", "xml");
 			File tempXsd = client.getXSD("openml.data.upload");
 			
-			System.out.println(Conversion.fileToString(tempXsd));
+			
+			
+		//	System.out.println(Conversion.fileToString(tempXsd));
 			
 			assertTrue(Conversion.validateXML(tempDsd, tempXsd));
 			
@@ -77,11 +80,12 @@ public class TestDataFunctionality {
 			DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
 			String dsdXML = xstream.toXML(dsd);
 			File description = Conversion.stringToTempFile(dsdXML, "test-data", "arff");
-			System.out.println(dsdXML);
+		//	System.out.println(dsdXML);
 			UploadDataSet ud = client.dataUpload(description, new File(data_file));
-			System.out.println(xstream.toXML(ud));
+		//	System.out.println(xstream.toXML(ud));
 			
-			client.dataTag(ud.getId(), "testTag");
+			client.dataTag(ud.getId(), tag);
+			client.dataUntag(ud.getId(), tag);
 			
 			DataDelete dd = client.dataDelete(ud.getId());
 			
@@ -97,6 +101,7 @@ public class TestDataFunctionality {
 	public void testApiAdditional() {
 		try {
 			client.dataQualitiesList();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Test failed: " + e.getMessage());
