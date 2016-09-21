@@ -32,9 +32,9 @@ public class Run {
 	private Integer run_id;
 	private Integer uploader;
 	private Integer task_id;
-	private Integer setup_id;
 	private int flow_id;
 	private String flow_name;
+	private Integer setup_id;
 	private String setup_string;
 	private String error_message;
 	private Parameter_setting[] parameter_settings;
