@@ -8,6 +8,7 @@ import org.openml.apiconnector.algorithms.TaskInformation;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.Task;
+import org.openml.apiconnector.xml.Tasks;
 
 public class TestOtherFunctions {
 
