@@ -98,21 +98,14 @@
     <dependency>
       <groupId>nz.ac.waikato.cms.moa</groupId>
       <artifactId>moa</artifactId>
-      <version>2014.11</version>
-      <scope>provided</scope>
-    </dependency>
-    
-    <dependency>
-      <groupId>nz.ac.waikato.cms.weka</groupId>
-      <artifactId>weka-dev</artifactId>
-      <version>3.7.13</version>
+      <version>2016.04</version>
       <scope>provided</scope>
     </dependency>
     
     <dependency>
       <groupId>org.openml</groupId>
       <artifactId>apiconnector</artifactId>
-      <version>1.0.10</version>
+      <version>1.0.12</version>
     </dependency>
   </dependencies>
 

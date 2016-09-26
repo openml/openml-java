@@ -1,7 +1,7 @@
 package moa.classifiers.meta;
 
-import weka.core.Instance;
-import moa.options.FloatOption;
+import com.github.javacliparser.FloatOption;
+import com.yahoo.labs.samoa.instances.Instance;
 
 public class BlastDecayed extends BlastAbstract {
 	

@@ -19,6 +19,9 @@
  */
 package org.openml.apiconnector.xml;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.openml.apiconnector.settings.Constants;
 
 public class DataFeature {
@@ -48,6 +51,14 @@ public class DataFeature {
 
 	public Feature[] getFeatures() {
 		return features;
+	}
+	
+	public Map<String, Feature> getFeatureMap() {
+		Map<String,Feature> fm = new HashMap<String, Feature>();
+		for (Feature f : features) {
+			fm.put(f.name, f);
+		}
+		return fm;
 	}
 	
 	public String getOml() {

@@ -1,21 +1,21 @@
 package moa.classifiers.meta;
 
-import weka.core.Instance;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.github.javacliparser.FlagOption;
+import com.github.javacliparser.IntOption;
+import com.github.javacliparser.ListOption;
+import com.github.javacliparser.Option;
+import com.yahoo.labs.samoa.instances.Instance;
+import com.yahoo.labs.samoa.instances.InstancesHeader;
+
 import moa.classifiers.AbstractClassifier;
 import moa.classifiers.Classifier;
-import moa.core.InstancesHeader;
 import moa.core.Measurement;
 import moa.core.ObjectRepository;
 import moa.options.ClassOption;
-import moa.options.FlagOption;
-import moa.options.IntOption;
-import moa.options.ListOption;
-import moa.options.Option;
 import moa.tasks.TaskMonitor;
 
 public abstract class BlastAbstract extends AbstractClassifier {
@@ -57,7 +57,7 @@ public abstract class BlastAbstract extends AbstractClassifier {
     protected Integer instancesSeen;
     
     List<Integer> topK;
-	
+
 	@Override
 	public double[] getVotesForInstance(Instance inst) {
 		double[] votes = new double[inst.classAttribute().numValues()];

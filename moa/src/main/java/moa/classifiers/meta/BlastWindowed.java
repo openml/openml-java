@@ -1,7 +1,7 @@
 package moa.classifiers.meta;
 
-import moa.options.IntOption;
-import weka.core.Instance;
+import com.github.javacliparser.IntOption;
+import com.yahoo.labs.samoa.instances.Instance;
 
 public class BlastWindowed extends BlastAbstract {
 	

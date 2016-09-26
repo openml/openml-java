@@ -1,14 +1,15 @@
 package moa.classifiers.meta;
 
+import com.github.javacliparser.ListOption;
+import com.github.javacliparser.Option;
+import com.yahoo.labs.samoa.instances.Instance;
+
 import moa.classifiers.AbstractClassifier;
 import moa.classifiers.Classifier;
 import moa.core.Measurement;
 import moa.core.ObjectRepository;
 import moa.options.ClassOption;
-import moa.options.ListOption;
-import moa.options.Option;
 import moa.tasks.TaskMonitor;
-import weka.core.Instance;
 
 public class MajorityVoteEnsemble extends AbstractClassifier {
 	
