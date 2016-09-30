@@ -32,123 +32,127 @@ import java.util.List;
 import org.openml.apiconnector.algorithms.Conversion;
 
 /**
- * A Class that loads a config file with username/password and server information.
- * Highly recommended to use config file and this class when executing experiments
- * on a server. 
+ * A Class that loads a config file with username/password and server
+ * information. Highly recommended to use config file and this class when
+ * executing experiments on a server.
  * 
  * @author J. N. van Rijn <j.n.van.rijn@liacs.leidenuniv.nl>
  */
 public class Config implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 	private boolean loaded = false;
 	private HashMap<String, String> config;
-	
+
 	/**
-	 * @throws IOException - Could not load config file
+	 * @throws IOException
+	 *             - Could not load config file
 	 */
 	public Config() {
 		try {
 			String configfile = Constants.OPENML_DIRECTORY + "/openml.conf";
-			load(new File( configfile ) );
-		} catch( IOException ioe ) {
+			load(new File(configfile));
+		} catch (IOException ioe) {
 			Conversion.log("Warning", "Load Config", "Could not locate default config file.");
 		}
 	}
-	
-	public Config( String config ) {
-		process( Arrays.asList( config.split(";") ) );
+
+	public Config(String config) {
+		process(Arrays.asList(config.split(";")));
 	}
-	
+
 	public void updateStaticSettings() {
-		if( get("cache_allowed") != null ) {
-			if( get("cache_allowed").equals("false") ) {
+		if (get("cache_allowed") != null) {
+			if (get("cache_allowed").equals("false")) {
 				Settings.CACHE_ALLOWED = false;
 			}
 		}
-		if( get("cache_directory") != null ) {
+		if (get("cache_directory") != null) {
 			Settings.CACHE_DIRECTORY = config.get("cache_directory");
 		}
 	}
-	
+
 	/**
-	 * @param f The location (absolute or relative) where the config
-	 * file can be found. 
-	 * @throws IOException - Could not load config file
+	 * @param f
+	 *            The location (absolute or relative) where the config file can
+	 *            be found.
+	 * @throws IOException
+	 *             - Could not load config file
 	 */
-	private void load( File f ) throws IOException {
-		
+	private void load(File f) throws IOException {
+
 		BufferedReader br = new BufferedReader(new FileReader(f));
 		List<String> lines = new ArrayList<String>();
-		while( br.ready() ) {
-			lines.add( br.readLine() );
+		while (br.ready()) {
+			lines.add(br.readLine());
 		}
 		br.close();
-		process( lines );
+		process(lines);
 	}
-	
-	private void process( List<String> lines ) {
+
+	private void process(List<String> lines) {
 		config = new HashMap<String, String>();
-		// default server, can be overridden. 
-		config.put("server", Settings.BASE_URL );
-		
-		for( String line : lines ) {
+		// default server, can be overridden.
+		config.put("server", Settings.BASE_URL);
+
+		for (String line : lines) {
 			String[] l = line.split("=");
-			if( l.length == 2 ) {
-				config.put( l[0].trim(), l[1].trim() );
+			if (l.length == 2) {
+				config.put(l[0].trim(), l[1].trim());
 			}
 		}
 		loaded = true;
 	}
-	
+
 	/**
 	 * @return The username specified in the config file
 	 */
 	public String getApiKey() {
 		return get("api_key");
 	}
-	
+
 	/**
 	 * @return The server address specified in the config file
 	 */
 	public String getServer() {
 		return get("server");
 	}
-	
+
 	public String[] getTags() {
 		String result = get("tags");
-		if( result == null ) {
+		if (result == null) {
 			return new String[0];
 		} else {
 			String[] tags = result.split(",");
-			for( int i = 0; i < tags.length; ++i ) {
+			for (int i = 0; i < tags.length; ++i) {
 				tags[i] = tags[i].trim();
 			}
 			return tags;
 		}
 	}
-	
+
 	/**
-	 * @param key - Item name to be loaded from the config file. 
+	 * @param key
+	 *            - Item name to be loaded from the config file.
 	 * @return Field "key", if specified in the config file. null otherwise
 	 */
-	public String get( String key ) {
-		if( loaded ) {
-			if( config.containsKey( key ) ) {
-				return config.get( key );
+	public String get(String key) {
+		if (loaded) {
+			if (config.containsKey(key)) {
+				return config.get(key);
 			}
 		}
 		return null;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		for( String s : config.keySet() ) {
-			if( s.equals("password") ) {
-				sb.append(s + "=" + config.get(s).length() + "chars\n");
+		for (String s : config.keySet()) {
+			if (s.equals("password")) {
+				sb.append(s + "=" + config.get(s).length() + "chars; ");
 			} else {
-				sb.append(s + "=" + config.get(s)+"\n");
+				sb.append(s + "=" + config.get(s) + "; ");
 			}
 		}
 		return sb.toString();

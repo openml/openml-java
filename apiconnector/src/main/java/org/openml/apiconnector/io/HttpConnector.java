@@ -27,6 +27,11 @@ public class HttpConnector implements Serializable {
 	private static final long serialVersionUID = -8589069573065947493L;
 	
 	public static Object doApiRequest( String url, MultipartEntity entity, String ash, int apiVerboseLevel ) throws Exception {
+		if (ash == null) {
+			throw new Exception("Api key not set. ");
+		}
+			
+			
 		entity.addPart("api_key", new StringBody( ash ) );
 		
 		String result = "";
