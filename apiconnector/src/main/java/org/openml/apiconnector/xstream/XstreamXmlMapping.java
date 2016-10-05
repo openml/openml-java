@@ -88,51 +88,10 @@ public class XstreamXmlMapping {
 		XStream xstream = new XStream(null,new DomDriver("UFT-8", new NoNameCoder()),clr);
 		xstream.processAnnotations(SetupParameters.class);
 		xstream.processAnnotations(SetupExists.class);
+		xstream.processAnnotations(Data.class);
+		xstream.processAnnotations(DataSetDescription.class);
 		
 		xstream.ignoreUnknownElements();
-		
-		// data
-		xstream.alias("oml:data", Data.class);
-		xstream.aliasAttribute(Data.class, "oml", "xmlns:oml");
-		xstream.addImplicitCollection(Data.class, "data", "oml:data", Data.DataSet.class);
-		
-		// Data.DataSet
-		xstream.alias("oml:dataset", Data.DataSet.class);
-		xstream.aliasField("oml:did", Data.DataSet.class, "did");
-		xstream.aliasField("oml:status", Data.DataSet.class, "status");
-		
-		xstream.addImplicitCollection(Data.DataSet.class, "qualities", "oml:quality", Data.DataSet.Quality.class);
-		xstream.useAttributeFor(Data.DataSet.Quality.class, "name");
-		xstream.registerConverter(new ToAttributedValueConverter(Data.DataSet.Quality.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
-		
-		
-		// data set description
-		xstream.alias("oml:data_set_description", DataSetDescription.class);
-		xstream.aliasAttribute(DataSetDescription.class, "oml", "xmlns:oml");
-		
-		xstream.addImplicitCollection(DataSetDescription.class, "creator", "oml:creator", String.class);
-		xstream.addImplicitCollection(DataSetDescription.class, "contributor", "oml:contributor", String.class);
-		xstream.addImplicitCollection(DataSetDescription.class, "ignore_attribute", "oml:ignore_attribute", String.class);
-		xstream.addImplicitCollection(DataSetDescription.class, "tag", "oml:tag", String.class);
-		
-		
-		xstream.aliasField("oml:id", DataSetDescription.class, "id");
-		xstream.aliasField("oml:name", DataSetDescription.class, "name");
-		xstream.aliasField("oml:version", DataSetDescription.class, "version");
-		xstream.aliasField("oml:description", DataSetDescription.class, "description");
-		xstream.aliasField("oml:format", DataSetDescription.class, "format");
-		xstream.aliasField("oml:collection_date", DataSetDescription.class, "collection_date");
-		xstream.aliasField("oml:language", DataSetDescription.class, "language");
-		xstream.aliasField("oml:upload_date", DataSetDescription.class, "upload_date");
-		xstream.aliasField("oml:licence", DataSetDescription.class, "licence");
-		xstream.aliasField("oml:url", DataSetDescription.class, "url");
-		xstream.aliasField("oml:file_id", DataSetDescription.class, "file_id");
-		xstream.aliasField("oml:row_id_attribute", DataSetDescription.class, "row_id_attribute");
-		xstream.aliasField("oml:default_target_attribute", DataSetDescription.class, "default_target_attribute");
-		xstream.aliasField("oml:visibility", DataSetDescription.class, "visibility");
-		xstream.aliasField("oml:md5_checksum", DataSetDescription.class, "md5_checksum");
-		
-		xstream.omitField(DataSetDescription.class, "dataset_cache");
 		
 		// data feature
 		xstream.alias("oml:data_features", DataFeature.class);

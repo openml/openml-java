@@ -21,9 +21,21 @@ package org.openml.apiconnector.xml;
 
 import org.openml.apiconnector.settings.Constants;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
+
+@XStreamAlias("oml:data")
 public class Data {
 
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:oml")
 	private final String oml = Constants.OPENML_XMLNS;
+
+	@XStreamImplicit
+	@XStreamAlias("oml:dataset")
 	private DataSet[] data;
 	
 	public String getOml() {
@@ -32,24 +44,42 @@ public class Data {
 	public DataSet[] getData() {
 		return data;
 	}
-	
+
+	@XStreamAlias("oml:dataset")
 	public static class DataSet {
+		@XStreamAlias("oml:did")
 		private int did;
-		private String status;
-		private Quality[] qualities;
 
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
+		@XStreamAlias("oml:name")
         private String name;
+
+		@XStreamAlias("oml:version")
+		private String version;
+
+		@XStreamAlias("oml:status")
+		private String status;
+
+		@XStreamAlias("oml:format")
+		private String format;
+
+		@XStreamImplicit
+		@XStreamAlias("oml:quality")
+		private Quality[] qualities;
 		
 		public int getDid() {
 			return did;
+		}
+		
+        public String getName() {
+            return name;
+        }
+		
+		public String getVersion() {
+			return version;
+		}
+		
+		public String getFormat() {
+			return format;
 		}
 		
 		public String getStatus() {
@@ -59,9 +89,15 @@ public class Data {
 		public Quality[] getQualities() {
 			return qualities;
 		}
-		
+
+		@XStreamAlias("oml:quality")
+		@XStreamConverter(value=ToAttributedValueConverter.class, strings={"value"})
 		public static class Quality {
+
+			@XStreamAsAttribute
+			@XStreamAlias("name")
 			private String name;
+			
 			private String value;
 			
 			public Quality( String name, String value ) {
@@ -81,6 +117,6 @@ public class Data {
 			public String toString() {
 				return name;
 			}
-		}
+		} 
 	}
 }

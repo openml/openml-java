@@ -21,20 +21,37 @@ package apiconnector;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.StringWriter;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.OpenmlConnector;
+import org.openml.apiconnector.xml.Data;
 import org.openml.apiconnector.xml.DataDelete;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.UploadDataSet;
+import org.openml.apiconnector.xml.Data.DataSet;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import com.thoughtworks.xstream.XStream;
-
 
 public class TestDataFunctionality {
 	private static final String data_file = "data/iris.arff";
@@ -43,10 +60,9 @@ public class TestDataFunctionality {
 
 	private static final String url = "http://capa.win.tue.nl/";
 	private static final String session_hash = "d488d8afd93b32331cf6ea9d7003d4c3";
-	private static final OpenmlConnector client = new OpenmlConnector(url,session_hash);
+	private static final OpenmlConnector client = new OpenmlConnector(url, session_hash);
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
-	
-	
+
 	@Test
 	public void testApiDataDownload() {
 		try {
@@ -57,11 +73,19 @@ public class TestDataFunctionality {
 			File tempDsd = Conversion.stringToTempFile(xstream.toXML(dsd), "data", "xml");
 			File tempXsd = client.getXSD("openml.data.upload");
 			
-			
-			
-		//	System.out.println(Conversion.fileToString(tempXsd));
+			String url = client.getApiUrl() + "data/" + probe;
+			String raw = OpenmlConnector.getStringFromUrl(url + "?api_key=" + client.getApiKey());
 			
 			assertTrue(Conversion.validateXML(tempDsd, tempXsd));
+			
+			
+			String dsdFromOpenml = toPrettyString(raw, 0);
+			String dsdFromConnector = toPrettyString(xstream.toXML(dsd), 0);
+			
+			System.out.println("---" + dsdFromOpenml+"---");
+			System.out.println("---" + dsdFromConnector+"---");
+			
+			assertTrue(dsdFromOpenml.equals(dsdFromConnector));
 			
 			// very easy checks, should all pass
 			assertTrue( dsd.getId() == probe );
@@ -75,37 +99,86 @@ public class TestDataFunctionality {
 
 	@Test
 	public void testApiUploadDownload() {
-	//	client.setVerboseLevel(2);
+		// client.setVerboseLevel(2);
 		try {
 			DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
 			String dsdXML = xstream.toXML(dsd);
 			File description = Conversion.stringToTempFile(dsdXML, "test-data", "arff");
-		//	System.out.println(dsdXML);
+			// System.out.println(dsdXML);
 			UploadDataSet ud = client.dataUpload(description, new File(data_file));
-		//	System.out.println(xstream.toXML(ud));
-			
+			// System.out.println(xstream.toXML(ud));
+
 			client.dataTag(ud.getId(), tag);
 			client.dataUntag(ud.getId(), tag);
-			
+
 			DataDelete dd = client.dataDelete(ud.getId());
-			
-			assertTrue( ud.getId() == dd.get_id() );
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Test failed: " + e.getMessage());
-		}
-	}
-	
-	@Test
-	public void testApiAdditional() {
-		try {
-			client.dataQualitiesList();
-			
+
+			assertTrue(ud.getId() == dd.get_id());
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Test failed: " + e.getMessage());
 		}
 	}
 
+	@Test
+	public void testApiDataList() {
+		try {
+			Data datasets = client.dataList("study_1");
+			assertTrue(datasets.getData().length > 20);
+			for (DataSet dataset : datasets.getData()) {
+				assertTrue(dataset.getQualities().length > 5);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Test failed: " + e.getMessage());
+		}
+	}
+
+	@Test
+	public void testApiAdditional() {
+		try {
+			client.dataQualitiesList();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Test failed: " + e.getMessage());
+		}
+	}
+	
+	// function that formats xml consistently, making it easy to compare them. 
+	public static String toPrettyString(String xml, int indent) {
+	    try {
+	        // Turn xml string into a document
+	        Document document = DocumentBuilderFactory.newInstance()
+	                .newDocumentBuilder()
+	                .parse(new InputSource(new ByteArrayInputStream(xml.getBytes("utf-8"))));
+
+	        // Remove whitespaces outside tags
+	        XPath xPath = XPathFactory.newInstance().newXPath();
+	        NodeList nodeList = (NodeList) xPath.evaluate("//text()[normalize-space()='']",
+	                                                      document,
+	                                                      XPathConstants.NODESET);
+
+	        for (int i = 0; i < nodeList.getLength(); ++i) {
+	            Node node = nodeList.item(i);
+	            node.getParentNode().removeChild(node);
+	        }
+
+	        // Setup pretty print options
+	        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	        transformerFactory.setAttribute("indent-number", indent);
+	        Transformer transformer = transformerFactory.newTransformer();
+	        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+	        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+	        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+	        // Return pretty print xml string
+	        StringWriter stringWriter = new StringWriter();
+	        transformer.transform(new DOMSource(document), new StreamResult(stringWriter));
+	        return stringWriter.toString();
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    }
+	}
 }

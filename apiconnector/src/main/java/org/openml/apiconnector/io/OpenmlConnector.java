@@ -294,6 +294,16 @@ public class OpenmlConnector implements Serializable {
 			throw new DataFormatException("Casting Api Object to DataFeature");
 		}
 	}
+	
+	
+	public Data dataList(String tag) throws Exception {
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "data/list/tag/" + tag, getApiKey(), verboseLevel);
+		if (apiResult instanceof Data) {
+			return (Data) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to Data");
+		}
+	}
 
 	/**
 	 * Retrieves the qualities (meta-features) of a specified data set.

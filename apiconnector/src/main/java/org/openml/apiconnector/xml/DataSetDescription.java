@@ -27,31 +27,86 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.openml.apiconnector.algorithms.ArffHelper;
 import org.openml.apiconnector.settings.Constants;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
+@XStreamAlias("oml:data_set_description")
 public class DataSetDescription implements Serializable {
 	private static final long serialVersionUID = 987612341129L;
+
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:oml")
 	private final String oml = Constants.OPENML_XMLNS;
-	
+
+	@XStreamAlias("oml:id")
 	private Integer id;
+	@XStreamAlias("oml:name")
 	private String name;
+	@XStreamAlias("oml:version")
 	private String version;
+	@XStreamAlias("oml:description")
 	private String description;
+	@XStreamAlias("oml:format")
 	private String format;
+
+	@XStreamImplicit(itemFieldName="oml:creator")
 	private String[] creator;
+
+	@XStreamImplicit(itemFieldName="oml:contributor")
 	private String[] contributor;
+
+	@XStreamAlias("oml:collection_date")
 	private String collection_date;
+	
+	@XStreamAlias("oml:upload_date")
 	private String upload_date;
+	
+	@XStreamAlias("oml:language")
 	private String language;
+	
+	@XStreamAlias("oml:licence")
 	private String licence;
+	
+	@XStreamAlias("oml:url")
 	private String url;
+	
+	@XStreamAlias("oml:file_id")
 	private Integer file_id;
+	
+	@XStreamAlias("oml:row_id_attribute")
 	private String row_id_attribute;
+	
+	@XStreamAlias("oml:default_target_attribute")
 	private String default_target_attribute;
+	
+	@XStreamImplicit(itemFieldName="ignore_attribute")
 	private String[] ignore_attribute;
+	
+	@XStreamAlias("oml:version_label")
+	private String version_label;
+	
+	@XStreamImplicit(itemFieldName="oml:tag")
 	private String[] tag;
+	
+	@XStreamAlias("oml:visibility")
 	private String visibility;
+
+	@XStreamAlias("oml:original_data_url")
+	private String original_data_url;
+
+	@XStreamAlias("oml:paper_url")
+	private String paper_url;
+
+	@XStreamAlias("oml:status")
+	private String status;
+	
+	@XStreamAlias("oml:md5_checksum")
 	private String md5_checksum;
 	
 	// do not serialize
+	@XStreamOmitField
 	private File dataset_cache;
 	
 	/*
@@ -207,6 +262,10 @@ public class DataSetDescription implements Serializable {
 
 	public String getDefault_target_attribute() {
 		return default_target_attribute;
+	}
+
+	public String getVersion_label() {
+		return version_label;
 	}
 
 	public String[] getIgnore_attribute() {
