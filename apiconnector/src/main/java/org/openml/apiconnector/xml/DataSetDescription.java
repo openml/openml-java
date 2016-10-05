@@ -42,12 +42,16 @@ public class DataSetDescription implements Serializable {
 
 	@XStreamAlias("oml:id")
 	private Integer id;
+	
 	@XStreamAlias("oml:name")
 	private String name;
+	
 	@XStreamAlias("oml:version")
 	private String version;
+	
 	@XStreamAlias("oml:description")
 	private String description;
+	
 	@XStreamAlias("oml:format")
 	private String format;
 
