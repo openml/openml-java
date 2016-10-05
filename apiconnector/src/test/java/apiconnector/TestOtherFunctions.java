@@ -38,5 +38,20 @@ public class TestOtherFunctions {
 			fail("Test failed: " + e.getMessage());
 		}
 	}
+
+	@Test
+	public void testApiTaskList() {
+		try {
+			Tasks tasks = client.taskList("study_1");
+			assertTrue(tasks.getTask().length > 20);
+			for (org.openml.apiconnector.xml.Tasks.Task t : tasks.getTask()) {
+				assertTrue(t.getQualities().length > 5);
+				assertTrue(t.getInputs().length > 2);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Test failed: " + e.getMessage());
+		}
+	}
 	
 }

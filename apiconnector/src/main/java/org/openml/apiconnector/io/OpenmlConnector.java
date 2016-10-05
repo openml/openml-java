@@ -295,7 +295,6 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-	
 	public Data dataList(String tag) throws Exception {
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "data/list/tag/" + tag, getApiKey(), verboseLevel);
 		if (apiResult instanceof Data) {
@@ -410,6 +409,15 @@ public class OpenmlConnector implements Serializable {
 			return (Task) apiResult;
 		} else {
 			throw new DataFormatException("Casting Api Object to Task");
+		}
+	}
+	
+	public Tasks taskList(String tag) throws Exception {
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "task/list/tag/" + tag, getApiKey(), verboseLevel);
+		if (apiResult instanceof Tasks) {
+			return (Tasks) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to Tasks");
 		}
 	}
 	

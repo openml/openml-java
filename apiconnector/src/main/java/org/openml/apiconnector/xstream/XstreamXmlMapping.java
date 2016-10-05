@@ -90,6 +90,7 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(SetupExists.class);
 		xstream.processAnnotations(Data.class);
 		xstream.processAnnotations(DataSetDescription.class);
+		xstream.processAnnotations(Tasks.class);
 		
 		xstream.ignoreUnknownElements();
 		
@@ -299,25 +300,10 @@ public class XstreamXmlMapping {
 		
 		xstream.useAttributeFor(Task_new.Input.class, "name");
 		xstream.registerConverter(new ToAttributedValueConverter(Task_new.Input.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
-		
-		// tasks (overview)
-		xstream.alias("oml:tasks", Tasks.class );
-		xstream.addImplicitCollection(Tasks.class, "task", "oml:task", Tasks.Task.class);
-
-		xstream.aliasField("oml:task_id", Tasks.Task.class, "task_id");
-		xstream.aliasField("oml:task_type", Tasks.Task.class, "task_type");
-		xstream.aliasField("oml:did", Tasks.Task.class, "did");
-		xstream.aliasField("oml:name", Tasks.Task.class, "name");
-		xstream.aliasField("oml:status", Tasks.Task.class, "status");
-		xstream.addImplicitCollection(Tasks.Task.class, "qualities", "oml:quality", Tasks.Task.Quality.class);
-		xstream.useAttributeFor(Tasks.Task.Quality.class, "name");
-		xstream.registerConverter(new ToAttributedValueConverter(Tasks.Task.Quality.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
-		
 
 		// task delete
 		xstream.alias("oml:task_delete", TaskDelete.class);
 		xstream.aliasField("oml:id", TaskDelete.class, "id");
-		
 		
 		// run
 		xstream.alias("oml:run", Run.class);
