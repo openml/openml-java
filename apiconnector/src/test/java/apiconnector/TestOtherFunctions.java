@@ -3,12 +3,16 @@ package apiconnector;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.File;
+
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.TaskInformation;
+import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.Tasks;
+import org.openml.apiconnector.xml.Task_new.Input;
 
 public class TestOtherFunctions {
 
@@ -39,6 +43,40 @@ public class TestOtherFunctions {
 		}
 	}
 
+	@Test(expected=ApiException.class)
+	public void testTaskCreationIllegalValues() throws Exception {
+		Input estimation_procedure = new Input("estimation_procedure", "15"); 
+		Input data_set = new Input("illegal_source_data", "-1");
+		Input target_feature = new Input("target_feature", "class");
+		Input[] inputs = {estimation_procedure, data_set, target_feature };
+		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 4);
+		
+		client.taskUpload( taskFile );
+	}
+
+	@Test(expected=ApiException.class)
+	public void testTaskCreationDuplicateValue() throws Exception {
+		Input estimation_procedure = new Input("estimation_procedure", "15"); 
+		Input data_set = new Input("source_data", "1");
+		Input data_set2 = new Input("source_data", "1");
+		Input target_feature = new Input("target_feature", "class");
+		Input[] inputs = {estimation_procedure, data_set, target_feature, data_set2};
+		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 4);
+		
+		client.taskUpload( taskFile );
+	}
+
+	@Test(expected=ApiException.class)
+	public void testTaskCreationNotRequiredValues() throws Exception {
+		Input estimation_procedure = new Input("estimation_procedure", "15"); 
+		Input target_feature = new Input("target_feature", "class");
+		Input[] inputs = {estimation_procedure, target_feature};
+		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 4);
+		
+		client.taskUpload( taskFile );
+	}
+	
+	
 	@Test
 	public void testApiTaskList() {
 		try {

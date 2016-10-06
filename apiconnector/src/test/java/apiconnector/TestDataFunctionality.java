@@ -23,6 +23,7 @@ import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,14 +38,19 @@ import javax.xml.xpath.XPathFactory;
 
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
+import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.Data;
 import org.openml.apiconnector.xml.DataDelete;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataSetDescription;
+import org.openml.apiconnector.xml.TaskDelete;
+import org.openml.apiconnector.xml.Task_new;
 import org.openml.apiconnector.xml.UploadDataSet;
+import org.openml.apiconnector.xml.UploadTask;
 import org.openml.apiconnector.xml.Data.DataSet;
+import org.openml.apiconnector.xml.Task_new.Input;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -82,9 +88,6 @@ public class TestDataFunctionality {
 			String dsdFromOpenml = toPrettyString(raw, 0);
 			String dsdFromConnector = toPrettyString(xstream.toXML(dsd), 0);
 			
-			System.out.println("---" + dsdFromOpenml+"---");
-			System.out.println("---" + dsdFromConnector+"---");
-			
 			assertTrue(dsdFromOpenml.equals(dsdFromConnector));
 			
 			// very easy checks, should all pass
@@ -104,17 +107,35 @@ public class TestDataFunctionality {
 			DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
 			String dsdXML = xstream.toXML(dsd);
 			File description = Conversion.stringToTempFile(dsdXML, "test-data", "arff");
-			// System.out.println(dsdXML);
 			UploadDataSet ud = client.dataUpload(description, new File(data_file));
-			// System.out.println(xstream.toXML(ud));
-
 			client.dataTag(ud.getId(), tag);
+			
+			// create task upon it
+			Input estimation_procedure = new Input("estimation_procedure", "1");
+			Input data_set = new Input("source_data", "" + ud.getId());
+			Input target_feature = new Input("target_feature", "class");
+			Input[] inputs = {estimation_procedure, data_set, target_feature};
+			UploadTask ut = client.taskUpload(inputsToTaskFile(inputs, 1));
+			System.out.println(xstream.toXML(ut));
+			client.taskTag(ut.getId(), tag);
+			client.taskUntag(ut.getId(), tag);
+			
+			try {
+				client.dataDelete(ud.getId());
+				// this SHOULD fail, we should not be allowed to delete data that contains tasks.
+				fail("Problem with API. Dataset ("+ud.getId()+") was deleted while it contains a task ("+ut.getId()+"). ");
+			} catch(ApiException ae) {}
+			
+			
+			// delete the task
+			TaskDelete td = client.taskDelete(ut.getId());
+			System.out.println(xstream.toXML(td));
+			assertTrue(td.get_id().equals(ut.getId()));
+			
+			// and delete the data
 			client.dataUntag(ud.getId(), tag);
-
 			DataDelete dd = client.dataDelete(ud.getId());
-
 			assertTrue(ud.getId() == dd.get_id());
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Test failed: " + e.getMessage());
@@ -180,5 +201,11 @@ public class TestDataFunctionality {
 	    } catch (Exception e) {
 	        throw new RuntimeException(e);
 	    }
+	}
+	
+	public static File inputsToTaskFile(Input[] inputs, int ttid) throws IOException {
+		Task_new task = new Task_new(null, ttid, inputs, null);
+		File taskFile = Conversion.stringToTempFile(xstream.toXML(task), "task", "xml");
+		return taskFile;
 	}
 }
