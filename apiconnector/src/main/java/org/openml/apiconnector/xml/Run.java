@@ -20,6 +20,8 @@
 package org.openml.apiconnector.xml;
 
 import java.util.Arrays;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.openml.apiconnector.algorithms.MathHelper;
 import org.openml.apiconnector.settings.Constants;
@@ -141,6 +143,14 @@ public class Run {
 
 	public File[] getOutputFile() {
 		return output_data.file;
+	}
+	
+	public Map<String, File> getOutputFileAsMap() {
+		Map<String, File> result = new TreeMap<String, Run.Data.File>();
+		for (File f : output_data.file) {
+			result.put(f.name, f);
+		}
+		return result;
 	}
 
 	public static class Parameter_setting {
