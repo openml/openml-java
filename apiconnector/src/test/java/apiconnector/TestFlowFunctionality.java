@@ -4,12 +4,15 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.util.Arrays;
 
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.Flow;
 import org.openml.apiconnector.xml.FlowDelete;
+import org.openml.apiconnector.xml.FlowTag;
+import org.openml.apiconnector.xml.FlowUntag;
 import org.openml.apiconnector.xml.UploadFlow;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
@@ -58,8 +61,10 @@ public class TestFlowFunctionality {
 			
 			UploadFlow uf = client.flowUpload(f, f, f);
 			
-			client.flowTag(uf.getId(), tag); 
-			client.flowUntag(uf.getId(), tag);
+			FlowTag ft = client.flowTag(uf.getId(), tag);
+			assertTrue(Arrays.asList(ft.getTags()).contains(tag));
+			FlowUntag fu = client.flowUntag(uf.getId(), tag);
+			assertTrue(fu.getTags() == null);
 			
 			FlowDelete fd = client.flowDelete(uf.getId());
 			System.out.println(fd.getId());

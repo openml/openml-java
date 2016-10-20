@@ -4,13 +4,19 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.Run;
+import org.openml.apiconnector.xml.RunList;
+import org.openml.apiconnector.xml.RunTag;
+import org.openml.apiconnector.xml.RunUntag;
 import org.openml.apiconnector.xml.UploadRun;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
@@ -47,9 +53,25 @@ public class TestRunFunctionality {
 	}
 	
 	@Test
+	public void testApiRunList() throws Exception {
+		List<Integer> uploaderId = new ArrayList<Integer>();
+		uploaderId.add(29);
+		
+		RunList rl = client.runList(null, null, null, uploaderId);
+		
+		for (org.openml.apiconnector.xml.RunList.Run r : rl.getRuns()) {
+			assertTrue(uploaderId.contains(r.getUploader()));
+		}
+		
+	}
+	
+	@Test
 	public void testApiRunUpload() {
+		client.setVerboseLevel(2);
 		try {
-			Run r = new Run(probe, null, 100, null, null, null);
+			String[] tags = {"first_tag", "another_tag"};
+			
+			Run r = new Run(probe, null, 100, null, null, tags);
 			String runXML = xstream.toXML(r);
 			
 			File runFile = Conversion.stringToTempFile(runXML, "runtest",  "xml" );
@@ -61,8 +83,13 @@ public class TestRunFunctionality {
 			
 			UploadRun ur = client.runUpload(runFile, output_files);
 			
-			client.runTag(ur.getRun_id(), tag);
-			client.runUntag(ur.getRun_id(), tag);
+			Run newrun = client.runGet(ur.getRun_id());
+			assertTrue(newrun.getTag().equals(tags));
+			
+			RunTag rt = client.runTag(ur.getRun_id(), tag);
+			assertTrue(Arrays.asList(rt.getTags()).contains(tag));
+			RunUntag ru = client.runUntag(ur.getRun_id(), tag);
+			assertTrue(ru.getTags() == null);
 			
 			client.runDelete(ur.getRun_id());
 			

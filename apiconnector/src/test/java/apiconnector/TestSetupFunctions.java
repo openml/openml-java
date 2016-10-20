@@ -9,15 +9,19 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
+import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.SetupExists;
+import org.openml.apiconnector.xml.SetupTag;
+import org.openml.apiconnector.xml.SetupUntag;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 import com.thoughtworks.xstream.XStream;
@@ -28,9 +32,11 @@ public class TestSetupFunctions {
 	private static final String session_hash = "d488d8afd93b32331cf6ea9d7003d4c3";
 	private static final OpenmlConnector client = new OpenmlConnector(url,session_hash);
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
+	private static final String tag = "junittest";
 	
 	@Test
 	public void testFindRightSetup() throws Exception {
+		client.setVerboseLevel(2);
 		Integer[] run_ids = {541980, 541944, 541932};
 		
 		for (Integer run_id : run_ids) {
@@ -41,6 +47,17 @@ public class TestSetupFunctions {
 			SetupExists se = client.setupExists(description);
 			assertTrue(se.exists());
 			assertTrue(se.getId() == setup_id);
+
+			try {
+				SetupTag st = client.setupTag(setup_id, tag);
+				assertTrue(Arrays.asList(st.getTags()).contains(tag));
+			} catch(ApiException ae) {
+				// tolerate. 
+				assertTrue(ae.getMessage().equals("Entity already tagged by this tag. "));
+			}
+			SetupUntag su = client.setupUntag(setup_id, tag);
+			assertTrue(su.getTags() == null);
+			
 		}
 	}
 	

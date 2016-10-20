@@ -25,6 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Arrays;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -45,7 +46,11 @@ import org.openml.apiconnector.xml.DataDelete;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataSetDescription;
+import org.openml.apiconnector.xml.DataTag;
+import org.openml.apiconnector.xml.DataUntag;
 import org.openml.apiconnector.xml.TaskDelete;
+import org.openml.apiconnector.xml.TaskTag;
+import org.openml.apiconnector.xml.TaskUntag;
 import org.openml.apiconnector.xml.Task_new;
 import org.openml.apiconnector.xml.UploadDataSet;
 import org.openml.apiconnector.xml.UploadTask;
@@ -102,13 +107,14 @@ public class TestDataFunctionality {
 
 	@Test
 	public void testApiUploadDownload() {
-		// client.setVerboseLevel(2);
 		try {
 			DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
 			String dsdXML = xstream.toXML(dsd);
 			File description = Conversion.stringToTempFile(dsdXML, "test-data", "arff");
 			UploadDataSet ud = client.dataUpload(description, new File(data_file));
-			client.dataTag(ud.getId(), tag);
+			DataTag dt = client.dataTag(ud.getId(), tag);
+			assertTrue(Arrays.asList(dt.getTags()).contains(tag));
+			
 			
 			// create task upon it
 			Input estimation_procedure = new Input("estimation_procedure", "1");
@@ -116,9 +122,11 @@ public class TestDataFunctionality {
 			Input target_feature = new Input("target_feature", "class");
 			Input[] inputs = {estimation_procedure, data_set, target_feature};
 			UploadTask ut = client.taskUpload(inputsToTaskFile(inputs, 1));
-			System.out.println(xstream.toXML(ut));
-			client.taskTag(ut.getId(), tag);
-			client.taskUntag(ut.getId(), tag);
+			
+			TaskTag tt = client.taskTag(ut.getId(), tag);
+			assertTrue(Arrays.asList(tt.getTags()).contains(tag));
+			TaskUntag tu = client.taskUntag(ut.getId(), tag);
+			assertTrue(tu.getTags() == null);
 			
 			try {
 				client.dataDelete(ud.getId());
@@ -129,11 +137,12 @@ public class TestDataFunctionality {
 			
 			// delete the task
 			TaskDelete td = client.taskDelete(ut.getId());
-			System.out.println(xstream.toXML(td));
 			assertTrue(td.get_id().equals(ut.getId()));
 			
 			// and delete the data
-			client.dataUntag(ud.getId(), tag);
+			DataUntag du = client.dataUntag(ud.getId(), tag);
+			assertTrue(du.getTags() == null);
+			
 			DataDelete dd = client.dataDelete(ud.getId());
 			assertTrue(ud.getId() == dd.get_id());
 		} catch (Exception e) {
