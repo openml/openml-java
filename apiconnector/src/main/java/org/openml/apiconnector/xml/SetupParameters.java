@@ -17,18 +17,25 @@ public class SetupParameters {
 	@XStreamAlias("xmlns:oml")
 	private final String oml = Constants.OPENML_XMLNS;
 
+	@XStreamAlias("oml:flow_id")
+	private Integer flow_id;
+	
 	@XStreamImplicit
 	@XStreamAlias("oml:parameter")
 	private Parameter[] parameters;
+	
+	public Integer getFlow_id() {
+		return flow_id;
+	}
 	
 	public Parameter[] getParameters() {
 		return parameters;
 	}
 	
-	public Map<String, String> getParametersAsMap() {
-		Map<String, String> res = new HashMap<String, String>();
+	public Map<String, Parameter> getParametersAsMap() {
+		Map<String, Parameter> res = new HashMap<String, Parameter>();
 		for (Parameter p : parameters) {
-			res.put(p.getFull_name(), p.getValue());
+			res.put(p.getFull_name(), p);
 		}
 		return res;
 	}
