@@ -5,9 +5,13 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Random;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.DelegateFileFilter;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
+import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.Flow;
 import org.openml.apiconnector.xml.FlowDelete;
@@ -48,7 +52,7 @@ public class TestFlowFunctionality {
 	}
 	
 	@Test
-	public void testApiFlowUpload() {
+	public void testApiFlowUpload() throws Exception {
 		client.setVerboseLevel(1);
 		try {
 			Flow created = new Flow("test2", "test", "test should be deleted", "english", "UnitTest");
@@ -71,7 +75,22 @@ public class TestFlowFunctionality {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			fail("Test failed: " + e.getMessage());
+			// possibly the previous test failed, and left the exact same flow on the server.
+			if (e instanceof ApiException) {
+				ApiException apiException = (ApiException) e;
+				if (apiException.getCode() == 171) {
+					int index = apiException.getMessage().indexOf("implementation_id") + "implementation_id".length()+1;
+					Integer implementation_id = Integer.parseInt(apiException.getMessage().substring(index));
+					// delete it
+					client.flowDelete(implementation_id);
+					// and try again
+					testApiFlowUpload();
+					
+				} else {
+					fail("Test failed: " + e.getMessage());
+				}
+			}
+			
 		}
 	}
 	
@@ -100,6 +119,21 @@ public class TestFlowFunctionality {
 			client.flowDelete(uf.getId());
 			
 		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Test failed: " + e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testUploadComplicatedFlow() {
+		try {
+			Random random = new Random(System.currentTimeMillis());
+			String complicatedFlow = FileUtils.readFileToString(new File("data/FilteredClassifier_RandomForest.xml")).replace("{SENTINEL}", "SEN" + Math.abs(random.nextInt()));
+			File f = Conversion.stringToTempFile(complicatedFlow, "test", "xml");
+			
+			UploadFlow uf = client.flowUpload(f, null, null);
+			client.flowDelete(uf.getId());
+		} catch(Exception e) {
 			e.printStackTrace();
 			fail("Test failed: " + e.getMessage());
 		}

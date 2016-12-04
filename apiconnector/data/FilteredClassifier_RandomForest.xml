@@ -1,0 +1,248 @@
+<oml:flow xmlns:oml="http://openml.org/openml">
+  <oml:name>weka.FilteredClassifier_RandomForest</oml:name>
+  <oml:external_version>Weka_3.7.13_{SENTINEL}</oml:external_version>
+  <oml:description>Weka implementation of FilteredClassifier</oml:description>
+  <oml:language>English</oml:language>
+  <oml:dependencies>Weka_3.7.13</oml:dependencies>
+  <oml:parameter>
+    <oml:name>F</oml:name>
+    <oml:data_type>option</oml:data_type>
+    <oml:default_value>weka.filters.supervised.attribute.Discretize -R first-last -precision 6</oml:default_value>
+    <oml:description>	Full class name of filter to use, followed
+	by filter options.
+	eg: &quot;weka.filters.unsupervised.attribute.Remove -V -R 1,2&quot;</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>W</oml:name>
+    <oml:data_type>baselearner</oml:data_type>
+    <oml:default_value>weka.classifiers.trees.RandomForest</oml:default_value>
+    <oml:description>	Full name of base classifier.
+	(default: weka.classifiers.trees.J48)</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>output-debug-info</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	If set, classifier is run in debug mode and
+	may output additional info to the console</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>-do-not-check-capabilities</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	If set, classifier capabilities are not checked before classifier is built
+	(use with caution).</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>num-decimal-places</oml:name>
+    <oml:data_type>option</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	The number of decimal places for the output of numbers in the model (default 2).</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>U</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Use unpruned tree.</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>O</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Do not collapse tree.</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>C</oml:name>
+    <oml:data_type>option</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Set confidence threshold for pruning.
+	(default 0.25)</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>M</oml:name>
+    <oml:data_type>option</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Set minimum number of instances per leaf.
+	(default 2)</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>R</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Use reduced error pruning.</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>N</oml:name>
+    <oml:data_type>option</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Set number of folds for reduced error
+	pruning. One fold is used as pruning set.
+	(default 3)</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>B</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Use binary splits only.</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>S</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Do not perform subtree raising.</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>L</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Do not clean up after the tree has been built.</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>A</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Laplace smoothing for predicted probabilities.</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>J</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Do not use MDL correction for info gain on numeric attributes.</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>Q</oml:name>
+    <oml:data_type>option</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Seed for random data shuffling (default 1).</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>-doNotMakeSplitPointActualValue</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Do not make split point actual value.</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>V</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Invert matching sense of column indexes.</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>D</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Output binary attributes for discretized attributes.</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>Y</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Use bin numbers rather than ranges for discretized attributes.</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>E</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Use better encoding of split point for MDL.</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>K</oml:name>
+    <oml:data_type>flag</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Use Kononenko&apos;s MDL criterion.</oml:description>
+  </oml:parameter>
+  <oml:parameter>
+    <oml:name>precision</oml:name>
+    <oml:data_type>option</oml:data_type>
+    <oml:default_value></oml:default_value>
+    <oml:description>	Precision for bin boundary labels.
+	(default = 6 decimal places).</oml:description>
+  </oml:parameter>
+  <oml:component>
+    <oml:identifier>W</oml:identifier>
+    <oml:flow xmlns:oml="http://openml.org/openml">
+      <oml:name>weka.RandomForest</oml:name>
+      <oml:external_version>Weka_3.7.13_{SENTINEL}</oml:external_version>
+      <oml:description>Leo Breiman (2001). Random Forests. Machine Learning. 45(1):5-32.</oml:description>
+      <oml:language>English</oml:language>
+      <oml:dependencies>Weka_3.7.13</oml:dependencies>
+      <oml:parameter>
+        <oml:name>I</oml:name>
+        <oml:data_type>option</oml:data_type>
+        <oml:default_value>100</oml:default_value>
+        <oml:description>	Number of trees to build.
+	(default 100)</oml:description>
+      </oml:parameter>
+      <oml:parameter>
+        <oml:name>K</oml:name>
+        <oml:data_type>option</oml:data_type>
+        <oml:default_value>0</oml:default_value>
+        <oml:description>	Number of features to consider (&lt;1=int(log_2(#predictors)+1)).
+	(default 0)</oml:description>
+      </oml:parameter>
+      <oml:parameter>
+        <oml:name>S</oml:name>
+        <oml:data_type>option</oml:data_type>
+        <oml:default_value>1</oml:default_value>
+        <oml:description>	Seed for random number generator.
+	(default 1)</oml:description>
+      </oml:parameter>
+      <oml:parameter>
+        <oml:name>depth</oml:name>
+        <oml:data_type>option</oml:data_type>
+        <oml:default_value></oml:default_value>
+        <oml:description>	The maximum depth of the trees, 0 for unlimited.
+	(default 0)</oml:description>
+      </oml:parameter>
+      <oml:parameter>
+        <oml:name>O</oml:name>
+        <oml:data_type>flag</oml:data_type>
+        <oml:default_value></oml:default_value>
+        <oml:description>	Don&apos;t calculate the out of bag error.</oml:description>
+      </oml:parameter>
+      <oml:parameter>
+        <oml:name>print</oml:name>
+        <oml:data_type>flag</oml:data_type>
+        <oml:default_value></oml:default_value>
+        <oml:description>	Print the individual trees in the output</oml:description>
+      </oml:parameter>
+      <oml:parameter>
+        <oml:name>num-slots</oml:name>
+        <oml:data_type>option</oml:data_type>
+        <oml:default_value>1</oml:default_value>
+        <oml:description>	Number of execution slots.
+	(default 1 - i.e. no parallelism)</oml:description>
+      </oml:parameter>
+      <oml:parameter>
+        <oml:name>B</oml:name>
+        <oml:data_type>flag</oml:data_type>
+        <oml:default_value></oml:default_value>
+        <oml:description>	Break ties randomly when several attributes look equally good.</oml:description>
+      </oml:parameter>
+      <oml:parameter>
+        <oml:name>output-debug-info</oml:name>
+        <oml:data_type>flag</oml:data_type>
+        <oml:default_value></oml:default_value>
+        <oml:description>	If set, classifier is run in debug mode and
+	may output additional info to the console</oml:description>
+      </oml:parameter>
+      <oml:parameter>
+        <oml:name>-do-not-check-capabilities</oml:name>
+        <oml:data_type>flag</oml:data_type>
+        <oml:default_value></oml:default_value>
+        <oml:description>	If set, classifier capabilities are not checked before classifier is built
+	(use with caution).</oml:description>
+      </oml:parameter>
+      <oml:parameter>
+        <oml:name>num-decimal-places</oml:name>
+        <oml:data_type>option</oml:data_type>
+        <oml:default_value></oml:default_value>
+        <oml:description>	The number of decimal places for the output of numbers in the model (default 2).</oml:description>
+      </oml:parameter>
+      <oml:tag>weka</oml:tag>
+      <oml:tag>weka_3.7.13</oml:tag>
+    </oml:flow>
+  </oml:component>
+  <oml:tag>weka</oml:tag>
+  <oml:tag>weka_3.7.13</oml:tag>
+</oml:flow>
