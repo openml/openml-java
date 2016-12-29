@@ -29,7 +29,7 @@ public class DateParser {
 
 	public static final DateFormat humanReadable = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	public static final DateFormat defaultOrder  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+	
 	/**
 	 * Parses MySQL date format to Unix Time Stamp.
 	 * 
@@ -42,8 +42,14 @@ public class DateParser {
 		Calendar cal = Calendar.getInstance();
 	    current.setTimeZone(TimeZone.getTimeZone(timezone));
 	    cal.setTime(current.parse(mysqlTime));
-	    //System.out.println("Valid until: " + sdf.format(cal.getTime()));
-	    //System.out.println("Now: " + sdf.format(utilDate.getTime()));
 	    return cal.getTime().getTime();
+	}
+	
+	public static long secondsSince(String xmlDate) throws ParseException {
+		DateFormat current = (DateFormat) defaultOrder.clone();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(current.parse(xmlDate.replace('T', ' ')));
+		
+		return (System.currentTimeMillis() - cal.getTimeInMillis()) / 1000;
 	}
 }

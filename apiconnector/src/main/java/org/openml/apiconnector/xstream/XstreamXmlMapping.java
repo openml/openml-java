@@ -106,6 +106,8 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(FlowTag.class);
 		xstream.processAnnotations(FlowUntag.class);
 		
+		xstream.processAnnotations(Task.class);
+		
 		xstream.ignoreUnknownElements();
 		
 		// data feature
@@ -247,55 +249,6 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:session_hash", Authenticate.class, "sessionHash");
 		xstream.aliasField("oml:valid_until", Authenticate.class, "validUntil");
 		xstream.aliasField("oml:timezone", Authenticate.class, "timezone");
-		
-		// tasks
-		xstream.alias("oml:task", Task.class);
-		xstream.alias("oml:data_set", Task.Input.Data_set.class);
-		xstream.alias("oml:estimation_procedure", Task.Input.Estimation_procedure.class);
-		xstream.alias("oml:feature", Task.Output.Predictions.Feature.class);
-		xstream.aliasField("oml:cost_matrix", Task.Input.class, "cost_matrix");
-		xstream.aliasAttribute(Task.class, "oml", "xmlns:oml");
-		
-		xstream.addImplicitCollection(Task.class, "inputs", "oml:input", Task.Input.class);
-		xstream.addImplicitCollection(Task.class, "outputs", "oml:output", Task.Output.class);
-		xstream.addImplicitCollection(Task.class, "tag", "oml:tag", String.class);
-		xstream.addImplicitCollection(Task.Input.Estimation_procedure.class, "parameters", "oml:parameter", Task.Input.Estimation_procedure.Parameter.class);
-		xstream.addImplicitCollection(Task.Input.Evaluation_measures.class, "evaluation_measure", "oml:evaluation_measure", String.class);
-		xstream.addImplicitCollection(Task.Output.Predictions.class, "features", "oml:feature", Task.Output.Predictions.Feature.class);
-		
-		xstream.aliasField("oml:task_id", Task.class, "task_id");
-		xstream.aliasField("oml:task_name", Task.class, "task_name");
-		xstream.aliasField("oml:task_type_id", Task.class, "task_type_id");
-		xstream.aliasField("oml:task_type", Task.class, "task_type");
-		xstream.aliasField("oml:data_set_id", Task.Input.Data_set.class, "data_set_id");
-		xstream.aliasField("oml:labeled_data_set_id", Task.Input.Data_set.class, "labeled_data_set_id");
-		xstream.aliasField("oml:target_feature", Task.Input.Data_set.class, "target_feature");
-		xstream.aliasField("oml:target_feature_left", Task.Input.Data_set.class, "target_feature_left");
-		xstream.aliasField("oml:target_feature_right", Task.Input.Data_set.class, "target_feature_right");
-		xstream.aliasField("oml:target_feature_event", Task.Input.Data_set.class, "target_feature_event");
-		xstream.aliasField("oml:target_value", Task.Input.Data_set.class, "target_value");
-		
-		xstream.aliasField("oml:data_set", Task.Input.class, "data_set");
-		xstream.aliasField("oml:type", Task.Input.Estimation_procedure.class, "type");
-		xstream.aliasField("oml:data_splits_url", Task.Input.Estimation_procedure.class, "data_splits_url");
-		xstream.aliasField("oml:estimation_procedure", Task.Input.class, "estimation_procedure");
-		xstream.aliasField("oml:evaluation_measure", Task.Input.Evaluation_measures.class, "evaluation_measure");
-		xstream.aliasField("oml:time_limit", Task.Input.class, "time_limit");
-		xstream.aliasField("oml:quality_measure", Task.Input.class, "quality_measure");
-		xstream.aliasField("oml:evaluation_measures", Task.Input.class, "evaluation_measures");
-		xstream.aliasField("oml:predictions", Task.Output.class, "predictions");
-		xstream.aliasField("oml:format", Task.Output.Predictions.class, "format");
-		xstream.omitField(Task.Input.Estimation_procedure.class, "data_splits_cache");
-		xstream.omitField(Task.Input.Data_set.class,"dsdCache");
-		
-		xstream.useAttributeFor(Task.Input.class, "name");
-		xstream.useAttributeFor(Task.Output.class, "name");
-		xstream.useAttributeFor(Task.Input.Estimation_procedure.Parameter.class, "name");
-		xstream.useAttributeFor(Task.Output.Predictions.Feature.class, "name");
-		xstream.useAttributeFor(Task.Output.Predictions.Feature.class, "type");
-		
-		xstream.registerConverter(new ToAttributedValueConverter(Task.Input.Estimation_procedure.Parameter.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
-		
 
 		// upload task
 		xstream.alias("oml:upload_task", UploadTask.class);

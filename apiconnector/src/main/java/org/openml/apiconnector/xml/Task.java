@@ -22,6 +22,7 @@ package org.openml.apiconnector.xml;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URL;
 
 import org.openml.apiconnector.algorithms.ArffHelper;
 import org.openml.apiconnector.algorithms.OptionParser;
@@ -29,17 +30,40 @@ import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.settings.Settings;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
+
+@XStreamAlias("oml:task")
 public class Task implements Serializable {
 	private static final long serialVersionUID = 987612341009L;
 
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:oml")
 	private final String oml = Constants.OPENML_XMLNS;
 	
+	@XStreamAlias("oml:task_id")
 	private Integer task_id;
+
+	@XStreamAlias("oml:task_name")
 	private String task_name;
+
+	@XStreamAlias("oml:task_type_id")
 	private Integer task_type_id;
+
+	@XStreamAlias("oml:task_type")
 	private String task_type;
+
+	@XStreamImplicit(itemFieldName="oml:input")
 	private Input[] inputs;
+	
+	@XStreamImplicit(itemFieldName="oml:output")
 	private Output[] outputs;
+
+	@XStreamImplicit(itemFieldName="oml:tag")
 	private String[] tag;
 	
 	// for quick initialization. 
@@ -95,12 +119,29 @@ public class Task implements Serializable {
 
 	public class Input implements Serializable {
 		private static final long serialVersionUID = 987612341019L;
+		
+		@XStreamAsAttribute
 		private String name;
+		
+		@XStreamAlias("oml:data_set")
 		private Data_set data_set;
+
+		@XStreamAlias("oml:stream_schedule")
+		private Stream_schedule stream_schedule;
+		
+		@XStreamAlias("oml:estimation_procedure")
 		private Estimation_procedure estimation_procedure;
+		
+		@XStreamAlias("oml:cost_matrix")
 		private String cost_matrix;
+		
+		@XStreamAlias("oml:evaluation_meaures")
 		private Evaluation_measures evaluation_measures;
+
+		@XStreamAlias("oml:time_limit")
 		private Double time_limit;
+
+		@XStreamAlias("oml:quality_measure")
 		private String quality_measure;
 		
 		public String getName() {
@@ -109,6 +150,10 @@ public class Task implements Serializable {
 
 		public Data_set getData_set() {
 			return data_set;
+		}
+		
+		public Stream_schedule getStream_schedule() {
+			return stream_schedule;
 		}
 		
 		public Double getTime_limit() {
@@ -134,18 +179,33 @@ public class Task implements Serializable {
 		public Evaluation_measures getEvaluation_measures() {
 			return evaluation_measures;
 		}
-		
+
+		@XStreamAlias("oml:data_set")
 		public class Data_set implements Serializable {
 			private static final long serialVersionUID = 987612341029L;
+
+			@XStreamAlias("oml:data_set_id")
 			private Integer data_set_id;
+
+			@XStreamAlias("oml:labeled_data_set_id")
 			private Integer labeled_data_set_id;
+
+			@XStreamAlias("oml:target_feature")
 			private String target_feature;
+
+			@XStreamAlias("oml:target_feature_left")
 			private String target_feature_left;
+
+			@XStreamAlias("oml:target_feature_right")
 			private String target_feature_right;
+
+			@XStreamAlias("oml:target_feature_event")
 			private String target_feature_event;
+
+			@XStreamAlias("oml:target_value")
 			private String target_value;
 			
-			// do not serialize
+			@XStreamOmitField
 			private DataSetDescription dsdCache;
 			
 			public Integer getData_set_id() {
@@ -178,13 +238,72 @@ public class Task implements Serializable {
 			}
 		}
 		
+		@XStreamAlias("oml:stream_schedule")
+		public class Stream_schedule implements Serializable {
+			private static final long serialVersionUID = -4788645256661953298L;
+
+			@XStreamAlias("oml:train_url")
+			private URL train_url;
+
+			@XStreamAlias("oml:test_url")
+			private URL test_url;
+
+			@XStreamAlias("oml:start_time")
+			private String start_time;
+
+			@XStreamAlias("oml:initial_batch_size")
+			private Integer initial_batch_size;
+
+			@XStreamAlias("oml:batch_size")
+			private Integer batch_size;
+
+			@XStreamAlias("oml:batch_time")
+			private Integer batch_time;
+
+			public URL getTrain_url() {
+				return train_url;
+			}
+
+			public URL getTest_url() {
+				return test_url;
+			}
+
+			public String getStart_time() {
+				return start_time;
+			}
+
+			public Integer getInitial_batch_size() {
+				return initial_batch_size;
+			}
+
+			public Integer getBatch_size() {
+				return batch_size;
+			}
+
+			public Integer getBatch_time() {
+				return batch_time;
+			}
+			
+			@Override
+			public String toString() {
+				return "[" + start_time + "; init: " + initial_batch_size + "; size: " + batch_size + "; time: " + batch_time + "]"; 
+			}
+		}
+
+		@XStreamAlias("oml:estimation_procedure")
 		public class Estimation_procedure implements Serializable {
 			private static final long serialVersionUID = 987612341039L;
+
+			@XStreamAlias("oml:type")
 			private String type;
+
+			@XStreamAlias("oml:data_splits_url")
 			private String data_splits_url;
+
+			@XStreamImplicit(itemFieldName="oml:parameter")
 			private Parameter[] parameters;
 			
-			// do not serialize
+			@XStreamOmitField
 			private File data_splits_cache;
 			
 			public String getType() {
@@ -211,10 +330,13 @@ public class Task implements Serializable {
 				}
 				return data_splits_cache;
 			}
-
+			
+			@XStreamConverter(value=ToAttributedValueConverter.class, strings={"value"})
 			public class Parameter implements Serializable {
 				private static final long serialVersionUID = 987612341099L;
+				
 				private String name;
+				
 				private String value;
 				
 				public String getName() {
@@ -228,6 +350,8 @@ public class Task implements Serializable {
 		
 		public class Evaluation_measures implements Serializable {
 			private static final long serialVersionUID = 987612341049L;
+
+			@XStreamImplicit(itemFieldName="oml:evaluation_measure")
 			private String[] evaluation_measure;
 
 			public String[] getEvaluation_measure() {
@@ -238,7 +362,11 @@ public class Task implements Serializable {
 	
 	public class Output implements Serializable {
 		private static final long serialVersionUID = 987612341059L;
+		
+		@XStreamAsAttribute
 		private String name;
+		
+		@XStreamAlias("oml:predictions")
 		private Predictions predictions;
 		
 		public String getName() {
@@ -251,7 +379,11 @@ public class Task implements Serializable {
 		
 		public class Predictions implements Serializable {
 			private static final long serialVersionUID = 987612341069L;
+
+			@XStreamAlias("oml:format")
 			private String format;
+			
+			@XStreamImplicit(itemFieldName="oml:feature")
 			private Feature[] features;
 			
 			public String getFormat() {
@@ -262,9 +394,14 @@ public class Task implements Serializable {
 				return features;
 			}
 
+			@XStreamAlias("oml:feature")
 			public class Feature implements Serializable {
 				private static final long serialVersionUID = 987612341079L;
+				
+				@XStreamAsAttribute
 				private String name;
+				
+				@XStreamAsAttribute
 				private String type;
 				
 				public String getName() {

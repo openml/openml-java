@@ -28,6 +28,7 @@ import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.Task.Input.Data_set;
 import org.openml.apiconnector.xml.Task.Input.Estimation_procedure;
+import org.openml.apiconnector.xml.Task.Input.Stream_schedule;
 import org.openml.apiconnector.xml.Task.Output.Predictions;
 
 public class TaskInformation {
@@ -104,6 +105,21 @@ public class TaskInformation {
 			}
 		}
 		throw new Exception("Task does not define an estimation procedure (task_id="+t.getTask_id()+")");
+	}
+	
+
+	/**
+	 * @param t - Input Task. 
+	 * @return The stream schedule
+	 * @throws Exception
+	 */
+	public static Stream_schedule getStreamSchedule(Task t) throws Exception {
+		for( int i = 0; i < t.getInputs().length; ++i ) {
+			if(t.getInputs()[i].getName().equals("stream_schedule") ) {
+				return t.getInputs()[i].getStream_schedule();
+			}
+		}
+		throw new Exception("Task does not define a stream_schedule (task_id="+t.getTask_id()+")");
 	}
 	
 	/**
