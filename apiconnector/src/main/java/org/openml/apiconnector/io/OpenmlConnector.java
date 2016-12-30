@@ -690,14 +690,29 @@ public class OpenmlConnector implements Serializable {
 			System.out.println(Conversion.fileToString(description) + "\n==========");
 		}
 		params.addPart("description", new FileBody(description));
-		for (String s : output_files.keySet()) {
-			params.addPart(s, new FileBody(output_files.get(s)));
+		if (output_files != null) {
+			for (String s : output_files.keySet()) {
+				params.addPart(s, new FileBody(output_files.get(s)));
+			}
 		}
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "run/", params, getApiKey(), verboseLevel);
 		if (apiResult instanceof UploadRun) {
 			return (UploadRun) apiResult;
 		} else {
 			throw new DataFormatException("Casting Api Object to UploadRun");
+		}
+	}
+	
+	public UploadRunAttach runUploadAttach(int run_id, int index, File description, File predictions) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("description", new FileBody(description));
+		params.addPart("predictions", new FileBody(predictions));
+		
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "run/" + run_id + "/" + index, params, getApiKey(), verboseLevel);
+		if (apiResult instanceof UploadRunAttach) {
+			return (UploadRunAttach) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to UploadRunAttach");
 		}
 	}
 	

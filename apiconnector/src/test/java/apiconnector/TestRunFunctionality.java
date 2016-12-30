@@ -7,8 +7,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
@@ -18,12 +20,14 @@ import org.openml.apiconnector.xml.RunList;
 import org.openml.apiconnector.xml.RunTag;
 import org.openml.apiconnector.xml.RunUntag;
 import org.openml.apiconnector.xml.UploadRun;
+import org.openml.apiconnector.xml.UploadRunAttach;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 import com.thoughtworks.xstream.XStream;
 
 public class TestRunFunctionality {
 	private static final int probe = 67;
+	private static final int probeChallenge = 13976;
 	private static final String predictions_path = "data/predictions_task53.arff";
 
 	private static final String url = "http://capa.win.tue.nl/";
@@ -67,14 +71,13 @@ public class TestRunFunctionality {
 	
 	@Test
 	public void testApiRunUpload() {
-		client.setVerboseLevel(2);
 		try {
 			String[] tags = {"first_tag", "another_tag"};
 			
 			Run r = new Run(probe, null, 100, null, null, tags);
 			String runXML = xstream.toXML(r);
 			
-			File runFile = Conversion.stringToTempFile(runXML, "runtest",  "xml" );
+			File runFile = Conversion.stringToTempFile(runXML, "runtest",  "xml");
 			File predictions = new File(predictions_path); 
 			
 			Map<String,File> output_files = new HashMap<String, File>();
@@ -84,12 +87,16 @@ public class TestRunFunctionality {
 			UploadRun ur = client.runUpload(runFile, output_files);
 			
 			Run newrun = client.runGet(ur.getRun_id());
-			assertTrue(newrun.getTag().equals(tags));
+			
+			Set<String> uploadedTags = new HashSet<String>(Arrays.asList(newrun.getTag()));
+			Set<String> providedTags = new HashSet<String>(Arrays.asList(tags));
+			
+			assertTrue(uploadedTags.equals(providedTags));
 			
 			RunTag rt = client.runTag(ur.getRun_id(), tag);
 			assertTrue(Arrays.asList(rt.getTags()).contains(tag));
 			RunUntag ru = client.runUntag(ur.getRun_id(), tag);
-			assertTrue(ru.getTags() == null);
+			assertTrue(Arrays.asList(ru.getTags()).contains(tag) == false);
 			
 			client.runDelete(ur.getRun_id());
 			
@@ -97,6 +104,19 @@ public class TestRunFunctionality {
 			e.printStackTrace();
 			fail("Test failed: " + e.getMessage());
 		}
-		
+	}
+	
+	@Test
+	public void testApiUploadRunAttach() throws Exception {
+		Run r = new Run(probeChallenge, null, 100, null, null, null);
+		String runXML = xstream.toXML(r);
+		File runFile = Conversion.stringToTempFile(runXML, "runtest",  "xml");
+		File predictions = new File(predictions_path); 
+		UploadRun ur = client.runUpload(runFile, null);
+		for (int i = 0; i < 5; i+=1) {
+			UploadRunAttach ura = client.runUploadAttach(ur.getRun_id(), i , runFile, predictions);
+			
+			assertTrue(ura.getPredictionFiles().length == i+1);
+		}
 	}
 }
