@@ -52,4 +52,12 @@ public class DateParser {
 		
 		return (System.currentTimeMillis() - cal.getTimeInMillis()) / 1000;
 	}
+	
+	public static long unixTimestamp(String xmlDate) throws ParseException {
+		DateFormat current = (DateFormat) defaultOrder.clone();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(current.parse(xmlDate.replace('T', ' ')));
+		
+		return cal.getTimeInMillis();
+	}
 }
