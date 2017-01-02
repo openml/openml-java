@@ -108,8 +108,8 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(FlowUntag.class);
 		
 		xstream.processAnnotations(Task.class);
+		xstream.processAnnotations(Run.class);
 		
-
 		xstream.processAnnotations(UploadRunAttach.class);
 		
 		xstream.ignoreUnknownElements();
@@ -277,39 +277,6 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:id", TaskDelete.class, "id");
 		
 		// run
-		xstream.alias("oml:run", Run.class);
-		xstream.aliasAttribute(Run.class, "oml", "xmlns:oml");
-		xstream.addImplicitCollection(Run.class, "parameter_settings", "oml:parameter_setting", Run.Parameter_setting.class);
-		xstream.addImplicitCollection(Run.class, "tag", "oml:tag", String.class);
-		
-		xstream.aliasField("oml:task_id", Run.class, "task_id");
-		xstream.aliasField("oml:run_id", Run.class, "run_id");
-		xstream.aliasField("oml:uploader", Run.class, "uploader");
-		xstream.aliasField("oml:flow_id", Run.class, "flow_id");
-		xstream.aliasField("oml:flow_name", Run.class, "flow_name");
-		xstream.aliasField("oml:error_message", Run.class, "error_message");
-		xstream.aliasField("oml:setup_id", Run.class, "setup_id");
-		xstream.aliasField("oml:setup_string", Run.class, "setup_string");
-		xstream.aliasField("oml:input_data", Run.class, "input_data");
-		xstream.aliasField("oml:output_data", Run.class, "output_data");
-		
-		xstream.aliasField("oml:name", Run.Parameter_setting.class, "name");
-		xstream.aliasField("oml:component", Run.Parameter_setting.class, "component");
-		xstream.aliasField("oml:value", Run.Parameter_setting.class, "value");
-		
-		xstream.addImplicitCollection( Run.Data.class, "dataset", "oml:dataset", Run.Data.Dataset.class);
-		xstream.addImplicitCollection( Run.Data.class, "file", "oml:file", Run.Data.File.class);
-		xstream.addImplicitCollection( Run.Data.class, "evaluation", "oml:evaluation", EvaluationScore.class);
-
-		xstream.aliasField("oml:did", Run.Data.Dataset.class, "did");
-		xstream.aliasField("oml:name", Run.Data.Dataset.class, "name");
-		xstream.aliasField("oml:url", Run.Data.Dataset.class, "url");
-		
-		xstream.aliasField("oml:did", Run.Data.File.class, "did");
-		xstream.aliasField("oml:file_id", Run.Data.File.class, "file_id");
-		xstream.aliasField("oml:name", Run.Data.File.class, "name");
-		xstream.aliasField("oml:url", Run.Data.File.class, "url");
-
 		xstream.aliasField("oml:did", EvaluationScore.class, "did");
 		xstream.aliasField("oml:name", EvaluationScore.class, "function"); // TODO: inconsistency? change?
 

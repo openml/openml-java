@@ -101,6 +101,7 @@ public class OpenmlDataStreamChallenge extends MainTask {
 		Classifier learner = (Classifier) getPreparedClassOption(this.learnerOption);
 		stream = new OpenmlChallengeReader(apiconnector, openmlTaskIdOption.getValue());
 		int batch_size = ((OpenmlChallengeReader) stream).getBatchSize();
+		int initial_batch_size = ((OpenmlChallengeReader) stream).getInitialBatchSize();
 		try {
 			resultListener = new ResultListener(openmlTaskIdOption.getValue(), apiconnector);
 		} catch (Exception e) {
@@ -147,7 +148,7 @@ public class OpenmlDataStreamChallenge extends MainTask {
 			}
 		}
 		
-		int instanceCounter = 0;
+		int instanceCounter = initial_batch_size;
 
 		while (stream.hasMoreInstances()) {
 			Example nextInstance = stream.nextInstance();

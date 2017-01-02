@@ -28,20 +28,40 @@ import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.xml.Run.Data.File;
 import org.apache.commons.lang3.ArrayUtils;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+
+@XStreamAlias("oml:run")
 public class Run {
 
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:oml")
 	private final String oml = Constants.OPENML_XMLNS;
+
+	@XStreamAlias("oml:run_id")
 	private Integer run_id;
+	@XStreamAlias("oml:uploader")
 	private Integer uploader;
+	@XStreamAlias("oml:task_id")
 	private Integer task_id;
+	@XStreamAlias("oml:flow_id")
 	private int flow_id;
+	@XStreamAlias("oml:flow_name")
 	private String flow_name;
+	@XStreamAlias("oml:setup_id")
 	private Integer setup_id;
+	@XStreamAlias("oml:setup_string")
 	private String setup_string;
+	@XStreamAlias("oml:error_message")
 	private String error_message;
+	@XStreamImplicit(itemFieldName="oml:parameter_settings")
 	private Parameter_setting[] parameter_settings;
+	@XStreamImplicit(itemFieldName="oml:tag")
 	private String[] tag;
+	@XStreamAlias("oml:input_data")
 	private Data input_data;
+	@XStreamAlias("oml:output_data")
 	private Data output_data;
 
 	public Run(Integer task_id, String error_message, int flow_id,
@@ -153,9 +173,13 @@ public class Run {
 		return result;
 	}
 
+	
 	public static class Parameter_setting {
+		@XStreamAlias("oml:run")
 		private String name;
+		@XStreamAlias("oml:value")
 		private String value;
+		@XStreamAlias("oml:component")
 		private Integer component;
 
 		public Parameter_setting(Integer component, String name, String value) {
@@ -183,8 +207,11 @@ public class Run {
 	}
 
 	public static class Data {
+		@XStreamImplicit(itemFieldName="oml:dataset")
 		private Dataset[] dataset;
+		@XStreamImplicit(itemFieldName="oml:file")
 		private File[] file;
+		@XStreamImplicit(itemFieldName="oml:evaluation")
 		private EvaluationScore[] evaluation;
 
 		public Data() {
@@ -224,8 +251,11 @@ public class Run {
 		}
 
 		public static class Dataset {
+			@XStreamAlias("oml:did")
 			private Integer did;
+			@XStreamAlias("oml:name")
 			private String name;
+			@XStreamAlias("oml:url")
 			private String url;
 
 			public Dataset(String name, String url) {
@@ -247,9 +277,17 @@ public class Run {
 		}
 
 		public static class File {
+			@XStreamAlias("oml:did")
 			private Integer did;
+			@XStreamAlias("oml:file_id")
 			private Integer file_id;
+			@XStreamAlias("oml:name")
 			private String name;
+			@XStreamAlias("oml:format")
+			private String format;
+			@XStreamAlias("oml:upload_time")
+			private String uploadTime;
+			@XStreamAlias("oml:url")
 			private String url;
 
 			public int getDid() {
@@ -266,6 +304,14 @@ public class Run {
 
 			public String getUrl() {
 				return url;
+			}
+			
+			public String getFormat() {
+				return format;
+			}
+			
+			public String getUploadTime() {
+				return uploadTime;
 			}
 		}
 	}

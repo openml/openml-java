@@ -128,6 +128,10 @@ public class OpenmlChallengeReader extends AbstractOptionHandler implements Inst
 	public int getBatchSize() {
 		return batchSize;
 	}
+	
+	public int getInitialBatchSize() {
+		return initialBatchSize;
+	}
 
 	@Override
 	public void restart() {
