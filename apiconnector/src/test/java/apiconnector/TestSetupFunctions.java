@@ -37,7 +37,7 @@ public class TestSetupFunctions {
 	@Test
 	public void testFindRightSetup() throws Exception {
 		client.setVerboseLevel(2);
-		Integer[] run_ids = {541980, 541944, 541932};
+		Integer[] run_ids = {541980, 541944};
 		
 		for (Integer run_id : run_ids) {
 			Run r = client.runGet(run_id);
@@ -63,11 +63,10 @@ public class TestSetupFunctions {
 	
 	@Test
 	public void testFindNonexistingSetup() throws Exception {
-		Integer[] run_ids = {541980, 541944, 541932};
+		Integer[] run_ids = {541980, 541944};
 		Map<String,String> searchReplace = new TreeMap<String,String>();
 		searchReplace.put("<oml:value>Inversion</oml:value>", "<oml:value>bla2</oml:value>"); // matches run 541980
 		searchReplace.put("<oml:value>weka.classifiers.trees.J48 -C 0.25 -M 2</oml:value>", "<oml:value>weka.classifiers.trees.J50 -C 0.25 -M 2</oml:value>"); // matches run 541944
-		searchReplace.put("<oml:value>False</oml:value>", "<oml:value>NoValidBooleans</oml:value>"); // matches run 541932
 		
 		for (Integer run_id : run_ids) {
 			Run r = client.runGet(run_id);
