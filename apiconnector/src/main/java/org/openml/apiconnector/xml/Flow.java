@@ -31,6 +31,8 @@ public class Flow {
 	private String fullName;
 	private Integer uploader;
 	private String name;
+	private String custom_name;
+	private String class_name;
 	private String version;
 	private String external_version;
 	private String description;
@@ -54,20 +56,24 @@ public class Flow {
 	private String source_md5;
 	private String binary_md5;
 
-	public Flow(String name, String external_version, String description, String language, String dependencies ) {
+	public Flow(String name, String class_name, String external_version, String description, String language, String dependencies ) {
 		this.name = name;
+		this.class_name = class_name;
 		this.external_version = external_version;
 		this.description = description;
 		this.language = language;
 		this.dependencies = dependencies;
 	}
 
-	public Flow(String name, String external_version, String description,
+	public Flow(String name, String custom_name, String class_name, 
+			String external_version, String description,
 			String[] creator, String[] contributor, String licence,
 			String language, String full_description,
 			String installation_notes, String dependencies, String[] tag) {
 		super();
 		this.name = name;
+		this.custom_name = custom_name;
+		this.class_name = class_name;
 		this.external_version = external_version;
 		this.description = description;
 		this.creator = creator;
@@ -96,6 +102,22 @@ public class Flow {
 		this.name = name;
 	}
 	
+	public String getCustom_name() {
+		return custom_name;
+	}
+
+	public void setCustom_name(String custom_name) {
+		this.custom_name = custom_name;
+	}
+
+	public String getClass_name() {
+		return class_name;
+	}
+
+	public void setClass_name(String class_name) {
+		this.class_name = class_name;
+	}
+
 	public String getExternal_version() {
 		return external_version;
 	}

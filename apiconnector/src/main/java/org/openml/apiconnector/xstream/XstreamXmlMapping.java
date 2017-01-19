@@ -187,6 +187,8 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:id", Flow.class, "id");
 		xstream.aliasField("oml:fullName", Flow.class, "fullName");
 		xstream.aliasField("oml:name", Flow.class, "name");
+		xstream.aliasField("oml:custom_name", Flow.class, "custom_name");
+		xstream.aliasField("oml:class_name", Flow.class, "class_name");
 		xstream.aliasField("oml:version", Flow.class, "version");
 		xstream.aliasField("oml:external_version", Flow.class, "external_version");
 		xstream.aliasField("oml:uploader", Flow.class, "uploader");

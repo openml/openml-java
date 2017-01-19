@@ -54,8 +54,8 @@ public class TestFlowFunctionality {
 	public void testApiFlowUpload() throws Exception {
 		client.setVerboseLevel(1);
 		try {
-			Flow created = new Flow("test2", "test", "test should be deleted", "english", "UnitTest");
-			created.addComponent("B", new Flow("test2", "test2", "test should be deleted", "english", "UnitTest") );
+			Flow created = new Flow("test2", "weka.classifiers.test.janistesting", "test", "test should be deleted", "english", "UnitTest");
+			created.addComponent("B", new Flow("test2", "weka.classifiers.test.janistesting.subflow", "test2", "test should be deleted", "english", "UnitTest") );
 			String flowXML = xstream.toXML(created);
 			
 			System.out.println(flowXML);
@@ -96,8 +96,9 @@ public class TestFlowFunctionality {
 	@Test
 	public void testApiFlowUploadDuplicate() {
 		try {
-			Flow created = new Flow("test2", "test", "test should be deleted", "english", "UnitTest");
-			created.addComponent("B", new Flow("test2", "test2", "test should be deleted", "english", "UnitTest") );
+			Flow created = new Flow("test2", "weka.classifiers.test.janistesting", "test", "test should be deleted", "english", "UnitTest");
+			created.addComponent("B", new Flow("test2", "weka.classifiers.test.janistesting", "test2", "test should be deleted", "english", "UnitTest") );
+			created.setCustom_name("Jans flow");
 			String flowXML = xstream.toXML(created);
 			
 			System.out.println(flowXML);
