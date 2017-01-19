@@ -55,7 +55,7 @@ public class Run {
 	private String setup_string;
 	@XStreamAlias("oml:error_message")
 	private String error_message;
-	@XStreamImplicit(itemFieldName="oml:parameter_settings")
+	@XStreamImplicit(itemFieldName="oml:parameter_setting")
 	private Parameter_setting[] parameter_settings;
 	@XStreamImplicit(itemFieldName="oml:tag")
 	private String[] tag;
@@ -175,7 +175,7 @@ public class Run {
 
 	
 	public static class Parameter_setting {
-		@XStreamAlias("oml:run")
+		@XStreamAlias("oml:name")
 		private String name;
 		@XStreamAlias("oml:value")
 		private String value;
