@@ -78,17 +78,20 @@ public class DataQuality {
 		private String value;
 		private Integer interval_start;
 		private Integer interval_end;
+		private Integer index;
 
 		public Quality(String name, String value) {
 			this.name = name;
 			this.value = value;
+			this.index = null;
 		}
 
-		public Quality(String name, String value, Integer intervat_start, Integer interval_end) {
+		public Quality(String name, String value, Integer intervat_start, Integer interval_end, Integer index) {
 			this.name = name;
 			this.value = value;
 			this.interval_start = intervat_start;
 			this.interval_end = interval_end;
+			this.index = index;
 		}
 
 		public String getName() {
@@ -105,6 +108,10 @@ public class DataQuality {
 
 		public Integer getInterval_end() {
 			return interval_end;
+		}
+
+		public Integer getIndex() {
+			return index;
 		}
 
 		@Override
