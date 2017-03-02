@@ -75,10 +75,10 @@ public class DataQuality {
 
 	public static class Quality {
 		private String name;
+		private Integer feature_index;
 		private String value;
 		private Integer interval_start;
 		private Integer interval_end;
-		private Integer feature_index;
 
 		public Quality(String name, String value) {
 			this.name = name;
