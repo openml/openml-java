@@ -1184,6 +1184,7 @@ public class OpenmlConnector implements Serializable {
 		File file = new File(filepath);
         HttpClient httpClient = HttpClientBuilder.create().build();
         try {
+            // Compared to FileUtils.copyURLToFile this can handle http -> https redirects
             HttpGet httpget = new HttpGet(url.toURI());
             HttpResponse response = httpClient.execute(httpget);
             HttpEntity entity = response.getEntity();
