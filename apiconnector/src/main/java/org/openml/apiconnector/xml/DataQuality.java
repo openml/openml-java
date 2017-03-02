@@ -78,12 +78,12 @@ public class DataQuality {
 		private String value;
 		private Integer interval_start;
 		private Integer interval_end;
-		private Integer index;
+		private Integer feature_index;
 
 		public Quality(String name, String value) {
 			this.name = name;
 			this.value = value;
-			this.index = null;
+			this.feature_index = null;
 		}
 
 		public Quality(String name, String value, Integer intervat_start, Integer interval_end, Integer index) {
@@ -91,7 +91,7 @@ public class DataQuality {
 			this.value = value;
 			this.interval_start = intervat_start;
 			this.interval_end = interval_end;
-			this.index = index;
+			this.feature_index = index;
 		}
 
 		public String getName() {
@@ -110,8 +110,8 @@ public class DataQuality {
 			return interval_end;
 		}
 
-		public Integer getIndex() {
-			return index;
+		public Integer getFeature_index() {
+			return feature_index;
 		}
 
 		@Override

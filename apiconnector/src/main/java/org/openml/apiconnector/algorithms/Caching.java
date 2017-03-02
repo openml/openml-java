@@ -1,14 +1,14 @@
 package org.openml.apiconnector.algorithms;
 
+import org.openml.apiconnector.io.HttpConnector;
+import org.openml.apiconnector.io.OpenmlConnector;
+import org.openml.apiconnector.settings.Settings;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-
-import org.openml.apiconnector.io.HttpConnector;
-import org.openml.apiconnector.io.OpenmlConnector;
-import org.openml.apiconnector.settings.Settings;
 
 public class Caching {
 
