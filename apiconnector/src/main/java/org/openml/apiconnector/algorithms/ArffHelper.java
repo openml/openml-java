@@ -59,7 +59,13 @@ public class ArffHelper {
 		} else {
 			dataset = Conversion.stringToTempFile(OpenmlConnector.getStringFromUrl( url ), type + "_" + identifier + "", extension );
 		}
-		return dataset;
+		String hash = Hashing.md5(dataset);
+        if(serverMd5 == null || hash.equals( serverMd5.trim())) {
+            return dataset;
+        }
+        else {
+            throw new IOException("Hash of the downloaded file does not correspond to the server hash");
+        }
 	}
 	
 	/**
