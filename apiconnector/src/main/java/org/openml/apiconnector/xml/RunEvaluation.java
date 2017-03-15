@@ -3,17 +3,37 @@ package org.openml.apiconnector.xml;
 import org.apache.commons.lang3.ArrayUtils;
 import org.openml.apiconnector.settings.Constants;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+
+@XStreamAlias("oml:run_evaluation")
 public class RunEvaluation {
-	private final String oml = Constants.OPENML_XMLNS;
 	
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:oml")
+	private final String oml = Constants.OPENML_XMLNS;
+
+	@XStreamAlias("oml:run_id")
 	private Integer run_id;
+
+	@XStreamAlias("oml:evaluation_engine_id")
+	private Integer evaluation_engine_id;
+	
+	@XStreamAlias("oml:error")
 	private String error;
+
+	@XStreamAlias("oml:warning")
 	private String warning;
+	
+	@XStreamImplicit(itemFieldName="oml:evaluation")
 	private EvaluationScore[] evaluation;
 	
-	public RunEvaluation( int run_id ) {
+	public RunEvaluation(int run_id, int evaluation_engine_id) {
 		this.run_id = run_id;
+		this.evaluation_engine_id = evaluation_engine_id;
 		this.error = null;
+		this.warning = null;
 	}
 	
 	public void addEvaluationMeasures( EvaluationScore[] em ) {

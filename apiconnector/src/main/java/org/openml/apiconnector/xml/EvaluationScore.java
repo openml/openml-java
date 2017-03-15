@@ -24,7 +24,7 @@ public class EvaluationScore {
 	@XStreamAlias("oml:array_data")
 	private final String array_data;
 	
-	@XStreamAlias("sample_size")
+	@XStreamAlias("oml:sample_size")
 	private Integer sample_size; /*not final*/
 
 	@XStreamAsAttribute

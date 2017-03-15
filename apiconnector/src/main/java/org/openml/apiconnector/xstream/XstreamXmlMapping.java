@@ -109,6 +109,7 @@ public class XstreamXmlMapping {
 		
 		xstream.processAnnotations(Task.class);
 		xstream.processAnnotations(Run.class);
+		xstream.processAnnotations(RunEvaluation.class);
 		xstream.processAnnotations(EvaluationScore.class);
 		xstream.aliasField("oml:name", EvaluationScore.class, "function"); // TODO: legacy, remove later
 		xstream.aliasField("oml:function", EvaluationScore.class, "function"); // TODO: fix for prev line
@@ -337,14 +338,6 @@ public class XstreamXmlMapping {
 		xstream.alias("oml:job", Job.class);
 		xstream.aliasField("oml:task_id", Job.class, "task_id");
 		xstream.aliasField("oml:learner", Job.class, "learner");
-		
-		// run evaluation
-		xstream.alias("oml:run_evaluation", RunEvaluation.class);
-		xstream.aliasAttribute(RunEvaluation.class, "oml", "xmlns:oml");
-		xstream.aliasField("oml:run_id", RunEvaluation.class, "run_id");
-		xstream.aliasField("oml:error", RunEvaluation.class, "error");
-		xstream.aliasField("oml:warning", RunEvaluation.class, "warning");
-		xstream.addImplicitCollection(RunEvaluation.class, "evaluation", "oml:evaluation", EvaluationScore.class);
 		
 		// run trace
 		xstream.alias("oml:trace", RunTrace.class);
