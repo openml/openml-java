@@ -1,18 +1,27 @@
 package org.openml.apiconnector.io;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.xml.ApiError;
@@ -107,6 +116,49 @@ public class HttpConnector implements Serializable {
 			throw new ApiException( Integer.parseInt( apiError.getCode() ), message );
 		}
 		return apiResult;
+	}
+	
+	public static String getStringFromUrl(String url, boolean accept_all) throws Exception {
+		CloseableHttpClient client = HttpClients.createDefault();
+		HttpGet httpget = new HttpGet(url);
+		HttpResponse httpResp = client.execute(httpget);
+		int code = httpResp.getStatusLine().getStatusCode();
+		if (!accept_all && code != HttpStatus.SC_OK) {
+			throw new IOException("Problem getting URL, status " + code + ": " + url);
+		}
+		return httpEntitiToString(httpResp.getEntity());
+	}
+	
+
+	/**
+	 * Returns a file from the openml server
+	 * 
+	 * @param url
+	 *            - The URL to obtain
+	 * @param filepath
+	 *            - Where to safe the file.
+	 * @return File - a pointer to the file that was saved.
+	 * @throws IOException
+	 *             - Can be: server down, etc.
+	 * @throws URISyntaxException 
+	 */
+	public static File getFileFromUrl(URL url, String filepath, boolean accept_all) throws IOException, URISyntaxException {
+		File file = new File(filepath);
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        // Compared to FileUtils.copyURLToFile this can handle http -> https redirects
+        HttpGet httpget = new HttpGet(url.toURI());
+        HttpResponse response = httpClient.execute(httpget);
+        int code = response.getStatusLine().getStatusCode();
+		if (!accept_all && code != HttpStatus.SC_OK) {
+			throw new IOException("Problem getting URL, status " + code + ": " + url);
+		}
+        HttpEntity entity = response.getEntity();
+        if (entity != null) {
+            FileOutputStream fos = new java.io.FileOutputStream(file);
+            entity.writeTo(fos);
+            fos.close();
+        }
+		return file;
 	}
 	
 	private static String httpEntitiToString(HttpEntity resEntity) throws IOException {

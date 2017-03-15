@@ -1,13 +1,13 @@
 package org.openml.apiconnector.algorithms;
 
 import org.openml.apiconnector.io.HttpConnector;
-import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Settings;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class Caching {
@@ -24,12 +24,12 @@ public class Caching {
 	}
 	
 
-	public static File cache(URL url, String type, int identifier, String extension) throws IOException {
+	public static File cache(URL url, String type, int identifier, String extension) throws IOException, URISyntaxException {
 		String directoryPath = Settings.CACHE_DIRECTORY + "/" + type;
 		File directory = new File(directoryPath);
 		directory.mkdirs();
 		String name = type + "_" + identifier + "." + extension;
-		File current = OpenmlConnector.getFileFromUrl(url,directory.getAbsolutePath() + "/" + name);
+		File current = HttpConnector.getFileFromUrl(url,directory.getAbsolutePath() + "/" + name, false);
 		Conversion.log("OK", "Cache", "Stored to cache: " + type + "/" + name);
 		return current;
 	}

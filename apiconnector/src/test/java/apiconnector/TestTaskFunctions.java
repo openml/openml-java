@@ -7,6 +7,7 @@ import java.io.File;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.TaskInformation;
 import org.openml.apiconnector.io.ApiException;
+import org.openml.apiconnector.io.HttpConnector;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.Task;
@@ -30,7 +31,7 @@ public class TestTaskFunctions {
 		
 		
 		Integer dataId = TaskInformation.getSourceData(t).getData_set_id();
-		String[] splits = OpenmlConnector.getStringFromUrl(splitsUrl).split("\n");
+		String[] splits = HttpConnector.getStringFromUrl(splitsUrl, false).split("\n");
 		DataQuality dq = client.dataQualities(dataId);
 		int numInstances = (int) Double.parseDouble(dq.getQualitiesMap().get("NumberOfInstances"));
 		

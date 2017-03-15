@@ -40,6 +40,7 @@ import javax.xml.xpath.XPathFactory;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.ApiException;
+import org.openml.apiconnector.io.HttpConnector;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.Data;
 import org.openml.apiconnector.xml.DataDelete;
@@ -85,7 +86,7 @@ public class TestDataFunctionality {
 			File tempXsd = client.getXSD("openml.data.upload");
 			
 			String url = client.getApiUrl() + "data/" + probe;
-			String raw = OpenmlConnector.getStringFromUrl(url + "?api_key=" + client.getApiKey());
+			String raw = HttpConnector.getStringFromUrl(url + "?api_key=" + client.getApiKey(), false);
 			
 			assertTrue(Conversion.validateXML(tempDsd, tempXsd));
 			

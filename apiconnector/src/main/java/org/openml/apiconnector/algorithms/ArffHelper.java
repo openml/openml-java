@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import org.openml.apiconnector.io.OpenmlConnector;
+import org.openml.apiconnector.io.HttpConnector;
 import org.openml.apiconnector.settings.Settings;
 
 public class ArffHelper {
@@ -38,7 +38,7 @@ public class ArffHelper {
 	 * @return A file pointer to the specified arff file.
 	 * @throws IOException
 	 */
-	public static File downloadAndCache(String type, int identifier, String extension, String url, String serverMd5) throws IOException {
+	public static File downloadAndCache(String type, int identifier, String extension, String url, String serverMd5) throws Exception {
 		if(Caching.in_cache(type, identifier, extension)) {
 			File file = Caching.cached(type, identifier, extension);
 			String clientMd5 = Hashing.md5(file);
@@ -57,7 +57,7 @@ public class ArffHelper {
 		if( Settings.CACHE_ALLOWED ) {
 			dataset = Caching.cache(new URL(url), type, identifier, extension);
 		} else {
-			dataset = Conversion.stringToTempFile(OpenmlConnector.getStringFromUrl( url ), type + "_" + identifier + "", extension );
+			dataset = Conversion.stringToTempFile(HttpConnector.getStringFromUrl(url, false), type + "_" + identifier + "", extension );
 		}
 		String hash = Hashing.md5(dataset);
         if(serverMd5 == null || hash.equals( serverMd5.trim())) {

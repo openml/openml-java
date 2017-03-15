@@ -20,12 +20,12 @@
 package org.openml.apiconnector.xml;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 
 import org.openml.apiconnector.algorithms.ArffHelper;
 import org.openml.apiconnector.algorithms.OptionParser;
+import org.openml.apiconnector.io.HttpConnector;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.settings.Settings;
@@ -318,12 +318,12 @@ public class Task implements Serializable {
 				return parameters;
 			}
 			
-			public File getDataSplits( int task_id ) throws IOException {
+			public File getDataSplits( int task_id ) throws Exception {
 				if( data_splits_cache == null ) {
 					// TODO: we want to get rid of the server calculated Md5 ... 
 					String serverMd5 = null;
 					if( Settings.LOCAL_OPERATIONS ) {
-						serverMd5 = OpenmlConnector.getStringFromUrl( getData_splits_url().replace("/get/", "/md5/") );
+						serverMd5 = HttpConnector.getStringFromUrl(getData_splits_url().replace("/get/", "/md5/"), false);
 					}
 					//	String identifier = getData_splits_url().substring( getData_splits_url().lastIndexOf('/') + 1 );
 					data_splits_cache = ArffHelper.downloadAndCache("splits", task_id, "arff", getData_splits_url(), serverMd5 );

@@ -20,16 +20,10 @@
 package org.openml.apiconnector.io;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONObject;
 import org.openml.apiconnector.algorithms.Caching;
 import org.openml.apiconnector.algorithms.Conversion;
@@ -38,10 +32,8 @@ import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xml.*;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
@@ -1147,57 +1139,14 @@ public class OpenmlConnector implements Serializable {
 	 */
 	public JSONObject freeQuery(String sql) throws Exception {
 		
-		String res = getStringFromUrl(OPENML_URL + "api_query/?q=" + URLEncoder.encode(sql, "ISO-8859-1")
-				+ "&hash=" + getApiKey());
+		String res = HttpConnector.getStringFromUrl(OPENML_URL + "api_query/?q=" + URLEncoder.encode(sql, "ISO-8859-1")
+				+ "&hash=" + getApiKey(), false);
 		
 		if (verboseLevel >= Constants.VERBOSE_LEVEL_XML) {
 			System.out.println(res + "\n==========\n");
 		}
 		
 		return new JSONObject(res);
-	}
-
-	/**
-	 * @param url
-	 *            - The URL to obtain
-	 * @return String - The content of the URL
-	 * @throws IOException
-	 *             - Can be: server down, etc.
-	 */
-	public static String getStringFromUrl(String url) throws IOException {
-		String result = IOUtils.toString(new URL(url));
-		return result;
-	}
- 
-	/**
-	 * Returns a file from the openml server
-	 * 
-	 * @param url
-	 *            - The URL to obtain
-	 * @param filepath
-	 *            - Where to safe the file.
-	 * @return File - a pointer to the file that was saved.
-	 * @throws IOException
-	 *             - Can be: server down, etc.
-	 */
-	public static File getFileFromUrl(URL url, String filepath) throws IOException {
-		File file = new File(filepath);
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        try {
-            // Compared to FileUtils.copyURLToFile this can handle http -> https redirects
-            HttpGet httpget = new HttpGet(url.toURI());
-            HttpResponse response = httpClient.execute(httpget);
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                FileOutputStream fos = new java.io.FileOutputStream(file);
-                entity.writeTo(fos);
-                fos.close();
-            }
-        }
-        catch (URISyntaxException exception) {
-            throw new IOException("URI not in correct format");
-        }
-		return file;
 	}
 
 	public URL getOpenmlFileUrl(int id, String filename) throws Exception {
