@@ -16,7 +16,7 @@ import org.openml.apiconnector.xml.Task_new.Input;
 public class TestTaskFunctions {
 
 
-	private static final String url = "http://test.openml.org/";
+	private static final String url = "https://test.openml.org/";
 	private static final String session_hash = "d488d8afd93b32331cf6ea9d7003d4c3";
 	private static final OpenmlConnector client = new OpenmlConnector(url,session_hash);
 	private static final Integer taskId = 1;

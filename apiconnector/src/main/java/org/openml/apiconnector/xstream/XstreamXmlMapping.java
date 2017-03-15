@@ -109,6 +109,8 @@ public class XstreamXmlMapping {
 		
 		xstream.processAnnotations(Task.class);
 		xstream.processAnnotations(Run.class);
+		xstream.processAnnotations(EvaluationScore.class);
+		xstream.aliasField("oml:name", EvaluationScore.class, "function"); // TODO: legacy, remove later
 		
 		xstream.processAnnotations(UploadRunAttach.class);
 		
@@ -278,20 +280,6 @@ public class XstreamXmlMapping {
 		// task delete
 		xstream.alias("oml:task_delete", TaskDelete.class);
 		xstream.aliasField("oml:id", TaskDelete.class, "id");
-		
-		// run
-		xstream.aliasField("oml:did", EvaluationScore.class, "did");
-		xstream.aliasField("oml:name", EvaluationScore.class, "function"); // TODO: inconsistency? change?
-
-		xstream.aliasField("oml:flow", EvaluationScore.class, "flow");
-		xstream.aliasField("oml:flow_id", EvaluationScore.class, "flow_id");
-		xstream.aliasField("oml:value", EvaluationScore.class, "value");
-		xstream.aliasField("oml:array_data", EvaluationScore.class, "array_data");
-		xstream.aliasField("oml:sample_size", EvaluationScore.class, "sample_size");
-		
-		xstream.useAttributeFor(EvaluationScore.class, "repeat");
-		xstream.useAttributeFor(EvaluationScore.class, "fold");
-		xstream.useAttributeFor(EvaluationScore.class, "sample");
 		
 		// run list
 		xstream.alias("oml:runs", RunList.class);

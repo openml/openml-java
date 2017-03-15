@@ -28,7 +28,7 @@ import com.thoughtworks.xstream.XStream;
 
 public class TestSetupFunctions {
 	
-	private static final String url = "http://test.openml.org/";
+	private static final String url = "https://www.openml.org/"; // Lookup test, can be done live
 	private static final String session_hash = "d488d8afd93b32331cf6ea9d7003d4c3";
 	private static final OpenmlConnector client = new OpenmlConnector(url,session_hash);
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
@@ -36,7 +36,6 @@ public class TestSetupFunctions {
 	
 	@Test
 	public void testFindRightSetup() throws Exception {
-		client.setVerboseLevel(2);
 		Integer[] run_ids = {541980, 541944};
 		
 		for (Integer run_id : run_ids) {
@@ -56,8 +55,7 @@ public class TestSetupFunctions {
 				assertTrue(ae.getMessage().equals("Entity already tagged by this tag. "));
 			}
 			SetupUntag su = client.setupUntag(setup_id, tag);
-			assertTrue(su.getTags() == null);
-			
+			assertTrue(Arrays.asList(su.getTags()).contains(tag) == false);
 		}
 	}
 	
@@ -65,8 +63,8 @@ public class TestSetupFunctions {
 	public void testFindNonexistingSetup() throws Exception {
 		Integer[] run_ids = {541980, 541944};
 		Map<String,String> searchReplace = new TreeMap<String,String>();
-		searchReplace.put("<oml:value>Inversion</oml:value>", "<oml:value>bla2</oml:value>"); // matches run 541980
-		searchReplace.put("<oml:value>weka.classifiers.trees.J48 -C 0.25 -M 2</oml:value>", "<oml:value>weka.classifiers.trees.J50 -C 0.25 -M 2</oml:value>"); // matches run 541944
+		searchReplace.put("<oml:value>500</oml:value>", "<oml:value>bla2</oml:value>"); // matches run 541980
+		searchReplace.put("<oml:value>weka.classifiers.trees.REPTree</oml:value>", "<oml:value>weka.classifiers.trees.J50 -C 0.25 -M 2</oml:value>"); // matches run 541944
 		
 		for (Integer run_id : run_ids) {
 			Run r = client.runGet(run_id);

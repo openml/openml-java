@@ -30,7 +30,7 @@ public class TestRunFunctionality {
 	private static final int probeChallenge = 13976;
 	private static final String predictions_path = "data/predictions_task53.arff";
 
-	private static final String url = "http://capa.win.tue.nl/";
+	private static final String url = "https://test.openml.org/";
 	private static final String session_hash = "d488d8afd93b32331cf6ea9d7003d4c3";
 	private static final OpenmlConnector client = new OpenmlConnector(url,session_hash);
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
@@ -70,40 +70,34 @@ public class TestRunFunctionality {
 	}
 	
 	@Test
-	public void testApiRunUpload() {
-		try {
-			String[] tags = {"first_tag", "another_tag"};
-			
-			Run r = new Run(probe, null, 100, null, null, tags);
-			String runXML = xstream.toXML(r);
-			
-			File runFile = Conversion.stringToTempFile(runXML, "runtest",  "xml");
-			File predictions = new File(predictions_path); 
-			
-			Map<String,File> output_files = new HashMap<String, File>();
-			
-			output_files.put("predictions", predictions);
-			
-			UploadRun ur = client.runUpload(runFile, output_files);
-			
-			Run newrun = client.runGet(ur.getRun_id());
-			
-			Set<String> uploadedTags = new HashSet<String>(Arrays.asList(newrun.getTag()));
-			Set<String> providedTags = new HashSet<String>(Arrays.asList(tags));
-			
-			assertTrue(uploadedTags.equals(providedTags));
-			
-			RunTag rt = client.runTag(ur.getRun_id(), tag);
-			assertTrue(Arrays.asList(rt.getTags()).contains(tag));
-			RunUntag ru = client.runUntag(ur.getRun_id(), tag);
-			assertTrue(Arrays.asList(ru.getTags()).contains(tag) == false);
-			
-			client.runDelete(ur.getRun_id());
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Test failed: " + e.getMessage());
-		}
+	public void testApiRunUpload() throws Exception {
+		String[] tags = {"first_tag", "another_tag"};
+		
+		Run r = new Run(probe, null, 100, null, null, tags);
+		String runXML = xstream.toXML(r);
+		
+		File runFile = Conversion.stringToTempFile(runXML, "runtest",  "xml");
+		File predictions = new File(predictions_path); 
+		
+		Map<String,File> output_files = new HashMap<String, File>();
+		
+		output_files.put("predictions", predictions);
+		
+		UploadRun ur = client.runUpload(runFile, output_files);
+		
+		Run newrun = client.runGet(ur.getRun_id());
+		
+		Set<String> uploadedTags = new HashSet<String>(Arrays.asList(newrun.getTag()));
+		Set<String> providedTags = new HashSet<String>(Arrays.asList(tags));
+		
+		assertTrue(uploadedTags.equals(providedTags));
+		
+		RunTag rt = client.runTag(ur.getRun_id(), tag);
+		assertTrue(Arrays.asList(rt.getTags()).contains(tag));
+		RunUntag ru = client.runUntag(ur.getRun_id(), tag);
+		assertTrue(Arrays.asList(ru.getTags()).contains(tag) == false);
+		
+		client.runDelete(ur.getRun_id());
 	}
 	
 	@Test

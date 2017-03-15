@@ -25,44 +25,46 @@ import java.util.Map;
 
 public class MetricCollector {
 
-	private Map<Metric, ArrayList<MetricScore>> metrics;
-	
+	private Map<String, ArrayList<MetricScore>> metrics;
+
 	/**
-	 * Default Constructor. Bundles the scores of evaluation measures in one class.
-	 * All the scores of the same measure are stored in an arraylist, so that we can
-	 * calculate the standard deviation of it. 
+	 * Default Constructor. Bundles the scores of evaluation measures in one
+	 * class. All the scores of the same measure are stored in an arraylist, so
+	 * that we can calculate the standard deviation of it.
 	 */
 	public MetricCollector() {
-		metrics = new HashMap<Metric, ArrayList<MetricScore>>();
+		metrics = new HashMap<String, ArrayList<MetricScore>>();
 	}
-	
+
 	/**
-	 * @param metricMap - A map containing metrics and their respective scores.
+	 * @param metricMap
+	 *            - A map containing metrics and their respective scores.
 	 */
-	public void add( Map<Metric, MetricScore> metricMap ) {
-		for( Metric m : metricMap.keySet() ) {
-			if( metrics.containsKey(m) == false ) {
-				
+	public void add(Map<String, MetricScore> metricMap) {
+		for (String m : metricMap.keySet()) {
+			if (metrics.containsKey(m) == false) {
+
 				metrics.put(m, new ArrayList<MetricScore>());
 			}
-			metrics.get(m).add( metricMap.get(m) );
+			metrics.get(m).add(metricMap.get(m));
 		}
 	}
-	
+
 	/**
-	 * @param m - The measure of which the scores should be returned
+	 * @param m
+	 *            - The measure of which the scores should be returned
 	 * @return An ArrayList containing all the scores of measure m
 	 */
-	public ArrayList<Double> getScores( Metric m ) {
-		ArrayList<MetricScore> metricscores = metrics.get( m );
+	public ArrayList<Double> getScores(String m) {
+		ArrayList<MetricScore> metricscores = metrics.get(m);
 		ArrayList<Double> scores = new ArrayList<Double>();
-		for( MetricScore s : metricscores ) {
-			if( s.getScore() != null )
-				scores.add( s.getScore() );
+		for (MetricScore s : metricscores) {
+			if (s.getScore() != null)
+				scores.add(s.getScore());
 		}
 		return scores;
 	}
-	
+
 	@Override
 	public String toString() {
 		return metrics.toString();

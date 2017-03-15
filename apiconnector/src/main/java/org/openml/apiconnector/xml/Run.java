@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.openml.apiconnector.algorithms.MathHelper;
 import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.xml.Run.Data.File;
 import org.apache.commons.lang3.ArrayUtils;
@@ -140,16 +139,6 @@ public class Run {
 		output_data.addDataset(name, url);
 	}
 
-	public void addOutputEvaluation(String name, Integer repeat, Integer fold,
-			Integer sample, String flow, Double value) {
-		output_data.addEvaluation(name, repeat, fold, sample, flow, value);
-	}
-
-	public void addOutputEvaluation(String name, String flow, Double value,
-			String array_data) {
-		output_data.addEvaluation(name, flow, value, array_data);
-	}
-
 	public void addOutputEvaluation(EvaluationScore e) {
 		output_data.addEvaluation(e);
 	}
@@ -234,16 +223,6 @@ public class Run {
 		public void addDataset(String name, String url) {
 			Dataset d = new Dataset(name, url);
 			dataset = ArrayUtils.addAll(dataset, d);
-		}
-
-		public void addEvaluation(String name, Integer repeat, Integer fold, Integer sample, String flow, Double value) {
-			EvaluationScore e = new EvaluationScore(flow, name, MathHelper.defaultDecimalFormat.format(value), null, repeat, fold, sample, null);
-			evaluation = ArrayUtils.addAll(evaluation, e);
-		}
-
-		public void addEvaluation(String name, String flow, Double value, String array_data) {
-			EvaluationScore e = new EvaluationScore(flow, name, (value != null) ? MathHelper.defaultDecimalFormat.format(value) : null, null, array_data);
-			evaluation = ArrayUtils.addAll(evaluation, e);
 		}
 
 		public void addEvaluation(EvaluationScore score) {

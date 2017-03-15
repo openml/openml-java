@@ -1,26 +1,44 @@
 package org.openml.apiconnector.xml;
 
 import org.openml.apiconnector.algorithms.MathHelper;
+import org.openml.apiconnector.settings.Constants;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 public class EvaluationScore {
-
-	private final String function;
-	private Integer flow_id;
-	private final String flow;
 	
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:oml")
+	private final String oml = Constants.OPENML_XMLNS;
+
+	@XStreamAlias("oml:function")
+	private final String function;
+
+	@XStreamAlias("oml:value")
 	private final String value;
+	
+	@XStreamAlias("oml:stdev")
 	private final Double stdev;
+	
+	@XStreamAlias("oml:array_data")
 	private final String array_data;
 	
-	private final Integer repeat;
-	private final Integer fold;
-	private final Integer sample;
+	@XStreamAlias("sample_size")
 	private Integer sample_size; /*not final*/
+
+	@XStreamAsAttribute
+	@XStreamAlias("repeat")
+	private final Integer repeat;
+	@XStreamAsAttribute
+	@XStreamAlias("fold")
+	private final Integer fold;
+	@XStreamAsAttribute
+	@XStreamAlias("sample")
+	private final Integer sample;
 	
-	public EvaluationScore(String flow, String function,
-			String value, Double stdev, String array_data) {
+	public EvaluationScore(String function, String value, Double stdev, String array_data) {
 		super();
-		this.flow = flow;
 		this.function = function;
 		this.value = value;
 		this.stdev = stdev;
@@ -33,10 +51,8 @@ public class EvaluationScore {
 		this.sample_size = null;
 	}
 
-	public EvaluationScore(String flow, String function,
-			String value, String array_data, Integer repeat, Integer fold) {
+	public EvaluationScore(String function, String value, String array_data, Integer repeat, Integer fold) {
 		super();
-		this.flow = flow;
 		this.function = function;
 		this.value = value;
 		this.array_data = array_data;
@@ -49,11 +65,10 @@ public class EvaluationScore {
 		this.stdev = null;
 	}
 
-	public EvaluationScore(String flow, String function,
-			String value, String array_data, Integer repeat, Integer fold,
+	public EvaluationScore(String function, String value, 
+			String array_data, Integer repeat, Integer fold,
 			Integer sample, Integer sample_size) {
 		super();
-		this.flow = flow;
 		this.function = function;
 		this.value = value;
 		this.array_data = array_data;
@@ -66,10 +81,6 @@ public class EvaluationScore {
 		this.stdev = null;
 	}
 	
-	public String getFlow() {
-		return flow;
-	}
-
 	public String getFunction() {
 		return function;
 	}
@@ -107,8 +118,7 @@ public class EvaluationScore {
 	}
 	
 	public boolean isSame( EvaluationScore other ) {
-		return equalStrings( flow, other.getFlow() ) && 
-			equalStrings( function, other.getFunction() ) && 
+		return equalStrings( function, other.getFunction() ) && 
 			equalIntegers( fold, other.getFold() ) && 
 			equalIntegers( repeat, other.getRepeat() ) && 
 			equalIntegers( sample, other.getSample() ); // do not compare on sample size, as this is just additional information
@@ -133,7 +143,7 @@ public class EvaluationScore {
 		if( sample != null ) sb.append( ", sample " + sample );
 		if( sb.length() == 0 ) sb.append( ", GLOBAL" );
 		
-		return function + " (" + flow_id + "," + flow + ") - [" + sb.toString().substring( 2 ) + "]";
+		return function + " - [" + sb.toString().substring( 2 ) + "]";
 	}
 	
 	private static boolean equalStrings( String s1, String s2 ) {
@@ -143,14 +153,6 @@ public class EvaluationScore {
 			return s1 == null && s2 == null;
 		}
 	}
-	/*
-	private static boolean equalDoubles( Double s1, Double s2 ) {
-		if( s1 != null && s2 != null ) {
-			return s1.equals( s2 );
-		} else {
-			return s1 == null && s2 == null;
-		}
-	}*/
 	
 	private static boolean equalIntegers( Integer s1, Integer s2 ) {
 		if( s1 != null && s2 != null ) {

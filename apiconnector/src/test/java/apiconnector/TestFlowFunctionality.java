@@ -24,30 +24,24 @@ import com.thoughtworks.xstream.XStream;
 public class TestFlowFunctionality {
 	private static final int probe = 100;
 
-	private static final String url = "http://test.openml.org/";
+	private static final String url = "https://test.openml.org/";
 	private static final String session_hash = "d488d8afd93b32331cf6ea9d7003d4c3";
 	private static final OpenmlConnector client = new OpenmlConnector(url,session_hash);
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
 	private static final String tag = "junittest";
 	
 	@Test
-	public void testApiFlowDownload() {
-		
-		try {
-			Flow flow = client.flowGet(probe);
-			
-			File tempXml = Conversion.stringToTempFile(xstream.toXML(flow), "flow", "xml");
-			File tempXsd = client.getXSD("openml.implementation.upload");
-			
-			assertTrue(Conversion.validateXML(tempXml, tempXsd));
-			
-			// very easy checks, should all pass
-			assertTrue(flow.getId() == probe);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Test failed: " + e.getMessage());
-		}
+	public void testApiFlowDownload() throws Exception {
+		Flow flow = client.flowGet(probe);
+
+		File tempXml = Conversion.stringToTempFile(xstream.toXML(flow), "flow", "xml");
+		File tempXsd = client.getXSD("openml.implementation.upload");
+
+		assertTrue(Conversion.validateXML(tempXml, tempXsd));
+
+		// very easy checks, should all pass
+		assertTrue(flow.getId() == probe);
+
 	}
 	
 	@Test
@@ -92,50 +86,42 @@ public class TestFlowFunctionality {
 			
 		}
 	}
-	
+
 	@Test
-	public void testApiFlowUploadDuplicate() {
+	public void testApiFlowUploadDuplicate() throws Exception {
+		Flow created = new Flow("test2", "weka.classifiers.test.javaunittest", "test", "test should be deleted",
+				"english", "UnitTest");
+		created.addComponent("B", new Flow("test2", "weka.classifiers.test.janistesting", "test2",
+				"test should be deleted", "english", "UnitTest"));
+		created.setCustom_name("Jans flow");
+		String flowXML = xstream.toXML(created);
+
+		File f = Conversion.stringToTempFile(flowXML, "test", "xml");
+
+		UploadFlow uf = client.flowUpload(f, f, f);
+
 		try {
-			Flow created = new Flow("test2", "weka.classifiers.test.janistesting", "test", "test should be deleted", "english", "UnitTest");
-			created.addComponent("B", new Flow("test2", "weka.classifiers.test.janistesting", "test2", "test should be deleted", "english", "UnitTest") );
-			created.setCustom_name("Jans flow");
-			String flowXML = xstream.toXML(created);
-			
-			System.out.println(flowXML);
-			
-			File f = Conversion.stringToTempFile(flowXML, "test", "xml");
-			
-			UploadFlow uf = client.flowUpload(f, f, f);
-			
-			try {
-				UploadFlow uf2 = client.flowUpload(f, null, null);
-				System.out.println(uf2.getId());
-				
-				fail("Test failed, flow upload should have been blocked.");
-			} catch (Exception e) {
-				// we expect an exception
-				System.out.println(e.getMessage());
-			}
-			client.flowDelete(uf.getId());
-			
+			UploadFlow uf2 = client.flowUpload(f, null, null);
+			System.out.println(uf2.getId());
+
+			fail("Test failed, flow upload should have been blocked.");
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Test failed: " + e.getMessage());
+			// we expect an exception
+			System.out.println(e.getMessage());
 		}
+		client.flowDelete(uf.getId());
+
 	}
-	
+
 	@Test
-	public void testUploadComplicatedFlow() {
-		try {
-			Random random = new Random(System.currentTimeMillis());
-			String complicatedFlow = FileUtils.readFileToString(new File("data/FilteredClassifier_RandomForest.xml")).replace("{SENTINEL}", "SEN" + Math.abs(random.nextInt()));
-			File f = Conversion.stringToTempFile(complicatedFlow, "test", "xml");
-			
-			UploadFlow uf = client.flowUpload(f, null, null);
-			client.flowDelete(uf.getId());
-		} catch(Exception e) {
-			e.printStackTrace();
-			fail("Test failed: " + e.getMessage());
-		}
+	public void testUploadComplicatedFlow() throws Exception {
+		Random random = new Random(System.currentTimeMillis());
+		String complicatedFlow = FileUtils.readFileToString(new File("data/FilteredClassifier_RandomForest.xml"))
+				.replace("{SENTINEL}", "SEN" + Math.abs(random.nextInt()));
+		File f = Conversion.stringToTempFile(complicatedFlow, "test", "xml");
+
+		client.setVerboseLevel(1);
+		UploadFlow uf = client.flowUpload(f, null, null);
+		client.flowDelete(uf.getId());
 	}
 }
