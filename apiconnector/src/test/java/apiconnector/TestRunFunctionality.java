@@ -31,8 +31,9 @@ public class TestRunFunctionality {
 	private static final String predictions_path = "data/predictions_task53.arff";
 
 	private static final String url = "https://test.openml.org/";
-	private static final String session_hash = "d488d8afd93b32331cf6ea9d7003d4c3";
-	private static final OpenmlConnector client = new OpenmlConnector(url,session_hash);
+	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");
+	private static final OpenmlConnector client_read = new OpenmlConnector(url, "c1994bdb7ecb3c6f3c8f3b35f4b47f1f");
+	
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
 	private static final String tag = "junittest";
 	
@@ -40,10 +41,10 @@ public class TestRunFunctionality {
 	public void testApiRunDownload() {
 		
 		try {
-			Run run = client.runGet(probe);
+			Run run = client_read.runGet(probe);
 			
 			File tempXml = Conversion.stringToTempFile(xstream.toXML(run), "run", "xml");
-			File tempXsd = client.getXSD("openml.run.upload");
+			File tempXsd = client_read.getXSD("openml.run.upload");
 			
 			assertTrue(Conversion.validateXML(tempXml, tempXsd));
 			
@@ -61,7 +62,7 @@ public class TestRunFunctionality {
 		List<Integer> uploaderId = new ArrayList<Integer>();
 		uploaderId.add(29);
 		
-		RunList rl = client.runList(null, null, null, uploaderId);
+		RunList rl = client_read.runList(null, null, null, uploaderId);
 		
 		for (org.openml.apiconnector.xml.RunList.Run r : rl.getRuns()) {
 			assertTrue(uploaderId.contains(r.getUploader()));
@@ -83,21 +84,21 @@ public class TestRunFunctionality {
 		
 		output_files.put("predictions", predictions);
 		
-		UploadRun ur = client.runUpload(runFile, output_files);
+		UploadRun ur = client_write.runUpload(runFile, output_files);
 		
-		Run newrun = client.runGet(ur.getRun_id());
+		Run newrun = client_read.runGet(ur.getRun_id());
 		
 		Set<String> uploadedTags = new HashSet<String>(Arrays.asList(newrun.getTag()));
 		Set<String> providedTags = new HashSet<String>(Arrays.asList(tags));
 		
 		assertTrue(uploadedTags.equals(providedTags));
 		
-		RunTag rt = client.runTag(ur.getRun_id(), tag);
+		RunTag rt = client_write.runTag(ur.getRun_id(), tag);
 		assertTrue(Arrays.asList(rt.getTags()).contains(tag));
-		RunUntag ru = client.runUntag(ur.getRun_id(), tag);
+		RunUntag ru = client_write.runUntag(ur.getRun_id(), tag);
 		assertTrue(Arrays.asList(ru.getTags()).contains(tag) == false);
 		
-		client.runDelete(ur.getRun_id());
+		client_write.runDelete(ur.getRun_id());
 	}
 	
 	@Test
@@ -106,9 +107,9 @@ public class TestRunFunctionality {
 		String runXML = xstream.toXML(r);
 		File runFile = Conversion.stringToTempFile(runXML, "runtest",  "xml");
 		File predictions = new File(predictions_path); 
-		UploadRun ur = client.runUpload(runFile, null);
+		UploadRun ur = client_write.runUpload(runFile, null);
 		for (int i = 0; i < 5; i+=1) {
-			UploadRunAttach ura = client.runUploadAttach(ur.getRun_id(), i , runFile, predictions);
+			UploadRunAttach ura = client_write.runUploadAttach(ur.getRun_id(), i , runFile, predictions);
 			
 			assertTrue(ura.getPredictionFiles().length == i+1);
 		}

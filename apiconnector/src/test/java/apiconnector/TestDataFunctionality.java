@@ -71,50 +71,43 @@ public class TestDataFunctionality {
 	private static final String tag = "junittest";
 
 	private static final String url = "http://capa.win.tue.nl/";
-	private static final String session_hash = "d488d8afd93b32331cf6ea9d7003d4c3";
-	private static final OpenmlConnector client = new OpenmlConnector(url, session_hash);
+	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");
+	private static final OpenmlConnector client_read = new OpenmlConnector(url, "c1994bdb7ecb3c6f3c8f3b35f4b47f1f"); // R-TEAM
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
 
 	@Test
-	public void testApiDataDownload() {
-		try {
-			DataSetDescription dsd = client.dataGet(probe);
-			DataFeature features = client.dataFeatures(probe);
-			DataQuality qualities = client.dataQualities(probe);
-			
-			File tempDsd = Conversion.stringToTempFile(xstream.toXML(dsd), "data", "xml");
-			File tempXsd = client.getXSD("openml.data.upload");
-			
-			String url = client.getApiUrl() + "data/" + probe;
-			String raw = HttpConnector.getStringFromUrl(url + "?api_key=" + client.getApiKey(), false);
-			
-			assertTrue(Conversion.validateXML(tempDsd, tempXsd));
-			
-			
-			String dsdFromOpenml = toPrettyString(raw, 0);
-			String dsdFromConnector = toPrettyString(xstream.toXML(dsd), 0);
-			
-			assertTrue(dsdFromOpenml.equals(dsdFromConnector));
-			
-			// very easy checks, should all pass
-			assertTrue( dsd.getId() == probe );
-			assertTrue( features.getFeatures().length > 0 );
-			assertTrue( qualities.getQualities().length > 0 );
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Test failed: " + e.getMessage());
-		}
+	public void testApiDataDownload() throws Exception {
+		DataSetDescription dsd = client_read.dataGet(probe);
+		DataFeature features = client_read.dataFeatures(probe);
+		DataQuality qualities = client_read.dataQualities(probe);
+		
+		File tempDsd = Conversion.stringToTempFile(xstream.toXML(dsd), "data", "xml");
+		File tempXsd = client_read.getXSD("openml.data.upload");
+		
+		String url = client_read.getApiUrl() + "data/" + probe;
+		String raw = HttpConnector.getStringFromUrl(url + "?api_key=" + client_read.getApiKey(), false);
+		
+		assertTrue(Conversion.validateXML(tempDsd, tempXsd));
+		
+		
+		String dsdFromOpenml = toPrettyString(raw, 0);
+		String dsdFromConnector = toPrettyString(xstream.toXML(dsd), 0);
+		
+		assertTrue(dsdFromOpenml.equals(dsdFromConnector));
+		
+		// very easy checks, should all pass
+		assertTrue( dsd.getId() == probe );
+		assertTrue( features.getFeatures().length > 0 );
+		assertTrue( qualities.getQualities().length > 0 );
 	}
 
 	@Test
 	public void testApiUploadDownload() throws Exception {
-		client.setVerboseLevel(1);
-		
 		DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
 		String dsdXML = xstream.toXML(dsd);
 		File description = Conversion.stringToTempFile(dsdXML, "test-data", "arff");
-		UploadDataSet ud = client.dataUpload(description, new File(data_file));
-		DataTag dt = client.dataTag(ud.getId(), tag);
+		UploadDataSet ud = client_write.dataUpload(description, new File(data_file));
+		DataTag dt = client_write.dataTag(ud.getId(), tag);
 		assertTrue(Arrays.asList(dt.getTags()).contains(tag));
 		
 		// create task upon it
@@ -122,50 +115,45 @@ public class TestDataFunctionality {
 		Input data_set = new Input("source_data", "" + ud.getId());
 		Input target_feature = new Input("target_feature", "class");
 		Input[] inputs = {estimation_procedure, data_set, target_feature};
-		UploadTask ut = client.taskUpload(inputsToTaskFile(inputs, 1));
+		UploadTask ut = client_write.taskUpload(inputsToTaskFile(inputs, 1));
 		
-		TaskTag tt = client.taskTag(ut.getId(), tag);
+		TaskTag tt = client_write.taskTag(ut.getId(), tag);
 		assertTrue(Arrays.asList(tt.getTags()).contains(tag));
-		TaskUntag tu = client.taskUntag(ut.getId(), tag);
+		TaskUntag tu = client_write.taskUntag(ut.getId(), tag);
 		assertTrue(tu.getTags() == null);
 		
 		try {
-			client.dataDelete(ud.getId());
+			client_write.dataDelete(ud.getId());
 			// this SHOULD fail, we should not be allowed to delete data that contains tasks.
 			fail("Problem with API. Dataset ("+ud.getId()+") was deleted while it contains a task ("+ut.getId()+"). ");
 		} catch(ApiException ae) {}
 		
 		
 		// delete the task
-		TaskDelete td = client.taskDelete(ut.getId());
+		TaskDelete td = client_write.taskDelete(ut.getId());
 		assertTrue(td.get_id().equals(ut.getId()));
 		
 		// and delete the data
-		DataUntag du = client.dataUntag(ud.getId(), tag);
+		DataUntag du = client_write.dataUntag(ud.getId(), tag);
 		assertTrue(du.getTags() == null);
 		
-		DataDelete dd = client.dataDelete(ud.getId());
+		DataDelete dd = client_write.dataDelete(ud.getId());
 		assertTrue(ud.getId() == dd.get_id());
 	}
 
 	@Test
-	public void testApiDataList() {
-		try {
-			Data datasets = client.dataList("study_1");
-			assertTrue(datasets.getData().length > 20);
-			for (DataSet dataset : datasets.getData()) {
-				assertTrue(dataset.getQualities().length > 5);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Test failed: " + e.getMessage());
+	public void testApiDataList() throws Exception {
+		Data datasets = client_read.dataList("study_1");
+		assertTrue(datasets.getData().length > 20);
+		for (DataSet dataset : datasets.getData()) {
+			assertTrue(dataset.getQualities().length > 5);
 		}
 	}
 
 	@Test
 	public void testApiAdditional() {
 		try {
-			client.dataQualitiesList();
+			client_read.dataQualitiesList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -174,39 +162,35 @@ public class TestDataFunctionality {
 	}
 	
 	// function that formats xml consistently, making it easy to compare them. 
-	public static String toPrettyString(String xml, int indent) {
-	    try {
-	        // Turn xml string into a document
-	        Document document = DocumentBuilderFactory.newInstance()
-	                .newDocumentBuilder()
-	                .parse(new InputSource(new ByteArrayInputStream(xml.getBytes("utf-8"))));
+	public static String toPrettyString(String xml, int indent) throws Exception {
+        // Turn xml string into a document
+        Document document = DocumentBuilderFactory.newInstance()
+                .newDocumentBuilder()
+                .parse(new InputSource(new ByteArrayInputStream(xml.getBytes("utf-8"))));
 
-	        // Remove whitespaces outside tags
-	        XPath xPath = XPathFactory.newInstance().newXPath();
-	        NodeList nodeList = (NodeList) xPath.evaluate("//text()[normalize-space()='']",
-	                                                      document,
-	                                                      XPathConstants.NODESET);
+        // Remove whitespaces outside tags
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        NodeList nodeList = (NodeList) xPath.evaluate("//text()[normalize-space()='']",
+                                                      document,
+                                                      XPathConstants.NODESET);
 
-	        for (int i = 0; i < nodeList.getLength(); ++i) {
-	            Node node = nodeList.item(i);
-	            node.getParentNode().removeChild(node);
-	        }
+        for (int i = 0; i < nodeList.getLength(); ++i) {
+            Node node = nodeList.item(i);
+            node.getParentNode().removeChild(node);
+        }
 
-	        // Setup pretty print options
-	        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-	        transformerFactory.setAttribute("indent-number", indent);
-	        Transformer transformer = transformerFactory.newTransformer();
-	        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-	        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-	        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        // Setup pretty print options
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        transformerFactory.setAttribute("indent-number", indent);
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
-	        // Return pretty print xml string
-	        StringWriter stringWriter = new StringWriter();
-	        transformer.transform(new DOMSource(document), new StreamResult(stringWriter));
+        // Return pretty print xml string
+        StringWriter stringWriter = new StringWriter();
+        transformer.transform(new DOMSource(document), new StreamResult(stringWriter));
 	        return stringWriter.toString();
-	    } catch (Exception e) {
-	        throw new RuntimeException(e);
-	    }
 	}
 	
 	public static File inputsToTaskFile(Input[] inputs, int ttid) throws IOException {

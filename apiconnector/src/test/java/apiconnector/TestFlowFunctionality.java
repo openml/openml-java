@@ -25,17 +25,17 @@ public class TestFlowFunctionality {
 	private static final int probe = 100;
 
 	private static final String url = "https://test.openml.org/";
-	private static final String session_hash = "d488d8afd93b32331cf6ea9d7003d4c3";
-	private static final OpenmlConnector client = new OpenmlConnector(url,session_hash);
+	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");
+	private static final OpenmlConnector client_read = new OpenmlConnector(url, "c1994bdb7ecb3c6f3c8f3b35f4b47f1f");
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
 	private static final String tag = "junittest";
 	
 	@Test
 	public void testApiFlowDownload() throws Exception {
-		Flow flow = client.flowGet(probe);
+		Flow flow = client_read.flowGet(probe);
 
 		File tempXml = Conversion.stringToTempFile(xstream.toXML(flow), "flow", "xml");
-		File tempXsd = client.getXSD("openml.implementation.upload");
+		File tempXsd = client_read.getXSD("openml.implementation.upload");
 
 		assertTrue(Conversion.validateXML(tempXml, tempXsd));
 
@@ -46,7 +46,6 @@ public class TestFlowFunctionality {
 	
 	@Test
 	public void testApiFlowUpload() throws Exception {
-		client.setVerboseLevel(1);
 		try {
 			Flow created = new Flow("test2", "weka.classifiers.test.janistesting", "test", "test should be deleted", "english", "UnitTest");
 			created.addComponent("B", new Flow("test2", "weka.classifiers.test.janistesting.subflow", "test2", "test should be deleted", "english", "UnitTest") );
@@ -56,14 +55,14 @@ public class TestFlowFunctionality {
 			
 			File f = Conversion.stringToTempFile(flowXML, "test", "xml");
 			
-			UploadFlow uf = client.flowUpload(f, f, f);
+			UploadFlow uf = client_write.flowUpload(f, f, f);
 			
-			FlowTag ft = client.flowTag(uf.getId(), tag);
+			FlowTag ft = client_write.flowTag(uf.getId(), tag);
 			assertTrue(Arrays.asList(ft.getTags()).contains(tag));
-			FlowUntag fu = client.flowUntag(uf.getId(), tag);
+			FlowUntag fu = client_write.flowUntag(uf.getId(), tag);
 			assertTrue(fu.getTags() == null);
 			
-			FlowDelete fd = client.flowDelete(uf.getId());
+			FlowDelete fd = client_write.flowDelete(uf.getId());
 			System.out.println(fd.getId());
 			
 		} catch (Exception e) {
@@ -75,7 +74,7 @@ public class TestFlowFunctionality {
 					int index = apiException.getMessage().indexOf("implementation_id") + "implementation_id".length()+1;
 					Integer implementation_id = Integer.parseInt(apiException.getMessage().substring(index));
 					// delete it
-					client.flowDelete(implementation_id);
+					client_write.flowDelete(implementation_id);
 					// and try again
 					testApiFlowUpload();
 					
@@ -98,10 +97,10 @@ public class TestFlowFunctionality {
 
 		File f = Conversion.stringToTempFile(flowXML, "test", "xml");
 
-		UploadFlow uf = client.flowUpload(f, f, f);
+		UploadFlow uf = client_write.flowUpload(f, f, f);
 
 		try {
-			UploadFlow uf2 = client.flowUpload(f, null, null);
+			UploadFlow uf2 = client_write.flowUpload(f, null, null);
 			System.out.println(uf2.getId());
 
 			fail("Test failed, flow upload should have been blocked.");
@@ -109,7 +108,7 @@ public class TestFlowFunctionality {
 			// we expect an exception
 			System.out.println(e.getMessage());
 		}
-		client.flowDelete(uf.getId());
+		client_write.flowDelete(uf.getId());
 
 	}
 
@@ -119,9 +118,8 @@ public class TestFlowFunctionality {
 		String complicatedFlow = FileUtils.readFileToString(new File("data/FilteredClassifier_RandomForest.xml"))
 				.replace("{SENTINEL}", "SEN" + Math.abs(random.nextInt()));
 		File f = Conversion.stringToTempFile(complicatedFlow, "test", "xml");
-
-		client.setVerboseLevel(1);
-		UploadFlow uf = client.flowUpload(f, null, null);
-		client.flowDelete(uf.getId());
+		
+		UploadFlow uf = client_write.flowUpload(f, null, null);
+		client_write.flowDelete(uf.getId());
 	}
 }

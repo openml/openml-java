@@ -18,21 +18,22 @@ public class TestTaskFunctions {
 
 
 	private static final String url = "https://test.openml.org/";
-	private static final String session_hash = "d488d8afd93b32331cf6ea9d7003d4c3";
-	private static final OpenmlConnector client = new OpenmlConnector(url,session_hash);
+	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");
+	private static final OpenmlConnector client_read = new OpenmlConnector(url, "c1994bdb7ecb3c6f3c8f3b35f4b47f1f");
+	
 	private static final Integer taskId = 1;
 	
 	
 	@Test
 	public void testApiAdditional() throws Exception {
-		Task t = client.taskGet(taskId);
+		Task t = client_read.taskGet(taskId);
 		
 		String splitsUrl = TaskInformation.getEstimationProcedure(t).getData_splits_url();
 		
 		
 		Integer dataId = TaskInformation.getSourceData(t).getData_set_id();
 		String[] splits = HttpConnector.getStringFromUrl(splitsUrl, false).split("\n");
-		DataQuality dq = client.dataQualities(dataId);
+		DataQuality dq = client_read.dataQualities(dataId);
 		int numInstances = (int) Double.parseDouble(dq.getQualitiesMap().get("NumberOfInstances"));
 		
 		assertTrue(splits.length > numInstances); // basic check
@@ -47,7 +48,7 @@ public class TestTaskFunctions {
 		Input[] inputs = {estimation_procedure, data_set, target_feature };
 		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 4);
 		
-		client.taskUpload( taskFile );
+		client_write.taskUpload(taskFile);
 	}
 
 	@Test(expected=ApiException.class)
@@ -59,7 +60,7 @@ public class TestTaskFunctions {
 		Input[] inputs = {estimation_procedure, data_set, target_feature, data_set2};
 		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 4);
 		
-		client.taskUpload( taskFile );
+		client_write.taskUpload( taskFile );
 	}
 
 	@Test(expected=ApiException.class)
@@ -69,13 +70,13 @@ public class TestTaskFunctions {
 		Input[] inputs = {estimation_procedure, target_feature};
 		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 4);
 		
-		client.taskUpload( taskFile );
+		client_write.taskUpload( taskFile );
 	}
 	
 	
 	@Test
 	public void testApiTaskList() throws Exception {
-		Tasks tasks = client.taskList("study_1");
+		Tasks tasks = client_read.taskList("study_1");
 		assertTrue(tasks.getTask().length > 20);
 		for (org.openml.apiconnector.xml.Tasks.Task t : tasks.getTask()) {
 			assertTrue(t.getQualities().length > 5);
