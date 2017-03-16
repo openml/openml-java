@@ -44,12 +44,22 @@ public class RunEvaluation {
 		evaluation = ArrayUtils.addAll( this.evaluation, em );
 	}
 	
-	public void setError( String error ) {
-		this.error = error;
+	public void setError(String error, int max_length) {
+		String truncateMessage = "... (message cut-off due to excessive length)";
+		if (error.length() <= max_length) {
+			this.error = error;
+		} else {
+			this.error = error.substring(0, max_length - truncateMessage.length()) + truncateMessage;
+		}
 	}
 	
-	public void setWarning( String warning ) {
-		this.warning = warning;
+	public void setWarning(String warning, int max_length) {
+		String truncateMessage = "... (message cut-off due to excessive length)";
+		if (warning.length() <= max_length) {
+			this.warning = warning;
+		} else {
+			this.warning = warning.substring(0, max_length - truncateMessage.length()) + truncateMessage;
+		}
 	}
 	
 	public String getOml() {
