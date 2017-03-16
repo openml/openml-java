@@ -108,7 +108,8 @@ public class TestDataFunctionality {
 
 	@Test
 	public void testApiUploadDownload() {
-		try {
+		client.setVerboseLevel(1);
+		
 			DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
 			String dsdXML = xstream.toXML(dsd);
 			File description = Conversion.stringToTempFile(dsdXML, "test-data", "arff");
