@@ -13,6 +13,7 @@ import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQuality.Quality;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.RunEvaluation;
+import org.openml.apiconnector.xml.RunTrace;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 import com.thoughtworks.xstream.XStream;
@@ -58,6 +59,19 @@ public class TestUserTypePrivileges {
 		File description = Conversion.stringToTempFile(xml, "run-evaluation", "xml");
 		try {
 			client_write.runEvaluate(description);
+		} catch(ApiException e) {
+			assertTrue(e.getCode() == 106);
+			throw e;
+		}
+	}
+	
+	@Test(expected=ApiException.class)
+	public void testApiRunTraceUpload() throws Exception {
+		RunTrace rt = new RunTrace(1);
+		String xml = xstream.toXML(rt);
+		File description = Conversion.stringToTempFile(xml, "run-trace", "xml");
+		try {
+			client_write.runTraceUpload(description);
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 106);
 			throw e;
