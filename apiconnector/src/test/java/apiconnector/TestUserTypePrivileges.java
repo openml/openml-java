@@ -12,8 +12,11 @@ import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQuality.Quality;
 import org.openml.apiconnector.xml.DataSetDescription;
+import org.openml.apiconnector.xml.Flow;
+import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.RunEvaluation;
 import org.openml.apiconnector.xml.RunTrace;
+import org.openml.apiconnector.xml.Task_new;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 import com.thoughtworks.xstream.XStream;
@@ -115,6 +118,76 @@ public class TestUserTypePrivileges {
 	public void testApiDataDelete() throws Exception {
 		try {
 			client_read.dataDelete(1);
+		} catch(ApiException e) {
+			assertTrue(e.getCode() == 104);
+			throw e;
+		}
+	}
+
+	@Test(expected=ApiException.class)
+	public void testApiFlowUpload() throws Exception {
+		Flow f = new Flow("test2", "weka.classifiers.test.javaunittest", "test", "test should be deleted",
+				"english", "UnitTest");
+		String xml = xstream.toXML(f);
+		File description = Conversion.stringToTempFile(xml, "flow", "xml");
+		try {
+			client_read.flowUpload(description, null, null);
+		} catch(ApiException e) {
+			assertTrue(e.getCode() == 104);
+			throw e;
+		}
+	}
+
+	@Test(expected=ApiException.class)
+	public void testApiTaskUpload() throws Exception {
+		Task_new task = new Task_new(1, 1, null, null);
+		String xml = xstream.toXML(task);
+		File description = Conversion.stringToTempFile(xml, "flow", "xml");
+		try {
+			client_read.taskUpload(description);
+		} catch(ApiException e) {
+			assertTrue(e.getCode() == 104);
+			throw e;
+		}
+	}
+
+	@Test(expected=ApiException.class)
+	public void testApiRunUpload() throws Exception {
+		Run run = new Run(1, null, 1, null, null, null);
+		String xml = xstream.toXML(run);
+		File description = Conversion.stringToTempFile(xml, "flow", "xml");
+		try {
+			client_read.runUpload(description, null);
+		} catch(ApiException e) {
+			assertTrue(e.getCode() == 104);
+			throw e;
+		}
+	}
+
+	@Test(expected=ApiException.class)
+	public void testApiFlowDelete() throws Exception {
+		try {
+			client_read.flowDelete(1);
+		} catch(ApiException e) {
+			assertTrue(e.getCode() == 104);
+			throw e;
+		}
+	}
+
+	@Test(expected=ApiException.class)
+	public void testApiTaskDelete() throws Exception {
+		try {
+			client_read.taskDelete(1);
+		} catch(ApiException e) {
+			assertTrue(e.getCode() == 104);
+			throw e;
+		}
+	}
+
+	@Test(expected=ApiException.class)
+	public void testApiRunDelete() throws Exception {
+		try {
+			client_read.runDelete(1);
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 104);
 			throw e;
