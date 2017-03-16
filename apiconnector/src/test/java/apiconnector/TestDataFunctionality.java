@@ -107,50 +107,45 @@ public class TestDataFunctionality {
 	}
 
 	@Test
-	public void testApiUploadDownload() {
+	public void testApiUploadDownload() throws Exception {
 		client.setVerboseLevel(1);
 		
-			DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
-			String dsdXML = xstream.toXML(dsd);
-			File description = Conversion.stringToTempFile(dsdXML, "test-data", "arff");
-			UploadDataSet ud = client.dataUpload(description, new File(data_file));
-			DataTag dt = client.dataTag(ud.getId(), tag);
-			assertTrue(Arrays.asList(dt.getTags()).contains(tag));
-			
-			
-			// create task upon it
-			Input estimation_procedure = new Input("estimation_procedure", "1");
-			Input data_set = new Input("source_data", "" + ud.getId());
-			Input target_feature = new Input("target_feature", "class");
-			Input[] inputs = {estimation_procedure, data_set, target_feature};
-			UploadTask ut = client.taskUpload(inputsToTaskFile(inputs, 1));
-			
-			TaskTag tt = client.taskTag(ut.getId(), tag);
-			assertTrue(Arrays.asList(tt.getTags()).contains(tag));
-			TaskUntag tu = client.taskUntag(ut.getId(), tag);
-			assertTrue(tu.getTags() == null);
-			
-			try {
-				client.dataDelete(ud.getId());
-				// this SHOULD fail, we should not be allowed to delete data that contains tasks.
-				fail("Problem with API. Dataset ("+ud.getId()+") was deleted while it contains a task ("+ut.getId()+"). ");
-			} catch(ApiException ae) {}
-			
-			
-			// delete the task
-			TaskDelete td = client.taskDelete(ut.getId());
-			assertTrue(td.get_id().equals(ut.getId()));
-			
-			// and delete the data
-			DataUntag du = client.dataUntag(ud.getId(), tag);
-			assertTrue(du.getTags() == null);
-			
-			DataDelete dd = client.dataDelete(ud.getId());
-			assertTrue(ud.getId() == dd.get_id());
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Test failed: " + e.getMessage());
-		}
+		DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
+		String dsdXML = xstream.toXML(dsd);
+		File description = Conversion.stringToTempFile(dsdXML, "test-data", "arff");
+		UploadDataSet ud = client.dataUpload(description, new File(data_file));
+		DataTag dt = client.dataTag(ud.getId(), tag);
+		assertTrue(Arrays.asList(dt.getTags()).contains(tag));
+		
+		// create task upon it
+		Input estimation_procedure = new Input("estimation_procedure", "1");
+		Input data_set = new Input("source_data", "" + ud.getId());
+		Input target_feature = new Input("target_feature", "class");
+		Input[] inputs = {estimation_procedure, data_set, target_feature};
+		UploadTask ut = client.taskUpload(inputsToTaskFile(inputs, 1));
+		
+		TaskTag tt = client.taskTag(ut.getId(), tag);
+		assertTrue(Arrays.asList(tt.getTags()).contains(tag));
+		TaskUntag tu = client.taskUntag(ut.getId(), tag);
+		assertTrue(tu.getTags() == null);
+		
+		try {
+			client.dataDelete(ud.getId());
+			// this SHOULD fail, we should not be allowed to delete data that contains tasks.
+			fail("Problem with API. Dataset ("+ud.getId()+") was deleted while it contains a task ("+ut.getId()+"). ");
+		} catch(ApiException ae) {}
+		
+		
+		// delete the task
+		TaskDelete td = client.taskDelete(ut.getId());
+		assertTrue(td.get_id().equals(ut.getId()));
+		
+		// and delete the data
+		DataUntag du = client.dataUntag(ud.getId(), tag);
+		assertTrue(du.getTags() == null);
+		
+		DataDelete dd = client.dataDelete(ud.getId());
+		assertTrue(ud.getId() == dd.get_id());
 	}
 
 	@Test
