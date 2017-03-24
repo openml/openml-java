@@ -29,10 +29,12 @@ public class TestRunFunctionality {
 	private static final int probe = 67;
 	private static final int probeChallenge = 13976;
 	private static final String predictions_path = "data/predictions_task53.arff";
+	private static final int FLOW_ID = 10;
 
-	private static final String url = "https://test.openml.org/";
-	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");
-	private static final OpenmlConnector client_read = new OpenmlConnector(url, "c1994bdb7ecb3c6f3c8f3b35f4b47f1f");
+	private static final String url_test = "https://test.openml.org/";
+	private static final String url_live = "https://www.openml.org/";
+	private static final OpenmlConnector client_write_test = new OpenmlConnector(url_test, "8baa83ecddfe44b561fd3d92442e3319");
+	private static final OpenmlConnector client_read_live = new OpenmlConnector(url_live, "c1994bdb7ecb3c6f3c8f3b35f4b47f1f");
 	
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
 	private static final String tag = "junittest";
@@ -41,10 +43,12 @@ public class TestRunFunctionality {
 	public void testApiRunDownload() {
 		
 		try {
-			Run run = client_read.runGet(probe);
+			Run run = client_read_live.runGet(probe);
 			
 			File tempXml = Conversion.stringToTempFile(xstream.toXML(run), "run", "xml");
-			File tempXsd = client_read.getXSD("openml.run.upload");
+			File tempXsd = client_read_live.getXSD("openml.run.upload");
+			
+			System.out.println(xstream.toXML(run));
 			
 			assertTrue(Conversion.validateXML(tempXml, tempXsd));
 			
@@ -62,7 +66,7 @@ public class TestRunFunctionality {
 		List<Integer> uploaderId = new ArrayList<Integer>();
 		uploaderId.add(29);
 		
-		RunList rl = client_read.runList(null, null, null, uploaderId);
+		RunList rl = client_read_live.runList(null, null, null, uploaderId);
 		
 		for (org.openml.apiconnector.xml.RunList.Run r : rl.getRuns()) {
 			assertTrue(uploaderId.contains(r.getUploader()));
@@ -74,7 +78,7 @@ public class TestRunFunctionality {
 	public void testApiRunUpload() throws Exception {
 		String[] tags = {"first_tag", "another_tag"};
 		
-		Run r = new Run(probe, null, 100, null, null, tags);
+		Run r = new Run(probe, null, FLOW_ID, null, null, tags);
 		String runXML = xstream.toXML(r);
 		
 		File runFile = Conversion.stringToTempFile(runXML, "runtest",  "xml");
@@ -84,32 +88,32 @@ public class TestRunFunctionality {
 		
 		output_files.put("predictions", predictions);
 		
-		UploadRun ur = client_write.runUpload(runFile, output_files);
+		UploadRun ur = client_write_test.runUpload(runFile, output_files);
 		
-		Run newrun = client_read.runGet(ur.getRun_id());
+		Run newrun = client_write_test.runGet(ur.getRun_id());
 		
 		Set<String> uploadedTags = new HashSet<String>(Arrays.asList(newrun.getTag()));
 		Set<String> providedTags = new HashSet<String>(Arrays.asList(tags));
 		
 		assertTrue(uploadedTags.equals(providedTags));
 		
-		RunTag rt = client_write.runTag(ur.getRun_id(), tag);
+		RunTag rt = client_write_test.runTag(ur.getRun_id(), tag);
 		assertTrue(Arrays.asList(rt.getTags()).contains(tag));
-		RunUntag ru = client_write.runUntag(ur.getRun_id(), tag);
+		RunUntag ru = client_write_test.runUntag(ur.getRun_id(), tag);
 		assertTrue(Arrays.asList(ru.getTags()).contains(tag) == false);
 		
-		client_write.runDelete(ur.getRun_id());
+		client_write_test.runDelete(ur.getRun_id());
 	}
 	
-	@Test
+	// skip for now, add to test server later
 	public void testApiUploadRunAttach() throws Exception {
-		Run r = new Run(probeChallenge, null, 100, null, null, null);
+		Run r = new Run(probeChallenge, null, FLOW_ID, null, null, null);
 		String runXML = xstream.toXML(r);
 		File runFile = Conversion.stringToTempFile(runXML, "runtest",  "xml");
 		File predictions = new File(predictions_path); 
-		UploadRun ur = client_write.runUpload(runFile, null);
+		UploadRun ur = client_write_test.runUpload(runFile, null);
 		for (int i = 0; i < 5; i+=1) {
-			UploadRunAttach ura = client_write.runUploadAttach(ur.getRun_id(), i , runFile, predictions);
+			UploadRunAttach ura = client_write_test.runUploadAttach(ur.getRun_id(), i , runFile, predictions);
 			
 			assertTrue(ura.getPredictionFiles().length == i+1);
 		}

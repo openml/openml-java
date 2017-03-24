@@ -22,7 +22,7 @@ import org.openml.apiconnector.xstream.XstreamXmlMapping;
 import com.thoughtworks.xstream.XStream;
 
 public class TestFlowFunctionality {
-	private static final int probe = 100;
+	private static final int probe = 10;
 
 	private static final String url = "https://test.openml.org/";
 	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");

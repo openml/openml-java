@@ -76,7 +76,7 @@ public class TestTaskFunctions {
 	
 	@Test
 	public void testApiTaskList() throws Exception {
-		Tasks tasks = client_read.taskList("study_1");
+		Tasks tasks = client_read.taskList("study_14");
 		assertTrue(tasks.getTask().length > 20);
 		for (org.openml.apiconnector.xml.Tasks.Task t : tasks.getTask()) {
 			assertTrue(t.getQualities().length > 5);

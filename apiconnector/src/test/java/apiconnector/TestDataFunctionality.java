@@ -143,7 +143,7 @@ public class TestDataFunctionality {
 
 	@Test
 	public void testApiDataList() throws Exception {
-		Data datasets = client_read.dataList("study_1");
+		Data datasets = client_read.dataList("study_14");
 		assertTrue(datasets.getData().length > 20);
 		for (DataSet dataset : datasets.getData()) {
 			assertTrue(dataset.getQualities().length > 5);
