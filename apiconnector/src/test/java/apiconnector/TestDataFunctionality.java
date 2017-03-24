@@ -70,7 +70,7 @@ public class TestDataFunctionality {
 	private static final int probe = 61;
 	private static final String tag = "junittest";
 
-	private static final String url = "http://capa.win.tue.nl/";
+	private static final String url = "https://test.openml.org/";
 	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");
 	private static final OpenmlConnector client_read = new OpenmlConnector(url, "c1994bdb7ecb3c6f3c8f3b35f4b47f1f"); // R-TEAM
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
