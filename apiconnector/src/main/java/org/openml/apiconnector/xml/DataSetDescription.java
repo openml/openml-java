@@ -256,7 +256,7 @@ public class DataSetDescription implements Serializable {
 		this.url = null;
 	}
 	
-	public int getFile_id() {
+	public Integer getFile_id() {
 		return file_id;
 	}
 

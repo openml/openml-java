@@ -1149,10 +1149,10 @@ public class OpenmlConnector implements Serializable {
 		return new JSONObject(res);
 	}
 
-	public URL getOpenmlFileUrl(int id, String filename) throws Exception {
+	public URL getOpenmlFileUrl(Integer file_id, String filename) throws Exception {
 		if (filename == null) {
 			filename = "file"; }
 		String suffix = api_key == null ? "" : "?api_key=" + getApiKey();
-		return new URL(OPENML_URL + "data/download/" + id + "/" + URLEncoder.encode(filename, "UTF-8") +  suffix );
+		return new URL(OPENML_URL + "data/download/" + file_id + "/" + URLEncoder.encode(filename, "UTF-8") +  suffix );
 	}
 }
