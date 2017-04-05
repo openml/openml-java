@@ -42,7 +42,7 @@ public class ArffHelper {
 		if(Caching.in_cache(type, identifier, extension)) {
 			File file = Caching.cached(type, identifier, extension);
 			String clientMd5 = Hashing.md5(file);
-			if(serverMd5 == null || clientMd5.equals( serverMd5.trim())) {
+			if(serverMd5 == null || serverMd5.equals("NotApplicable") || clientMd5.equals( serverMd5.trim())) {
 				return file;
 			} else {
 				Conversion.log("WARNING", "ARFF Cache", type + " " + identifier + " hash and cache not identical: \n- Client: " + clientMd5 + "\n- Server: " + serverMd5);
