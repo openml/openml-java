@@ -60,7 +60,7 @@ public class ArffHelper {
 			dataset = Conversion.stringToTempFile(HttpConnector.getStringFromUrl(url, false), type + "_" + identifier + "", extension );
 		}
 		String hash = Hashing.md5(dataset);
-        if(serverMd5 == null || hash.equals( serverMd5.trim())) {
+        if(serverMd5 == null || serverMd5.equals("NotApplicable") || hash.equals( serverMd5.trim())) {
             return dataset;
         }
         else {
