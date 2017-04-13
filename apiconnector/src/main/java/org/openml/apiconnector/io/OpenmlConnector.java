@@ -420,6 +420,26 @@ public class OpenmlConnector implements Serializable {
 	}
 	
 	/**
+	 * Returns a list of all of the tasks with a certain tag and type
+	 * @param type - the task type
+	 * @param tag - the task tag
+	 * @return
+	 * @throws DataFormatException
+	 */
+	public Tasks taskList(int type, String tag) throws Exception 
+	{
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "task/list/tag/" + tag + "/type/" + type + "/", getApiKey(), verboseLevel);
+		if (apiResult instanceof Tasks) 
+		{
+			return (Tasks) apiResult;
+		} 
+		else 
+		{
+			throw new DataFormatException("Casting Api Object to Tasks");
+		}
+	}
+	
+	/**
 	 * Deletes a task
 	 * 
 	 * @param task_id - the task to be deleted
