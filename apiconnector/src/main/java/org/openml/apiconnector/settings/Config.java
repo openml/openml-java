@@ -43,11 +43,7 @@ public class Config implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private boolean loaded = false;
 	private HashMap<String, String> config;
-
-	/**
-	 * @throws IOException
-	 *             - Could not load config file
-	 */
+	
 	public Config() {
 		try {
 			String configfile = Constants.OPENML_DIRECTORY + "/openml.conf";
