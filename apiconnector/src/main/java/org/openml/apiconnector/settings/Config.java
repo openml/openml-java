@@ -36,7 +36,7 @@ import org.openml.apiconnector.algorithms.Conversion;
  * information. Highly recommended to use config file and this class when
  * executing experiments on a server.
  * 
- * @author J. N. van Rijn <j.n.van.rijn@liacs.leidenuniv.nl>
+ * @author J. N. van Rijn &gt;j.n.van.rijn@liacs.leidenuniv.nl&lt;
  */
 public class Config implements Serializable {
 
