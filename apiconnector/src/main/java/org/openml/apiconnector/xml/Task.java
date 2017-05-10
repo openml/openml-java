@@ -22,6 +22,8 @@ package org.openml.apiconnector.xml;
 import java.io.File;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.openml.apiconnector.algorithms.ArffHelper;
 import org.openml.apiconnector.algorithms.OptionParser;
@@ -107,6 +109,14 @@ public class Task implements Serializable {
 
 	public Input[] getInputs() {
 		return inputs;
+	}
+	
+	public Map<String, Input> getInputsAsMap() {
+		Map<String, Input> result = new TreeMap<String, Task.Input>();
+		for (Input i : inputs) {
+			result.put(i.getName(), i);
+		}
+		return result;
 	}
 
 	public Output[] getOutputs() {
