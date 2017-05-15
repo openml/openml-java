@@ -44,16 +44,30 @@ public class Conversion {
 	 * @param string - The string to store in the file. 
 	 * @param filename - The name of the file.
 	 * @param format - The extension of the file. 
+	 * @param directory - the tmp directory
 	 * @return A pointer to the temp file that was created. 
 	 * @throws IOException
 	 */
-	public static File stringToTempFile( String string, String filename, String format ) throws IOException {
-		File file = File.createTempFile(filename, '.' + format );
+	public static File stringToTempFile( String string, String filename, String format, File directory) throws IOException {
+		File file = File.createTempFile(filename, '.' + format, directory);
 		BufferedWriter br = new BufferedWriter(new FileWriter(file));
 		br.write(string);
 		br.close();
 		file.deleteOnExit();
 		return file;
+	}
+
+	/**
+	 * Stores a string into a temporarily existing file. 
+	 * 
+	 * @param string - The string to store in the file. 
+	 * @param filename - The name of the file.
+	 * @param format - The extension of the file. 
+	 * @return A pointer to the temp file that was created. 
+	 * @throws IOException
+	 */
+	public static File stringToTempFile( String string, String filename, String format) throws IOException {
+		return stringToTempFile(string, filename, format, null);
 	}
 	
 	/**
