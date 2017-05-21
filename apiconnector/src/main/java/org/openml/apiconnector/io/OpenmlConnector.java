@@ -795,6 +795,20 @@ public class OpenmlConnector implements Serializable {
 			throw new DataFormatException("Casting Api Object to EvaluationList");
 		}
 	}
+	
+	public EvaluationRequest evaluationRequest(int evaluationEngineId, String mode, Integer ttid) throws Exception {
+		String suffix = "evaluation/request/" + evaluationEngineId + "/" + mode;
+		if (ttid != null) {
+			suffix += "/" + ttid;
+		}
+		setVerboseLevel(1);
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + suffix, getApiKey(), verboseLevel);
+		if (apiResult instanceof EvaluationRequest) {
+			return (EvaluationRequest) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to EvaluationRequest");
+		}
+	}
 
 	/**
 	 * Tags a run
@@ -904,7 +918,7 @@ public class OpenmlConnector implements Serializable {
 		if (apiResult instanceof Run) {
 			return (Run) apiResult;
 		} else {
-			throw new DataFormatException("Casting Api Object to Task");
+			throw new DataFormatException("Casting Api Object to Run");
 		}
 	}
 

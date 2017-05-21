@@ -1,7 +1,6 @@
 package apiconnector;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,6 +14,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.OpenmlConnector;
+import org.openml.apiconnector.xml.EvaluationRequest;
 import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.RunList;
 import org.openml.apiconnector.xml.RunTag;
@@ -40,25 +40,20 @@ public class TestRunFunctionality {
 	private static final String tag = "junittest";
 	
 	@Test
-	public void testApiRunDownload() {
+	public void testApiRunDownload() throws Exception {
 		
-		try {
-			Run run = client_read_live.runGet(probe);
-			
-			File tempXml = Conversion.stringToTempFile(xstream.toXML(run), "run", "xml");
-			File tempXsd = client_read_live.getXSD("openml.run.upload");
-			
-			System.out.println(xstream.toXML(run));
-			
-			assertTrue(Conversion.validateXML(tempXml, tempXsd));
-			
-			// very easy checks, should all pass
-			assertTrue(run.getRun_id() == probe);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Test failed: " + e.getMessage());
-		}
+		Run run = client_read_live.runGet(probe);
+		
+		File tempXml = Conversion.stringToTempFile(xstream.toXML(run), "run", "xml");
+		File tempXsd = client_read_live.getXSD("openml.run.upload");
+		
+		System.out.println(xstream.toXML(run));
+		
+		assertTrue(Conversion.validateXML(tempXml, tempXsd));
+		
+		// very easy checks, should all pass
+		assertTrue(run.getRun_id() == probe);
+		
 	}
 	
 	@Test
@@ -117,5 +112,11 @@ public class TestRunFunctionality {
 			
 			assertTrue(ura.getPredictionFiles().length == i+1);
 		}
+	}
+	
+	@Test
+	public void testApiEvaluationRequest() throws Exception {
+		EvaluationRequest er = client_write_test.evaluationRequest(2, "random", 1);
+		assertTrue(er.getRuns().length == 1);
 	}
 }

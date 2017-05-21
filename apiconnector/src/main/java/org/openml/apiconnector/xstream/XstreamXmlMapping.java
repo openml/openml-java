@@ -29,6 +29,7 @@ import org.openml.apiconnector.xml.DataQualityUpload;
 import org.openml.apiconnector.xml.DataTag;
 import org.openml.apiconnector.xml.DataUntag;
 import org.openml.apiconnector.xml.EvaluationList;
+import org.openml.apiconnector.xml.EvaluationRequest;
 import org.openml.apiconnector.xml.EvaluationScore;
 import org.openml.apiconnector.xml.FileUpload;
 import org.openml.apiconnector.xml.FlowTag;
@@ -109,6 +110,8 @@ public class XstreamXmlMapping {
 		
 		xstream.processAnnotations(Task.class);
 		xstream.processAnnotations(Run.class);
+		xstream.processAnnotations(RunList.class);
+		xstream.processAnnotations(EvaluationRequest.class);
 		xstream.processAnnotations(RunEvaluation.class);
 		xstream.processAnnotations(EvaluationScore.class);
 		xstream.aliasField("oml:name", EvaluationScore.class, "function"); // TODO: legacy, remove later
@@ -281,19 +284,6 @@ public class XstreamXmlMapping {
 		// task delete
 		xstream.alias("oml:task_delete", TaskDelete.class);
 		xstream.aliasField("oml:id", TaskDelete.class, "id");
-		
-		// run list
-		xstream.alias("oml:runs", RunList.class);
-		xstream.aliasAttribute(RunList.class, "oml", "xmlns:oml");
-		xstream.addImplicitCollection(RunList.class, "runs", "oml:run", RunList.Run.class);
-	//	xstream.aliasField("oml:run", RunList.class, "run");
-		
-		xstream.aliasField("oml:run_id", RunList.Run.class, "run_id");
-		xstream.aliasField("oml:task_id", RunList.Run.class, "task_id");
-		xstream.aliasField("oml:setup_id", RunList.Run.class, "setup_id");
-		xstream.aliasField("oml:flow_id", RunList.Run.class, "flow_id");
-		xstream.aliasField("oml:uploader", RunList.Run.class, "uploader");
-		xstream.aliasField("oml:error_message", RunList.Run.class, "error_message");
 
 		// evaluation list
 		xstream.alias("oml:evaluations", EvaluationList.class);
