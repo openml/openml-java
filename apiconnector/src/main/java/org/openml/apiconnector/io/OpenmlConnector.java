@@ -801,7 +801,6 @@ public class OpenmlConnector implements Serializable {
 		if (ttid != null) {
 			suffix += "/" + ttid;
 		}
-		setVerboseLevel(1);
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + suffix, getApiKey(), verboseLevel);
 		if (apiResult instanceof EvaluationRequest) {
 			return (EvaluationRequest) apiResult;
