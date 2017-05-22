@@ -44,7 +44,7 @@ public class HttpConnector implements Serializable {
 		HttpPost httppost = new HttpPost( url );
         httppost.setEntity(entity);
         CloseableHttpResponse response = httpclient.execute(httppost);
-        return readHttpResponse(response, url, "POST", apiVerboseLevel);
+        return wrapHttpResponse(response, url, "POST", apiVerboseLevel);
 	}
 	
 	public static Object doApiRequest(String url, String ash, int apiVerboseLevel) throws Exception {
@@ -55,7 +55,7 @@ public class HttpConnector implements Serializable {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpGet httpget = new HttpGet(url + "?api_key=" + ash);
         CloseableHttpResponse response = httpclient.execute(httpget);
-        return readHttpResponse(response, url, "GET", apiVerboseLevel);
+        return wrapHttpResponse(response, url, "GET", apiVerboseLevel);
 	}
 	
 	public static Object doApiDelete(String url, String ash, int apiVerboseLevel) throws Exception {
@@ -66,7 +66,7 @@ public class HttpConnector implements Serializable {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpDelete httpdelete = new HttpDelete(url + "?api_key=" + ash);
         CloseableHttpResponse response = httpclient.execute(httpdelete);
-		return readHttpResponse(response, url, "DELETE", apiVerboseLevel);
+		return wrapHttpResponse(response, url, "DELETE", apiVerboseLevel);
 	}
 	
 	public static String getStringFromUrl(String url, boolean accept_all) throws Exception {
@@ -80,8 +80,22 @@ public class HttpConnector implements Serializable {
 		return httpEntitiToString(httpResp.getEntity());
 	}
 	
+	private static Object wrapHttpResponse(CloseableHttpResponse response, String url, String requestType, int apiVerboseLevel) throws Exception {
+		String result = readHttpResponse(response, url, requestType, apiVerboseLevel);
+		Object apiResult = xstreamClient.fromXML(result);
+		if(apiResult instanceof ApiError) {
+			ApiError apiError = (ApiError) apiResult;
+			String message = apiError.getMessage();
+			if( apiError.getAdditional_information() != null ) {
+				message += ": " + apiError.getAdditional_information();
+			}
+			throw new ApiException(Integer.parseInt(apiError.getCode()), message);
+		}
+		return apiResult;
+	}
+	
 
-	private static Object readHttpResponse(CloseableHttpResponse response, String url, String requestType, int apiVerboseLevel) throws Exception {
+	private static String readHttpResponse(CloseableHttpResponse response, String url, String requestType, int apiVerboseLevel) throws Exception {
 		String result = "";
         HttpEntity resEntity = response.getEntity();
         int code = response.getStatusLine().getStatusCode();
@@ -99,17 +113,7 @@ public class HttpConnector implements Serializable {
 		if(apiVerboseLevel >= Constants.VERBOSE_LEVEL_XML) {
 			System.out.println("===== REQUEST URI ("+requestType+"): " + url + " (Status Code: " + code + ", Content Length: "+contentLength+") =====\n" + result + "\n=====\n");
 		}
-		
-		Object apiResult = xstreamClient.fromXML(result);
-		if(apiResult instanceof ApiError) {
-			ApiError apiError = (ApiError) apiResult;
-			String message = apiError.getMessage();
-			if( apiError.getAdditional_information() != null ) {
-				message += ": " + apiError.getAdditional_information();
-			}
-			throw new ApiException(Integer.parseInt(apiError.getCode()), message);
-		}
-		return apiResult;
+		return result;
 	}
 	
 	/**

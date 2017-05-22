@@ -115,6 +115,8 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(RunEvaluation.class);
 		xstream.processAnnotations(EvaluationScore.class);
 		xstream.aliasField("oml:name", EvaluationScore.class, "function"); // TODO: legacy, remove later
+		xstream.aliasField("oml:function", EvaluationScore.class, "function"); // TODO: legacy, remove later
+		
 		
 		xstream.processAnnotations(UploadRunAttach.class);
 		

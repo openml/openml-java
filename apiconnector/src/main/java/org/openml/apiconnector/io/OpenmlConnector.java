@@ -52,10 +52,33 @@ public class OpenmlConnector implements Serializable {
 	
 	private final String OPENML_URL;
 	
-	private static final String API_PART = "api_new/v1/";
+	private String API_PART = "api_new/v1/";
 	
 	private boolean apiKeySet = false;
-	
+
+	/**
+	 * Creates a OpenML Connector with url and authentication
+	 * 
+	 * @param url - the openml server
+	 * @param api_key - the api key to authenticate with
+	 */
+	public OpenmlConnector(String url, String api_key, boolean useJson) {
+		if (url != null) {
+			this.OPENML_URL = url;
+		} else {
+			this.OPENML_URL = Settings.BASE_URL;
+		}
+		
+		this.api_key = api_key;
+		
+		if (api_key != null) {
+			this.apiKeySet = true;
+		}
+		
+		if (useJson) {
+			API_PART += "json/";
+		}
+	}
 	/**
 	 * Creates a OpenML Connector with url and authentication
 	 * 
