@@ -24,8 +24,14 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.Random;
+import java.util.TreeMap;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -37,8 +43,12 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.io.input.BOMInputStream;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
+import org.openml.apiconnector.algorithms.Hashing;
 import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.HttpConnector;
 import org.openml.apiconnector.io.OpenmlConnector;
@@ -71,8 +81,11 @@ public class TestDataFunctionality {
 	private static final String tag = "junittest";
 
 	private static final String url = "https://test.openml.org/";
+	private static final String url_live = "https://www.openml.org/";
+	private static final String key_read = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f"; // mlr ..  sorry i borrowed it
 	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");
-	private static final OpenmlConnector client_read = new OpenmlConnector(url, "c1994bdb7ecb3c6f3c8f3b35f4b47f1f"); // R-TEAM
+	private static final OpenmlConnector client_read = new OpenmlConnector(url, key_read); 
+	private static final OpenmlConnector client_live = new OpenmlConnector(url_live, key_read); 
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
 
 	@Test
@@ -103,12 +116,20 @@ public class TestDataFunctionality {
 
 	@Test
 	public void testApiUploadDownload() throws Exception {
+		client_write.setVerboseLevel(1);
 		DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
 		String dsdXML = xstream.toXML(dsd);
+		System.out.println(dsdXML);
 		File description = Conversion.stringToTempFile(dsdXML, "test-data", "arff");
-		UploadDataSet ud = client_write.dataUpload(description, new File(data_file));
+		File toUpload = new File(data_file);
+		UploadDataSet ud = client_write.dataUpload(description, toUpload);
 		DataTag dt = client_write.dataTag(ud.getId(), tag);
 		assertTrue(Arrays.asList(dt.getTags()).contains(tag));
+		
+		// Download dataset and check md5 thingy
+		DataSetDescription dsd_downloaded = client_read.dataGet(ud.getId());
+		File dataset = dsd_downloaded.getDataset(key_read);
+		assertEquals(Hashing.md5(dataset), Hashing.md5(toUpload));
 		
 		// create task upon it
 		Input estimation_procedure = new Input("estimation_procedure", "1");
@@ -140,10 +161,34 @@ public class TestDataFunctionality {
 		DataDelete dd = client_write.dataDelete(ud.getId());
 		assertTrue(ud.getId() == dd.get_id());
 	}
+	
+	@Test
+	public void testApiUploadFromUrl() throws Exception {
+		String dataUrl = "http://storm.cis.fordham.edu/~gweiss/data-mining/weka-data/cpu.arff";
+		
+		client_write.setVerboseLevel(1);
+		DataSetDescription dsd = new DataSetDescription("anneal", "Unit test should be deleted", "arff", dataUrl, "class");
+		String dsdXML = xstream.toXML(dsd);
+		File description = Conversion.stringToTempFile(dsdXML, "test-data", "arff");
+		
+		UploadDataSet ud = client_write.dataUpload(description, null);
+		DataTag dt = client_write.dataTag(ud.getId(), tag);
+		assertTrue(Arrays.asList(dt.getTags()).contains(tag));
+		
+		// Download dataset and check md5 thingy
+		DataSetDescription dsd_downloaded = client_read.dataGet(ud.getId());
+		File dataset = dsd_downloaded.getDataset(key_read);
+
+		assertEquals(Hashing.md5(dataset), Hashing.md5(HttpConnector.getStringFromUrl(dataUrl, false)));
+		
+	}
 
 	@Test
 	public void testApiDataList() throws Exception {
-		Data datasets = client_read.dataList("study_14");
+		Map<String, String> filters = new TreeMap<String, String>();
+		filters.put("tag", "study_14");
+		
+		Data datasets = client_read.dataList(filters);
 		assertTrue(datasets.getData().length > 20);
 		for (DataSet dataset : datasets.getData()) {
 			assertTrue(dataset.getQualities().length > 5);
@@ -151,14 +196,49 @@ public class TestDataFunctionality {
 	}
 
 	@Test
-	public void testApiAdditional() {
-		try {
-			client_read.dataQualitiesList();
+	public void testApiAdditional() throws Exception {
+		client_read.dataQualitiesList();
+	}
+	
+	@Test
+	public void testGetDataAsCsv() throws Exception{
+		client_read.setVerboseLevel(1);
+		Random random = new Random();
+		for (int i = 0; i < 5; ) {
+			Map<String,String> filters = new TreeMap<String, String>();
+			// TODO: change to study_14 and remove in_preparation flag
+			filters.put("tag", tag);
+			filters.put("status", "in_preparation");
+			
+			DataSet[] all = client_read.dataList(filters).getData();
+			DataSet current = all[i];
+			
+			String numInst = current.getQualityMap().get("NumberOfInstances");
+			
+			if (current.getFileId() == null || !current.getFormat().toLowerCase().equals("arff")) {
+				System.out.println(current.getFileId() + "," + current.getFormat().toLowerCase());
+				continue;
+			}
+			
+			String fullUrl = url + "data/get_csv/" + current.getFileId() + "/" + current.getName() + ".csv";
+			System.out.println(fullUrl);
+			final URL url = new URL(fullUrl);
+			final Reader reader = new InputStreamReader(new BOMInputStream(url.openStream()), "UTF-8");
+			final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);
+			try {
+				if (numInst != null) {
+					int numberOfInstances = (int) Double.parseDouble(numInst);
+					assertEquals(parser.getRecords().size(), numberOfInstances);
+				}
+			} finally {
+			    parser.close();
+			    reader.close();
+			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Test failed: " + e.getMessage());
+			// important
+			i += 1;
 		}
+		
 	}
 	
 	// function that formats xml consistently, making it easy to compare them. 

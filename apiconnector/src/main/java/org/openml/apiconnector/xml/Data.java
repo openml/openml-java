@@ -19,6 +19,9 @@
  */
 package org.openml.apiconnector.xml;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.openml.apiconnector.settings.Constants;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -61,6 +64,9 @@ public class Data {
 
 		@XStreamAlias("oml:format")
 		private String format;
+		
+		@XStreamAlias("oml:file_id")
+		private Integer file_id;
 
 		@XStreamImplicit
 		@XStreamAlias("oml:quality")
@@ -86,8 +92,22 @@ public class Data {
 			return status;
 		}
 		
+		public Integer getFileId() {
+			return file_id;
+		}
+		
 		public Quality[] getQualities() {
 			return qualities;
+		}
+		
+		public Map<String, String> getQualityMap() {
+			Map<String, String> result = new TreeMap<String, String>();
+			if (getQualities() != null) {
+				for (Quality q : getQualities()) {
+					result.put(q.getName(), q.getValue());
+				}
+			}
+			return result;
 		}
 
 		@XStreamAlias("oml:quality")

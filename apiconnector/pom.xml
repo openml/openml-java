@@ -32,7 +32,7 @@
       <organization>Leiden University, NL</organization>
       <organizationUrl>http://liacs.leidenuniv.nl/</organizationUrl>
       <roles>
-        <role>PhD Candidate</role>
+        <role>Postdoctoral Reaseacher</role>
       </roles>
     </developer>
   </developers>
@@ -112,6 +112,12 @@
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
       <version>4.5.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-csv</artifactId>
+      <version>1.4</version>
     </dependency>
 
     <dependency>

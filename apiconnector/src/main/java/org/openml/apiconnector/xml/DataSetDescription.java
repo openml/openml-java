@@ -172,12 +172,13 @@ public class DataSetDescription implements Serializable {
 		this.md5_checksum = null;
 	}
 	
+
 	public DataSetDescription(
 			String name, 
 			String description, 
 			String format, 
-			String default_target_attribute,
-			String visibility) {
+			String url,
+			String default_target_attribute) {
 		this.id = null;
 		this.name = name;
 		this.version = null;
@@ -189,10 +190,9 @@ public class DataSetDescription implements Serializable {
 		this.language = null;
 		this.upload_date = null;
 		this.licence = null;
-		this.url = null;
+		this.url = url;
 		this.row_id_attribute = null;
 		this.default_target_attribute = default_target_attribute;
-		this.visibility = visibility;
 		this.md5_checksum = null;
 	}
 

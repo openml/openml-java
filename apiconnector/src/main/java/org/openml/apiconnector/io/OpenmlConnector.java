@@ -316,8 +316,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-	public Data dataList(String tag) throws Exception {
-		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "data/list/tag/" + tag, getApiKey(), verboseLevel);
+	public Data dataList(Map<String, String> filters) throws Exception {
+		String suffix = "";
+		if (filters != null) {
+			for (String filter : filters.keySet()) {
+				suffix += filter + "/" + filters.get(filter) + "/";
+			}
+		}
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "data/list/" + suffix, getApiKey(), verboseLevel);
 		if (apiResult instanceof Data) {
 			return (Data) apiResult;
 		} else {
