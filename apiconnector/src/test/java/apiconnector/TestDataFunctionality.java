@@ -202,21 +202,20 @@ public class TestDataFunctionality {
 	
 	@Test
 	public void testGetDataAsCsv() throws Exception{
-		client_read.setVerboseLevel(1);
+		//client_read.setVerboseLevel(1);
 		Random random = new Random();
+
+		Map<String,String> filters = new TreeMap<String, String>();
+		filters.put("tag", "study_14");
+		
+		DataSet[] all = client_read.dataList(filters).getData();
+		
 		for (int i = 0; i < 5; ) {
-			Map<String,String> filters = new TreeMap<String, String>();
-			// TODO: change to study_14 and remove in_preparation flag
-			filters.put("tag", tag);
-			filters.put("status", "in_preparation");
-			
-			DataSet[] all = client_read.dataList(filters).getData();
-			DataSet current = all[i];
+			DataSet current = all[random.nextInt(all.length)];
 			
 			String numInst = current.getQualityMap().get("NumberOfInstances");
 			
 			if (current.getFileId() == null || !current.getFormat().toLowerCase().equals("arff")) {
-				System.out.println(current.getFileId() + "," + current.getFormat().toLowerCase());
 				continue;
 			}
 			
