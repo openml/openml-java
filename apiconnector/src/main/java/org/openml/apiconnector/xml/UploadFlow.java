@@ -22,6 +22,11 @@ package org.openml.apiconnector.xml;
 public class UploadFlow {
 	private int id;
 
+	public UploadFlow(int id)
+	{
+		this.id = id;
+	}
+	
 	public int getId() {
 		return id;
 	}

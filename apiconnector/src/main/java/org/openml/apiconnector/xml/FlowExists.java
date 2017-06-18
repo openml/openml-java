@@ -27,6 +27,12 @@ public class FlowExists {
 	private boolean exists;
 	private int id;
 	
+	public FlowExists(boolean exists, int id)
+	{
+		this.exists = exists;
+		this.id = id;
+	}
+	
 	public String getOml() {
 		return oml;
 	}

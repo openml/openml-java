@@ -22,6 +22,8 @@ package org.openml.apiconnector.xml;
 import java.io.File;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -34,10 +36,8 @@ import org.openml.apiconnector.settings.Settings;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
-import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
-import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 
 @XStreamAlias("oml:task")
 public class Task implements Serializable {
@@ -69,8 +69,19 @@ public class Task implements Serializable {
 	private String[] tag;
 	
 	// for quick initialization. 
-	public Task(int id) {
+	public Task(int id)
+	{
 		this.task_id = id;
+	}
+	
+	public Task(int id, String inputName1,Integer data_set_id, String target_feature, String inputName2, String data_splits_url, HashMap<String, String> parameters) 
+	{
+		this.task_id = id;
+		Input firstInput = new Input(inputName1, data_set_id, target_feature);
+		Input secondInput = new Input(inputName2, data_splits_url, parameters);
+		this.inputs = new Input[2];
+		this.inputs[0] = firstInput;
+		this.inputs[1] = secondInput;
 	}
 	
 	@Override
@@ -129,6 +140,19 @@ public class Task implements Serializable {
 
 	public class Input implements Serializable {
 		private static final long serialVersionUID = 987612341019L;
+		
+		public Input (String name, Integer datasetId, String targetFeature)
+		{
+			this.name = name;
+			this.data_set = new Data_set(datasetId, targetFeature);
+			
+		}
+		
+		public Input (String name, String data_splits_url, HashMap<String, String> parameters)
+		{
+			this.name = name;
+			this.estimation_procedure = new Estimation_procedure(data_splits_url, parameters);
+		}
 		
 		@XStreamAsAttribute
 		private String name;
@@ -194,6 +218,11 @@ public class Task implements Serializable {
 		public class Data_set implements Serializable {
 			private static final long serialVersionUID = 987612341029L;
 
+			public Data_set(Integer data_set_id, String target_feature)
+			{
+				this.data_set_id = data_set_id;
+				this.target_feature = target_feature;
+			}
 			@XStreamAlias("oml:data_set_id")
 			private Integer data_set_id;
 
@@ -304,6 +333,21 @@ public class Task implements Serializable {
 		public class Estimation_procedure implements Serializable {
 			private static final long serialVersionUID = 987612341039L;
 
+			public Estimation_procedure(String data_splits_url, HashMap<String, String> parameterList)
+			{
+				int size = parameterList.size();
+				this.parameters = new Parameter[size];
+				this.data_splits_url = data_splits_url;
+				Iterator<String> keysIterator = parameterList.keySet().iterator();
+				int counter = 0;
+				while(keysIterator.hasNext())
+				{
+					String key = keysIterator.next();
+					this.parameters[counter] = new Parameter(key, parameterList.get(key));
+					counter++;
+					
+				}
+			}
 			@XStreamAlias("oml:type")
 			private String type;
 
@@ -341,10 +385,15 @@ public class Task implements Serializable {
 				return data_splits_cache;
 			}
 			
-			@XStreamConverter(value=ToAttributedValueConverter.class, strings={"value"})
+			
 			public class Parameter implements Serializable {
 				private static final long serialVersionUID = 987612341099L;
 				
+				public Parameter(String parameterName, String value)
+				{
+					name = parameterName;
+					this.value = value;
+				}
 				private String name;
 				
 				private String value;

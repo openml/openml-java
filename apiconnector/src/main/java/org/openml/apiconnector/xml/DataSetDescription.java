@@ -116,7 +116,9 @@ public class DataSetDescription implements Serializable {
 	/*
 	 *	Constructor used from the Register Dataset Dialog. Set "null" for unspecified values that are optional.
 	 */
+	
 	public DataSetDescription(
+			Integer id, 
 			String name, 
 			String version, 
 			String description, 
@@ -126,12 +128,13 @@ public class DataSetDescription implements Serializable {
 			String collection_date, 
 			String language, 
 			String licence, 
+			String url, 
 			String row_id_attribute, 
 			String default_target_attribute,
 			String[] ignore_attribute,
 			String[] tag,
 			String md5_checksum) {
-		this.id = null;
+		this.id = id;
 		this.name = name;
 		this.version = version;
 		this.description = description;
@@ -142,7 +145,7 @@ public class DataSetDescription implements Serializable {
 		this.language = language;
 		this.upload_date = null;
 		this.licence = licence;
-		this.url = null;
+		this.url = url;
 		this.row_id_attribute = row_id_attribute;
 		this.default_target_attribute = default_target_attribute;
 		this.ignore_attribute = ignore_attribute;
