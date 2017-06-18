@@ -116,7 +116,14 @@ public class TestRunFunctionality {
 	
 	@Test
 	public void testApiEvaluationRequest() throws Exception {
-		EvaluationRequest er = client_write_test.evaluationRequest(2, "random", 1);
+		// this test assumes that there are runs on the test server. 
+		// might not be the case just after reset 
+		
+		client_write_test.setVerboseLevel(1);
+		
+		// gives evaluation id "42", which does not exist. 
+		// therefore we get an actual run that is not evaluated by this engine back. 
+		EvaluationRequest er = client_write_test.evaluationRequest(42, "random", 1);
 		assertTrue(er.getRuns().length == 1);
 	}
 }

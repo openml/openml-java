@@ -81,11 +81,9 @@ public class TestDataFunctionality {
 	private static final String tag = "junittest";
 
 	private static final String url = "https://test.openml.org/";
-	private static final String url_live = "https://www.openml.org/";
 	private static final String key_read = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f"; // mlr ..  sorry i borrowed it
 	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");
 	private static final OpenmlConnector client_read = new OpenmlConnector(url, key_read); 
-	private static final OpenmlConnector client_live = new OpenmlConnector(url_live, key_read); 
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
 
 	@Test
@@ -109,9 +107,9 @@ public class TestDataFunctionality {
 		assertTrue(dsdFromOpenml.equals(dsdFromConnector));
 		
 		// very easy checks, should all pass
-		assertTrue( dsd.getId() == probe );
-		assertTrue( features.getFeatures().length > 0 );
-		assertTrue( qualities.getQualities().length > 0 );
+		assertTrue(dsd.getId() == probe);
+		assertTrue(features.getFeatures().length > 0);
+		assertTrue(qualities.getQualities().length > 0);
 	}
 
 	@Test
