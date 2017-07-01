@@ -2,6 +2,7 @@ package org.openml.apiconnector.algorithms;
 
 import org.openml.apiconnector.io.HttpConnector;
 import org.openml.apiconnector.settings.Settings;
+import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -40,7 +41,7 @@ public class Caching {
 		directory.mkdirs();
 		String name = type + "_" + identifier + "." + extension;
 		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(directory.getAbsolutePath() + "/" + name)));
-		bw.append(HttpConnector.xstreamClient.toXML(o));
+		bw.append(XstreamXmlMapping.getInstance().toXML(o));
 		bw.close();
 		Conversion.log("OK", "Cache", "Stored to cache: " + type + "/" + name);
 	}

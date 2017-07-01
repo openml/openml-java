@@ -30,6 +30,7 @@ import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xml.*;
+import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 import java.io.File;
 import java.io.IOException;
@@ -198,7 +199,7 @@ public class OpenmlConnector implements Serializable {
 	public DataSetDescription dataGet(int did) throws Exception {
 		if (Caching.in_cache("datadescription", did, "xml") || Settings.LOCAL_OPERATIONS) {
 			String dsdString = Conversion.fileToString(Caching.cached("datadescription", did, "xml"));
-			return (DataSetDescription) HttpConnector.xstreamClient.fromXML(dsdString);
+			return (DataSetDescription) XstreamXmlMapping.getInstance().fromXML(dsdString);
 		}
 
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "data/" + did, getApiKey(), verboseLevel);
@@ -421,7 +422,7 @@ public class OpenmlConnector implements Serializable {
 	public Task taskGet(int task_id) throws Exception {
 		if (Caching.in_cache("task", task_id, "xml") || Settings.LOCAL_OPERATIONS) {
 			String taskXml = Conversion.fileToString(Caching.cached("task", task_id, "xml"));
-			return (Task) HttpConnector.xstreamClient.fromXML(taskXml);
+			return (Task) XstreamXmlMapping.getInstance().fromXML(taskXml);
 		}
 
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "task/" + task_id, getApiKey(), verboseLevel);

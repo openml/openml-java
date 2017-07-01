@@ -31,8 +31,6 @@ import com.thoughtworks.xstream.XStream;
 
 public class HttpConnector implements Serializable {
 	
-	public static XStream xstreamClient = XstreamXmlMapping.getInstance();
-	
 	private static final long serialVersionUID = -8589069573065947493L;
 	
 	public static Object doApiRequest(String url, MultipartEntity entity, String ash, int apiVerboseLevel) throws Exception {
@@ -82,6 +80,7 @@ public class HttpConnector implements Serializable {
 	
 	private static Object wrapHttpResponse(CloseableHttpResponse response, String url, String requestType, int apiVerboseLevel) throws Exception {
 		String result = readHttpResponse(response, url, requestType, apiVerboseLevel);
+		XStream xstreamClient = XstreamXmlMapping.getInstance();
 		Object apiResult = xstreamClient.fromXML(result);
 		if(apiResult instanceof ApiError) {
 			ApiError apiError = (ApiError) apiResult;
@@ -95,7 +94,7 @@ public class HttpConnector implements Serializable {
 	}
 	
 
-	private static String readHttpResponse(CloseableHttpResponse response, String url, String requestType, int apiVerboseLevel) throws Exception {
+	protected static String readHttpResponse(CloseableHttpResponse response, String url, String requestType, int apiVerboseLevel) throws Exception {
 		String result = "";
         HttpEntity resEntity = response.getEntity();
         int code = response.getStatusLine().getStatusCode();
@@ -147,7 +146,7 @@ public class HttpConnector implements Serializable {
 		return file;
 	}
 	
-	private static String httpEntitiToString(HttpEntity resEntity) throws IOException {
+	protected static String httpEntitiToString(HttpEntity resEntity) throws IOException {
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(new InputStreamReader( resEntity.getContent() ), writer );
 		return writer.toString();
