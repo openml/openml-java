@@ -36,8 +36,10 @@ import org.openml.apiconnector.settings.Settings;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 
 @XStreamAlias("oml:task")
 public class Task implements Serializable {
@@ -385,7 +387,8 @@ public class Task implements Serializable {
 				return data_splits_cache;
 			}
 			
-			
+
+			@XStreamConverter(value=ToAttributedValueConverter.class, strings={"value"})
 			public class Parameter implements Serializable {
 				private static final long serialVersionUID = 987612341099L;
 				
@@ -394,8 +397,9 @@ public class Task implements Serializable {
 					name = parameterName;
 					this.value = value;
 				}
+
 				private String name;
-				
+
 				private String value;
 				
 				public String getName() {
