@@ -57,6 +57,14 @@ public abstract class BlastAbstract extends AbstractClassifier {
     protected Integer instancesSeen;
     
     List<Integer> topK;
+    
+
+    @Override
+    public String getPurposeString() {
+        return "The model-free heterogeneous ensemble as presented in "
+        		+ "'Having a Blast: Meta-Learning and Heterogeneous Ensembles "
+        		+ "for Data Streams' (ICDM 2015).";
+    }
 
 	@Override
 	public double[] getVotesForInstance(Instance inst) {
