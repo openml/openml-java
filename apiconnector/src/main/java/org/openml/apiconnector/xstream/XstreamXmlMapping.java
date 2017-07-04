@@ -39,7 +39,6 @@ import org.openml.apiconnector.xml.RunEvaluate;
 import org.openml.apiconnector.xml.RunEvaluation;
 import org.openml.apiconnector.xml.FlowDelete;
 import org.openml.apiconnector.xml.FlowExists;
-import org.openml.apiconnector.xml.FlowOwned;
 import org.openml.apiconnector.xml.Authenticate;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.ApiError;
@@ -57,6 +56,7 @@ import org.openml.apiconnector.xml.SetupExists;
 import org.openml.apiconnector.xml.SetupParameters;
 import org.openml.apiconnector.xml.SetupTag;
 import org.openml.apiconnector.xml.SetupUntag;
+import org.openml.apiconnector.xml.Study;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskDelete;
 import org.openml.apiconnector.xml.TaskTag;
@@ -108,6 +108,8 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(FlowTag.class);
 		xstream.processAnnotations(FlowUntag.class);
 		
+		xstream.processAnnotations(Study.class);
+		
 		xstream.processAnnotations(Task.class);
 		xstream.processAnnotations(Run.class);
 		xstream.processAnnotations(RunList.class);
@@ -115,7 +117,7 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(RunEvaluation.class);
 		xstream.processAnnotations(EvaluationScore.class);
 		xstream.aliasField("oml:name", EvaluationScore.class, "function"); // TODO: legacy, remove later
-	//	xstream.aliasField("oml:function", EvaluationScore.class, "function"); // TODO: legacy, remove later
+		xstream.aliasField("oml:function", EvaluationScore.class, "function"); // TODO: legacy, remove later
 		
 		
 		xstream.processAnnotations(UploadRunAttach.class);
@@ -188,7 +190,6 @@ public class XstreamXmlMapping {
 		
 		xstream.addImplicitCollection(Flow.class, "creator", "oml:creator", String.class);
 		xstream.addImplicitCollection(Flow.class, "contributor", "oml:contributor", String.class);
-		xstream.addImplicitCollection(Flow.class, "bibliographical_reference", "oml:bibliographical_reference", Flow.Bibliographical_reference.class);
 		xstream.addImplicitCollection(Flow.class, "parameter", "oml:parameter", Flow.Parameter.class);
 		xstream.addImplicitCollection(Flow.class, "component", "oml:component", Flow.Component.class);
 		xstream.addImplicitCollection(Flow.class, "tag", "oml:tag", String.class);
@@ -222,11 +223,6 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:identifier", Flow.Component.class, "identifier");
 		xstream.aliasField("oml:flow", Flow.Component.class, "flow");
 		
-		// bibliographical reference
-		xstream.alias("oml:bibliographical_reference", Flow.Bibliographical_reference.class);
-		xstream.aliasField("oml:citation", Flow.Bibliographical_reference.class, "citation");
-		xstream.aliasField("oml:url", Flow.Bibliographical_reference.class, "url");
-		
 		// parameter
 		xstream.alias("oml:parameter", Flow.Parameter.class);
 		xstream.aliasField("oml:name", Flow.Parameter.class, "name");
@@ -237,11 +233,6 @@ public class XstreamXmlMapping {
 		// upload flow
 		xstream.alias("oml:upload_flow", UploadFlow.class);
 		xstream.aliasField("oml:id", UploadFlow.class, "id");
-		
-		// owned flow
-		xstream.addImplicitCollection(FlowOwned.class, "id", "oml:id", Integer.class);
-		xstream.alias("oml:flow_owned", FlowOwned.class);
-		xstream.aliasField("oml:id", FlowOwned.class, "id");
 		
 		// delete flow
 		xstream.alias("oml:flow_delete", FlowDelete.class);

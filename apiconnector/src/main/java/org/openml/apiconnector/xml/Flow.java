@@ -44,7 +44,6 @@ public class Flow {
 	private String full_description;
 	private String installation_notes;
 	private String dependencies;
-	private Bibliographical_reference[] bibliographical_reference;
 	private String implement;
 	private Parameter[] parameter;
 	private Component[] component;
@@ -180,10 +179,6 @@ public class Flow {
 
 	public String getDependencies() {
 		return dependencies;
-	}
-
-	public Bibliographical_reference[] getBibliographical_reference() {
-		return bibliographical_reference;
 	}
 
 	public String getImplement() {

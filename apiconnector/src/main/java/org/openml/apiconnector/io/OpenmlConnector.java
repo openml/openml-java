@@ -610,23 +610,6 @@ public class OpenmlConnector implements Serializable {
 	}
 	
 	/**
-	 * Returns all flows of the logged in user
-	 * 
-	 * @return ImplementationOwned - An object containing all implementation_ids
-	 *         that are owned by the current user.
-	 * @throws Exception
-	 *             - Can be: API Error (see documentation at openml.org), server
-	 *             down, etc.
-	 */
-	public FlowOwned flowOwned() throws Exception {
-		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "flow/owned", getApiKey(), verboseLevel);
-		if (apiResult instanceof FlowOwned) {
-			return (FlowOwned) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to ImplementationOwned");
-		}
-	}
-	/**
 	 * Deletes a flow
 	 * 
 	 * @param id
@@ -1188,6 +1171,15 @@ public class OpenmlConnector implements Serializable {
 			return (Job) apiResult;
 		} else {
 			throw new DataFormatException("Casting Api Object to Job");
+		}
+	}
+	
+	public Study studyGet(int studyId) throws Exception {
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "study/" + studyId, getApiKey(), verboseLevel);
+		if (apiResult instanceof Study) {
+			return (Study) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to Study");
 		}
 	}
 	
