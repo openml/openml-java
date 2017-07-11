@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
@@ -19,6 +20,7 @@ import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.RunList;
 import org.openml.apiconnector.xml.RunTag;
 import org.openml.apiconnector.xml.RunUntag;
+import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.UploadRun;
 import org.openml.apiconnector.xml.UploadRunAttach;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
@@ -123,7 +125,13 @@ public class TestRunFunctionality {
 		
 		// gives evaluation id "42", which does not exist. 
 		// therefore we get an actual run that is not evaluated by this engine back. 
-		EvaluationRequest er = client_write_test.evaluationRequest(42, "random", 1);
+		Map<String, String> filters = new TreeMap<String, String>();
+		int ttid = 3;
+		filters.put("ttid", "" + ttid);
+		EvaluationRequest er = client_write_test.evaluationRequest(42, "random", filters);
 		assertTrue(er.getRuns().length == 1);
+		Run r = client_write_test.runGet(er.getRuns()[0].getRun_id());
+		Task t = client_write_test.taskGet(r.getTask_id());
+		assertTrue(t.getTask_type_id() == ttid);
 	}
 }

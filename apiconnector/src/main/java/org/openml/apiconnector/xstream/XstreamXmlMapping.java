@@ -101,23 +101,23 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(TaskTag.class);
 		xstream.processAnnotations(TaskUntag.class);
 		xstream.processAnnotations(Tasks.class);
+		xstream.processAnnotations(Task.class);
 		
 		xstream.processAnnotations(RunTag.class);
 		xstream.processAnnotations(RunUntag.class);
+		xstream.processAnnotations(RunList.class);
+		xstream.processAnnotations(Run.class);
 		
 		xstream.processAnnotations(FlowTag.class);
 		xstream.processAnnotations(FlowUntag.class);
 		
 		xstream.processAnnotations(Study.class);
 		
-		xstream.processAnnotations(Task.class);
-		xstream.processAnnotations(Run.class);
-		xstream.processAnnotations(RunList.class);
 		xstream.processAnnotations(EvaluationRequest.class);
 		xstream.processAnnotations(RunEvaluation.class);
 		xstream.processAnnotations(EvaluationScore.class);
 		xstream.aliasField("oml:name", EvaluationScore.class, "function"); // TODO: legacy, remove later
-		xstream.aliasField("oml:function", EvaluationScore.class, "function"); // TODO: legacy, remove later
+	//	xstream.aliasField("oml:function", EvaluationScore.class, "function"); // TODO: legacy, remove later
 		
 		
 		xstream.processAnnotations(UploadRunAttach.class);
@@ -282,7 +282,7 @@ public class XstreamXmlMapping {
 		xstream.alias("oml:evaluations", EvaluationList.class);
 		xstream.aliasAttribute(EvaluationList.class, "oml", "xmlns:oml");
 		xstream.addImplicitCollection(EvaluationList.class, "evaluation", "oml:evaluation", EvaluationList.Evaluation.class);
-	//	xstream.aliasField("oml:run", RunList.class, "run");
+		xstream.aliasField("oml:run", RunList.class, "run");
 		
 		xstream.aliasField("oml:run_id", EvaluationList.Evaluation.class, "run_id");
 		xstream.aliasField("oml:task_id", EvaluationList.Evaluation.class, "task_id");

@@ -809,11 +809,14 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-	public EvaluationRequest evaluationRequest(int evaluationEngineId, String mode, Integer ttid) throws Exception {
+	public EvaluationRequest evaluationRequest(int evaluationEngineId, String mode, Map<String, String> additionalFilters) throws Exception {
 		String suffix = "evaluation/request/" + evaluationEngineId + "/" + mode;
-		if (ttid != null) {
-			suffix += "/" + ttid;
+		if (additionalFilters != null) {
+			for (String filter : additionalFilters.keySet()) {
+				suffix += "/" + filter + "/" + additionalFilters.get(filter);
+			}
 		}
+		
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + suffix, getApiKey(), verboseLevel);
 		if (apiResult instanceof EvaluationRequest) {
 			return (EvaluationRequest) apiResult;

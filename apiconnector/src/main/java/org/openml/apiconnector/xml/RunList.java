@@ -26,7 +26,8 @@ public class RunList {
 	public String getOml() {
 		return oml;
 	}
-	
+
+	@XStreamAlias("oml:run")
 	public class Run implements Serializable {
 		private static final long serialVersionUID = 87L;
 
