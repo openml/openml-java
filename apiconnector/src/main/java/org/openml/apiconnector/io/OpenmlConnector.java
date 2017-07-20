@@ -750,8 +750,9 @@ public class OpenmlConnector implements Serializable {
 	/**
 	 * Returns a list with run results. Must be restricted with tasks, setups or both. 
 	 * 
-	 * @param task_id - a list with task ids to include (null to not restrict on tasks)
-	 * @param setup_id - a list with setup ids to include (null to not restrict on setups)
+	 * @param filters - filters to limit the number of results
+	 * @param limit - maximal number of results allowed
+	 * @param offset - number of results to ignore (from the beginning)
 	 * @return
 	 * @throws Exception
 	 */
