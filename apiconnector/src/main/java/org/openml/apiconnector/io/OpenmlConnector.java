@@ -1177,13 +1177,24 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-	public Study studyGet(int studyId) throws Exception {
-		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "study/" + studyId, getApiKey(), verboseLevel);
+	public Study studyGet(String studyAlias, String dataType) throws Exception {
+		String suffix = "";
+		if (dataType != null) { suffix += "/" + dataType; }
+		
+		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "study/" + studyAlias + suffix, getApiKey(), verboseLevel);
 		if (apiResult instanceof Study) {
 			return (Study) apiResult;
 		} else {
 			throw new DataFormatException("Casting Api Object to Study");
 		}
+	}
+	
+	public Study studyGet(int studyId) throws Exception {
+		return studyGet("" + studyId, null);
+	}
+	
+	public Study studyGet(int studyId, String dataType) throws Exception {
+		return studyGet("" + studyId, dataType);
 	}
 	
 	/**

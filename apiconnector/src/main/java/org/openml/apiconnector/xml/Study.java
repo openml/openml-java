@@ -71,18 +71,30 @@ public class Study implements Serializable {
 	}
 
 	public Integer[] getDataset() {
+		if (data == null) {
+			return null;
+		}
 		return data.getData();
 	}
 
 	public Integer[] getTasks() {
+		if (tasks == null) {
+			return null;
+		}
 		return tasks.getTasks();
 	}
 	
 	public Integer[] getFlows() {
+		if (flows == null) {
+			return null;
+		}
 		return flows.getFlows();
 	}
 	
 	public Integer[] getSetups() {
+		if (setups == null) {
+			return null;
+		}
 		return setups.getSetups();
 	}
 	

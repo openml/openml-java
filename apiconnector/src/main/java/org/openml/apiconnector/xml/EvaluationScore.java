@@ -12,7 +12,7 @@ public class EvaluationScore {
 	@XStreamAlias("xmlns:oml")
 	private final String oml = Constants.OPENML_XMLNS;
 
-	@XStreamAlias("oml:function")
+	@XStreamAlias("oml:name")
 	private final String function;
 
 	@XStreamAlias("oml:value")

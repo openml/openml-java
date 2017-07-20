@@ -10,10 +10,10 @@
 
   <name>APIConnector</name>
   <description>Ancestor for API connector libraries for specific frameworks.</description>
-  <url>http://openml.org/</url>
+  <url>https://www.openml.org/</url>
   <organization>
     <name>Leiden University, NL</name>
-    <url>http://www.liacs.nl/</url>
+    <url>https://liacs.leidenuniv.nl/</url>
   </organization>
   <licenses>
     <license>
