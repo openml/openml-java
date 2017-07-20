@@ -755,20 +755,19 @@ public class OpenmlConnector implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	public RunList runList(List<Integer> task_id, List<Integer> setup_id, List<Integer> flow_id, List<Integer> uploader_id) throws Exception {
+	public RunList runList(Map<String, List<Integer>> filters, Integer limit, Integer offset) throws Exception {
 		String suffix = "";
+		
+		for (String name : filters.keySet()) {
+			suffix += "/" + name + "/" + StringUtils.join(filters.get(name), ',');
+		}
+		
+		if (limit != null) {
+			suffix += "/limit/" + limit;
+		}
 
-		if (uploader_id != null) {
-			suffix += "/uploader/" + StringUtils.join(uploader_id, ',');
-		}
-		if (flow_id != null) {
-			suffix += "/flow/" + StringUtils.join(flow_id, ',');
-		}
-		if (task_id != null) {
-			suffix += "/task/" + StringUtils.join(task_id, ',');
-		}
-		if (setup_id != null) {
-			suffix += "/setup/" + StringUtils.join(setup_id, ',');
+		if (offset != null) {
+			suffix += "/offset/" + offset;
 		}
 		
 		Object apiResult = HttpConnector.doApiRequest(OPENML_URL + API_PART + "run/list" + suffix, getApiKey(), verboseLevel);

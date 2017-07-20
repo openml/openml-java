@@ -60,13 +60,17 @@ public class TestRunFunctionality {
 	
 	@Test
 	public void testApiRunList() throws Exception {
-		List<Integer> uploaderId = new ArrayList<Integer>();
-		uploaderId.add(29);
+		List<Integer> uploaderFilter = new ArrayList<Integer>();
+		uploaderFilter.add(16);
 		
-		RunList rl = client_read_live.runList(null, null, null, uploaderId);
+		Map<String, List<Integer>> filters = new HashMap<String, List<Integer>>();
+		filters.put("uploader", uploaderFilter);
+		
+		RunList rl = client_read_live.runList(filters, 100, 0);
+		assertTrue(rl.getRuns().length == 100);
 		
 		for (org.openml.apiconnector.xml.RunList.Run r : rl.getRuns()) {
-			assertTrue(uploaderId.contains(r.getUploader()));
+			assertTrue(uploaderFilter.contains(r.getUploader()));
 		}
 		
 	}
