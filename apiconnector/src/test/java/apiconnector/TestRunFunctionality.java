@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.OpenmlConnector;
@@ -59,6 +60,7 @@ public class TestRunFunctionality {
 	}
 	
 	@Test
+	@Ignore
 	public void testApiRunList() throws Exception {
 		List<Integer> uploaderFilter = new ArrayList<Integer>();
 		uploaderFilter.add(16);
