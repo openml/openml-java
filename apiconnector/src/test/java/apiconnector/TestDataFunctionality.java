@@ -104,6 +104,13 @@ public class TestDataFunctionality {
 		String dsdFromOpenml = toPrettyString(raw, 0);
 		String dsdFromConnector = toPrettyString(xstream.toXML(dsd), 0);
 		
+		if (!dsdFromOpenml.equals(dsdFromConnector)) {
+			System.out.println("===== OBTAINED FROM OPENML: =====");
+			System.out.println(dsdFromOpenml);
+			System.out.println("===== LOCALLY AVILABLE: =====");
+			System.out.println(dsdFromConnector);
+		}
+		
 		assertTrue(dsdFromOpenml.equals(dsdFromConnector));
 		
 		// very easy checks, should all pass
