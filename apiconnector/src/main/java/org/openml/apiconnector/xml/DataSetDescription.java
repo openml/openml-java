@@ -21,6 +21,7 @@ package org.openml.apiconnector.xml;
 
 import java.io.File;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -42,58 +43,58 @@ public class DataSetDescription implements Serializable {
 
 	@XStreamAlias("oml:id")
 	private Integer id;
-	
+
 	@XStreamAlias("oml:name")
 	private String name;
-	
+
 	@XStreamAlias("oml:version")
 	private String version;
-	
+
 	@XStreamAlias("oml:description")
 	private String description;
-	
+
 	@XStreamAlias("oml:format")
 	private String format;
 
-	@XStreamImplicit(itemFieldName="oml:creator")
+	@XStreamImplicit(itemFieldName = "oml:creator")
 	private String[] creator;
 
-	@XStreamImplicit(itemFieldName="oml:contributor")
+	@XStreamImplicit(itemFieldName = "oml:contributor")
 	private String[] contributor;
 
 	@XStreamAlias("oml:collection_date")
 	private String collection_date;
-	
+
 	@XStreamAlias("oml:upload_date")
 	private String upload_date;
-	
+
 	@XStreamAlias("oml:language")
 	private String language;
-	
+
 	@XStreamAlias("oml:licence")
 	private String licence;
-	
+
 	@XStreamAlias("oml:url")
 	private String url;
-	
+
 	@XStreamAlias("oml:file_id")
 	private Integer file_id;
-	
+
 	@XStreamAlias("oml:default_target_attribute")
 	private String default_target_attribute;
-	
+
 	@XStreamAlias("oml:row_id_attribute")
 	private String row_id_attribute;
-	
-	@XStreamImplicit(itemFieldName="ignore_attribute")
+
+	@XStreamImplicit(itemFieldName = "ignore_attribute")
 	private String[] ignore_attribute;
-	
+
 	@XStreamAlias("oml:version_label")
 	private String version_label;
-	
-	@XStreamImplicit(itemFieldName="oml:tag")
+
+	@XStreamImplicit(itemFieldName = "oml:tag")
 	private String[] tag;
-	
+
 	@XStreamAlias("oml:visibility")
 	private String visibility;
 
@@ -105,34 +106,22 @@ public class DataSetDescription implements Serializable {
 
 	@XStreamAlias("oml:status")
 	private String status;
-	
+
 	@XStreamAlias("oml:md5_checksum")
 	private String md5_checksum;
-	
+
 	// do not serialize
 	@XStreamOmitField
 	private File dataset_cache;
-	
+
 	/*
-	 *	Constructor used from the Register Dataset Dialog. Set "null" for unspecified values that are optional.
+	 * Constructor used from the Register Dataset Dialog. Set "null" for
+	 * unspecified values that are optional.
 	 */
-	
-	public DataSetDescription(
-			Integer id, 
-			String name, 
-			String version, 
-			String description, 
-			String[] creator, 
-			String[] contributor, 
-			String format, 
-			String collection_date, 
-			String language, 
-			String licence, 
-			String url, 
-			String row_id_attribute, 
-			String default_target_attribute,
-			String[] ignore_attribute,
-			String[] tag,
+
+	public DataSetDescription(Integer id, String name, String version, String description, String[] creator,
+			String[] contributor, String format, String collection_date, String language, String licence, String url,
+			String row_id_attribute, String default_target_attribute, String[] ignore_attribute, String[] tag,
 			String md5_checksum) {
 		this.id = id;
 		this.name = name;
@@ -152,12 +141,8 @@ public class DataSetDescription implements Serializable {
 		this.tag = tag;
 		this.md5_checksum = md5_checksum;
 	}
-	
-	public DataSetDescription(
-			String name, 
-			String description, 
-			String format, 
-			String default_target_attribute ) {
+
+	public DataSetDescription(String name, String description, String format, String default_target_attribute) {
 		this.id = null;
 		this.name = name;
 		this.version = null;
@@ -174,13 +159,8 @@ public class DataSetDescription implements Serializable {
 		this.default_target_attribute = default_target_attribute;
 		this.md5_checksum = null;
 	}
-	
 
-	public DataSetDescription(
-			String name, 
-			String description, 
-			String format, 
-			String url,
+	public DataSetDescription(String name, String description, String format, String url,
 			String default_target_attribute) {
 		this.id = null;
 		this.name = name;
@@ -206,7 +186,7 @@ public class DataSetDescription implements Serializable {
 	public Integer getId() {
 		return id;
 	}
-	
+
 	public void unsetId() {
 		id = null;
 	}
@@ -254,11 +234,11 @@ public class DataSetDescription implements Serializable {
 	public String getUrl() {
 		return url;
 	}
-	
+
 	public void unsetUrl() {
 		this.url = null;
 	}
-	
+
 	public Integer getFile_id() {
 		return file_id;
 	}
@@ -278,36 +258,39 @@ public class DataSetDescription implements Serializable {
 	public String[] getIgnore_attribute() {
 		return ignore_attribute;
 	}
-	
+
 	public String[] getTag() {
 		return tag;
 	}
-	
-	public void addTag( String new_tag ) {
+
+	public void addTag(String new_tag) {
 		// check if tag is not already present
-		if( tag != null ) {
-			if( Arrays.asList(tag).contains(new_tag) == true ) {
+		if (tag != null) {
+			if (Arrays.asList(tag).contains(new_tag) == true) {
 				return;
 			}
 		}
-		tag = ArrayUtils.addAll( tag, new_tag );
+		tag = ArrayUtils.addAll(tag, new_tag);
 	}
 
 	public String getVisibility() {
 		return visibility;
 	}
-	
+
 	public String getMd5_checksum() {
 		return md5_checksum;
 	}
-	
-	public File getDataset( String api_key ) throws Exception {
+
+	public File getDataset(String api_key) throws Exception {
 		// for privacy settings
 		String url_suffix = "";
-		if( api_key != null ) { url_suffix = "?api_key=" + api_key; }
-		
-		if( dataset_cache == null ) 
-			dataset_cache = ArffHelper.downloadAndCache( "dataset", getId(), getFormat(), getUrl() + url_suffix, getMd5_checksum() );
+		if (api_key != null) {
+			url_suffix = "?api_key=" + api_key;
+		}
+
+		if (dataset_cache == null) {
+			dataset_cache = ArffHelper.downloadAndCache("dataset", getId(), getFormat(), new URL(getUrl() + url_suffix), getMd5_checksum());
+		}
 		return dataset_cache;
 	}
 }

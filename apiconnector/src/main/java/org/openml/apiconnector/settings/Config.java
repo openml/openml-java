@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -125,6 +127,19 @@ public class Config implements Serializable {
 			}
 			return tags;
 		}
+	}
+	
+	public String getChachePrefixFromUrl() throws MalformedURLException {
+		return getChachePrefixFromUrl(new URL(getServer()));
+	}
+	
+	public static String getChachePrefixFromUrl(URL server) throws MalformedURLException {
+		String[] host = server.getHost().split("\\.");
+		String result = "";
+		for (int i = 0; i < host.length; ++i) {
+			result = host[i] + "/" + result;
+		}
+		return result;
 	}
 
 	/**

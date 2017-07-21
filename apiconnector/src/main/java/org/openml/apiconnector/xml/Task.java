@@ -379,10 +379,10 @@ public class Task implements Serializable {
 					// TODO: we want to get rid of the server calculated Md5 ... 
 					String serverMd5 = null;
 					if( Settings.LOCAL_OPERATIONS ) {
-						serverMd5 = HttpConnector.getStringFromUrl(getData_splits_url().replace("/get/", "/md5/"), false);
+						serverMd5 = HttpConnector.getStringFromUrl(new URL(getData_splits_url().replace("/get/", "/md5/")), false);
 					}
 					//	String identifier = getData_splits_url().substring( getData_splits_url().lastIndexOf('/') + 1 );
-					data_splits_cache = ArffHelper.downloadAndCache("splits", task_id, "arff", getData_splits_url(), serverMd5 );
+					data_splits_cache = ArffHelper.downloadAndCache("splits", task_id, "arff", new URL(getData_splits_url()), serverMd5 );
 				}
 				return data_splits_cache;
 			}

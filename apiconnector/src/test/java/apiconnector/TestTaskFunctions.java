@@ -3,6 +3,7 @@ package apiconnector;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.net.URL;
 
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.TaskInformation;
@@ -32,7 +33,7 @@ public class TestTaskFunctions {
 		
 		
 		Integer dataId = TaskInformation.getSourceData(t).getData_set_id();
-		String[] splits = HttpConnector.getStringFromUrl(splitsUrl, false).split("\n");
+		String[] splits = HttpConnector.getStringFromUrl(new URL(splitsUrl), false).split("\n");
 		DataQuality dq = client_read.dataQualities(dataId);
 		int numInstances = (int) Double.parseDouble(dq.getQualitiesMap().get("NumberOfInstances"));
 		

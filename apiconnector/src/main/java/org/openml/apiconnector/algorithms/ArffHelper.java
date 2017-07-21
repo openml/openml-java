@@ -38,9 +38,9 @@ public class ArffHelper {
 	 * @return A file pointer to the specified arff file.
 	 * @throws IOException
 	 */
-	public static File downloadAndCache(String type, int identifier, String extension, String url, String serverMd5) throws Exception {
-		if(Caching.in_cache(type, identifier, extension)) {
-			File file = Caching.cached(type, identifier, extension);
+	public static File downloadAndCache(String type, int identifier, String extension, URL url, String serverMd5) throws Exception {
+		if(Caching.in_cache(url, type, identifier, extension)) {
+			File file = Caching.cached(url, type, identifier, extension);
 			String clientMd5 = Hashing.md5(file);
 			if(serverMd5 == null || serverMd5.equals("NotApplicable") || clientMd5.equals( serverMd5.trim())) {
 				return file;
@@ -55,7 +55,7 @@ public class ArffHelper {
 		
 		File dataset;
 		if( Settings.CACHE_ALLOWED ) {
-			dataset = Caching.cache(new URL(url), type, identifier, extension);
+			dataset = Caching.cache(url, type, identifier, extension);
 		} else {
 			dataset = Conversion.stringToTempFile(HttpConnector.getStringFromUrl(url, false), type + "_" + identifier + "", extension );
 		}

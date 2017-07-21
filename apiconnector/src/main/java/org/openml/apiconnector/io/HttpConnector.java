@@ -33,19 +33,19 @@ public class HttpConnector implements Serializable {
 	
 	private static final long serialVersionUID = -8589069573065947493L;
 	
-	public static Object doApiRequest(String url, MultipartEntity entity, String ash, int apiVerboseLevel) throws Exception {
+	public static Object doApiRequest(URL url, MultipartEntity entity, String ash, int apiVerboseLevel) throws Exception {
 		if (ash == null) {
 			throw new Exception("Api key not set. ");
 		}
 		entity.addPart("api_key", new StringBody( ash ) );
 		CloseableHttpClient httpclient = HttpClients.createDefault();
-		HttpPost httppost = new HttpPost( url );
+		HttpPost httppost = new HttpPost(url.toString());
         httppost.setEntity(entity);
         CloseableHttpResponse response = httpclient.execute(httppost);
         return wrapHttpResponse(response, url, "POST", apiVerboseLevel);
 	}
 	
-	public static Object doApiRequest(String url, String ash, int apiVerboseLevel) throws Exception {
+	public static Object doApiRequest(URL url, String ash, int apiVerboseLevel) throws Exception {
 		if (ash == null) {
 			throw new Exception("Api key not set. ");
 		}
@@ -56,7 +56,7 @@ public class HttpConnector implements Serializable {
         return wrapHttpResponse(response, url, "GET", apiVerboseLevel);
 	}
 	
-	public static Object doApiDelete(String url, String ash, int apiVerboseLevel) throws Exception {
+	public static Object doApiDelete(URL url, String ash, int apiVerboseLevel) throws Exception {
 		if (ash == null) {
 			throw new Exception("Api key not set. ");
 		}
@@ -67,9 +67,9 @@ public class HttpConnector implements Serializable {
 		return wrapHttpResponse(response, url, "DELETE", apiVerboseLevel);
 	}
 	
-	public static String getStringFromUrl(String url, boolean accept_all) throws Exception {
+	public static String getStringFromUrl(URL url, boolean accept_all) throws Exception {
 		CloseableHttpClient client = HttpClients.createDefault();
-		HttpGet httpget = new HttpGet(url);
+		HttpGet httpget = new HttpGet(url.toString());
 		HttpResponse httpResp = client.execute(httpget);
 		int code = httpResp.getStatusLine().getStatusCode();
 		if (!accept_all && code != HttpStatus.SC_OK) {
@@ -78,7 +78,7 @@ public class HttpConnector implements Serializable {
 		return httpEntitiToString(httpResp.getEntity());
 	}
 	
-	private static Object wrapHttpResponse(CloseableHttpResponse response, String url, String requestType, int apiVerboseLevel) throws Exception {
+	private static Object wrapHttpResponse(CloseableHttpResponse response, URL url, String requestType, int apiVerboseLevel) throws Exception {
 		String result = readHttpResponse(response, url, requestType, apiVerboseLevel);
 		XStream xstreamClient = XstreamXmlMapping.getInstance();
 		Object apiResult = xstreamClient.fromXML(result);
@@ -94,7 +94,7 @@ public class HttpConnector implements Serializable {
 	}
 	
 
-	protected static String readHttpResponse(CloseableHttpResponse response, String url, String requestType, int apiVerboseLevel) throws Exception {
+	protected static String readHttpResponse(CloseableHttpResponse response, URL url, String requestType, int apiVerboseLevel) throws Exception {
 		String result = "";
         HttpEntity resEntity = response.getEntity();
         int code = response.getStatusLine().getStatusCode();
