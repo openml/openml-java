@@ -19,13 +19,35 @@ import org.openml.apiconnector.xml.EvaluationList;
 import org.openml.apiconnector.xml.EvaluationList.Evaluation;
 import org.openml.apiconnector.xml.Flow;
 import org.openml.apiconnector.xml.SetupParameters;
+import org.openml.apiconnector.xml.Study;
 
 public class PlotCsvGenerator {
 
 	private static final String key_read = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f";
 	private static final String url = "https://www.openml.org/";
 	private static final OpenmlConnector openml = new OpenmlConnector(url, key_read);
+	
+	@Test
+	public void testCompareSetups() throws Exception {
+		Study study = openml.studyGet(34);
+		String measure = "predictive_accuracy";
+		File resultFile = new File("results.csv");
+		compareClassifiersAcrossTasks(openml, 
+				Arrays.asList(study.getTasks()), 
+				Arrays.asList(study.getSetups()), 
+				measure, resultFile);
+	}
+	
+	@Test
+	public void testFlowsOnTaks() throws Exception {
+		int taskId = 6;
+		String measure = "predictive_accuracy";
+		File resultFile = new File("flowsOnTask" + taskId + ".csv");
+		int resultLimit = 20;
 
+		flowsOnTask(openml, taskId, measure, resultFile, resultLimit);
+	}
+	
 	@Test
 	public void testHyperparameterEffect() throws Exception {
 		Integer[] taskIds = {6, 21, 28, 41, 58};
@@ -36,26 +58,50 @@ public class PlotCsvGenerator {
 
 		hyperparameterEffect(openml, Arrays.asList(taskIds), Arrays.asList(setupIds), hyperparameter, measure, resultFile);
 	}
-
-	@Test
-	@Ignore
-	public void testFlowsOnTaks() throws Exception {
-		int taskId = 6;
-		String measure = "predictive_accuracy";
-		File resultFile = new File("flowsOnTask" + taskId + ".csv");
-		int resultLimit = 20;
-
-		flowsOnTask(openml, taskId, measure, resultFile, resultLimit);
-	}
-
-	public static String formatFlowname(Flow f) {
-		// this function provides a name mapping in case you want to display
-		// custom names
-		return f.getName().substring(5) + "(" + f.getVersion() + ")";
-	}
-
-	public static boolean flowEligible(Flow f) {
-		return f.getName().startsWith("weka.") && f.getComponent() == null;
+	
+	public static void compareClassifiersAcrossTasks(OpenmlConnector openml, List<Integer> taskIds, List<Integer> setupIds, String evaluationMeasure, File resultsFile) throws Exception {
+		// obtains all evaluations that comply to the three filters
+		EvaluationList results = openml.evaluationList(taskIds, setupIds, evaluationMeasure);
+		// initialize data structure for storing the results, mapping from
+		// param value to a mapping from task id to result value
+		Map<Integer, Map<Integer, Double>> resultMap = new TreeMap<Integer, Map<Integer, Double>>();
+		
+		// loop over all the results obtained from OpenML
+		for (Evaluation e : results.getEvaluations()) {
+			if (!resultMap.containsKey(e.getTask_id())) {
+				resultMap.put(e.getTask_id(), new TreeMap<Integer, Double>());
+			}
+			resultMap.get(e.getTask_id()).put(e.getSetup_id(), e.getValue());
+		}
+		
+		// initialize the csv writer and the header
+		BufferedWriter bw = new BufferedWriter(new FileWriter(resultsFile));
+		bw.write("\"Task id\"");
+		for (int setupId : setupIds) { bw.write("\t\"" + formatSetupid(setupId) + "\""); }
+		
+		for (int taskId : taskIds) {
+			bw.write("\n" + taskId);
+			for (int setupId : setupIds) {
+				if (resultMap.get(taskId).containsKey(setupId)) {
+					bw.write("\t" + resultMap.get(taskId).get(setupId));
+				} else {
+					System.err.println("Warning: task " + taskId + " does not contain setup " + setupId);
+					bw.write("\t0.0");
+				}
+			}
+		}
+		
+		bw.close();
+		
+		/* now the file can be plotted with a GNUplot script like:
+		 * 
+		 * set style data boxplot
+		 * set xtics rotate by -45
+		 * sub(s) = system(sprintf("echo \"%s\" | sed 's/@/ /g'", s))
+		 * header = system("head -1 'results.csv'")
+		 * set for [i=1:words(header)] xtics (sub(word(header, i)) i)
+		 * plot for [i=2:40] 'results.csv' using (i):i lt -1 lc rgb "blue" pointsize 0.2 notitle
+		 */
 	}
 
 	public static void flowsOnTask(OpenmlConnector openml, int taskId, String evaluationMeasure, File resultsFile,
@@ -200,5 +246,22 @@ public class PlotCsvGenerator {
 		bw.close();
 
 		// now the file can be plotted with a GNUplot command like "plot for [i=2:10] "results.csv" using 1:i with lp title columnheader"
+	}
+	
+	public static String formatSetupid(int setupId) throws Exception {
+		SetupParameters sp = openml.setupParameters(setupId);
+		Flow f = openml.flowGet(sp.getFlow_id());
+		
+		return f.getName();
+	}
+
+	public static String formatFlowname(Flow f) {
+		// this function provides a name mapping in case you want to display
+		// custom names
+		return f.getName().substring(5) + "(" + f.getVersion() + ")";
+	}
+
+	public static boolean flowEligible(Flow f) {
+		return f.getName().startsWith("weka.") && f.getComponent() == null;
 	}
 }

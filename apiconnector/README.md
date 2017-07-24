@@ -15,8 +15,62 @@ where taskIds and setupIds are lists filtering the results on the included ids (
 
 After that, the data needs to be formatted in such a way that the appropriate plotting script can handle it. This usually requires some (trivial) data processing. Full code and examples how to call these are provided in the UnitTest [PlotCsvGenerator.java](https://github.com/openml/java/blob/master/apiconnector/src/test/java/examples/PlotCsvGenerator.java). 
 
+
+## Compare various classifiers across tasks
+This function requires the following additional functions to be present: 
+* formatSetupid(int setupid) - A function that formats the name of the setup. By default, it could just return its own value, but in order to be more informative, the name of the corresponding flow could be attached. 
+
+This will lead to a plot similar to [Figure 4.10 of 'Massively Collaborative Machine Learning'](https://openaccess.leidenuniv.nl/bitstream/handle/1887/44814/thesis.pdf?sequence=2#figure.caption.26)
+
+```java
+public static void compareClassifiersAcrossTasks(OpenmlConnector openml, List<Integer> taskIds, List<Integer> setupIds, String evaluationMeasure, File resultsFile) throws Exception {
+  // obtains all evaluations that comply to the three filters
+  EvaluationList results = openml.evaluationList(taskIds, setupIds, evaluationMeasure);
+  // initialize data structure for storing the results, mapping from
+  // param value to a mapping from task id to result value
+  Map<Integer, Map<Integer, Double>> resultMap = new TreeMap<Integer, Map<Integer, Double>>();
+  
+  // loop over all the results obtained from OpenML
+  for (Evaluation e : results.getEvaluations()) {
+    if (!resultMap.containsKey(e.getTask_id())) {
+      resultMap.put(e.getTask_id(), new TreeMap<Integer, Double>());
+    }
+    resultMap.get(e.getTask_id()).put(e.getSetup_id(), e.getValue());
+  }
+  
+  // initialize the csv writer and the header
+  BufferedWriter bw = new BufferedWriter(new FileWriter(resultsFile));
+  bw.write("\"Task id\"");
+  for (int setupId : setupIds) { bw.write("\t\"" + formatSetupid(setupId) + "\""); }
+  
+  for (int taskId : taskIds) {
+    bw.write("\n" + taskId);
+    for (int setupId : setupIds) {
+      if (resultMap.get(taskId).containsKey(setupId)) {
+        bw.write("\t" + resultMap.get(taskId).get(setupId));
+      } else {
+        System.err.println("Warning: task " + taskId + " does not contain setup " + setupId);
+        bw.write("\t0.0");
+      }
+    }
+  }
+  
+  bw.close();
+  
+  /* now the file can be plotted with a GNUplot script like:
+   * 
+   * set style data boxplot
+   * set xtics rotate by -45
+   * sub(s) = system(sprintf("echo \"%s\" | sed 's/@/ /g'", s))
+   * header = system("head -1 'results.csv'")
+   * set for [i=1:words(header)] xtics (sub(word(header, i)) i)
+   * plot for [i=2:40] 'results.csv' using (i):i lt -1 lc rgb "blue" pointsize 0.2 notitle
+   */
+}
+```
+
 ## Plot results of flows on a given task
-This function requires to additional functions to be present: 
+This function requires the following additional functions to be present: 
 * flowEligible(Flow f) - A boolean function that determines whether a flow is eligible to be shown in the plot (useful when we want to show a subset of the flows, e.g., only the Weka flows).
 * formatFlowname(Flow f) - A function that formats the name of the flow. By default, it could return f.getName(), but as some flow names tend to be quite long, obfuscating the legend, sometimes something a more complicated should be done. 
 
@@ -91,8 +145,8 @@ public static void flowsOnTask(OpenmlConnector openml, int taskId, String evalua
 }
 ```
 
-## Plot the effect of a given parameter
-This functionality requires as input a list of setups, be aware that these setups need to be originated from the same flow. 
+## Plot the effect of a given hyperparameter
+This functionality requires as input a list of setups; please be aware that these setups need to be originated from the same flow. 
 
 This will lead to a plot similar to [Figure 4.9 of 'Massively Collaborative Machine Learning'](https://openaccess.leidenuniv.nl/bitstream/handle/1887/44814/thesis.pdf?sequence=2#figure.caption.25).
 
@@ -158,7 +212,6 @@ public static void hyperparameterEffect(OpenmlConnector openml, List<Integer> ta
   // now the file can be plotted with a GNUplot command like "plot for [i=2:10] "results.csv" using 1:i with lp title columnheader"
 }
 ```
-
 
 # How to cite
 If you found this library useful, please cite: J. N. van Rijn, Massively Collaborative Machine Learning, Leiden University, 2016. If you used OpenML in a scientific publication, please check out the [OpenML citation policy](https://www.openml.org/cite). 
