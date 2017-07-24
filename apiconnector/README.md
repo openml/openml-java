@@ -16,12 +16,11 @@ where taskIds and setupIds are lists filtering the results on the included ids (
 After that, the data needs to be formatted in such a way that the appropriate plotting script can handle it. This usually requires some (trivial) data processing. Full code and examples how to call these are provided in the UnitTest [PlotCsvGenerator.java](https://github.com/openml/java/blob/master/apiconnector/src/test/java/examples/PlotCsvGenerator.java). 
 
 ## Plot results of flows on a given task
-
 This function requires to additional functions to be present: 
 * flowEligible(Flow f) - A boolean function that determines whether a flow is eligible to be shown in the plot (useful when we want to show a subset of the flows, e.g., only the Weka flows).
 * formatFlowname(Flow f) - A function that formats the name of the flow. By default, it could return f.getName(), but as some flow names tend to be quite long, obfuscating the legend, sometimes something a more complicated should be done. 
 
-This will lead to a plot similar to [Figure 4.7 of 'Massively Collaborative Machine Learning'](https://openaccess.leidenuniv.nl/bitstream/handle/1887/44814/thesis.pdf?sequence=2#figure.caption.22)
+This will lead to a plot similar to [Figure 4.7 of 'Massively Collaborative Machine Learning'](https://openaccess.leidenuniv.nl/bitstream/handle/1887/44814/thesis.pdf?sequence=2#figure.caption.22).
 
 ```java
 public static void flowsOnTask(OpenmlConnector openml, int taskId, String evaluationMeasure, File resultsFile, int resultLimit) throws Exception {
@@ -88,7 +87,75 @@ public static void flowsOnTask(OpenmlConnector openml, int taskId, String evalua
     }
   }
   bw.close();
-  // now the resulting csv can be plotted with a GNUplot command like "plot "results.csv" using 1:4:xticlabels(3)" 
+  // now the resulting csv can be plotted with a GNUplot command like "plot 'results.csv' using 1:4:xticlabels(3)" 
+}
+```
+
+## Plot the effect of a given parameter
+This functionality requires as input a list of setups, be aware that these setups need to be originated from the same flow. 
+
+This will lead to a plot similar to [Figure 4.9 of 'Massively Collaborative Machine Learning'](https://openaccess.leidenuniv.nl/bitstream/handle/1887/44814/thesis.pdf?sequence=2#figure.caption.25).
+
+```java
+public static void hyperparameterEffect(OpenmlConnector openml, List<Integer> taskIds, List<Integer> setupIds,
+    String hyperparameter, String evaluationMeasure, File resultsFile) throws Exception {
+  // obtains all evaluations that comply to the three filters
+  EvaluationList results = openml.evaluationList(taskIds, setupIds, evaluationMeasure);
+
+  // initialize data structure for storing the results, mapping from
+  // param value to a mapping from task id to result value
+  Map<Double, Map<Integer, Double>> hyperparameterEffect = new TreeMap<Double, Map<Integer, Double>>();
+  
+  // for sanity checking: all setups need to have the same flow id
+  Integer flowId = null;
+  
+  // loop over all the results obtained from OpenML
+  for (Evaluation e : results.getEvaluations()) {
+    // we have a setup id -> use this to obtain the full setup object
+    SetupParameters setupDetails = openml.setupParameters(e.getSetup_id());
+    // sanity checking
+    if (flowId == null) {
+      flowId = setupDetails.getFlow_id();
+    } else {
+      if (flowId != setupDetails.getFlow_id()) { 
+        throw new RuntimeException("Flow id of setups does not match"); 
+      }
+    }
+    
+    // use convenience function to convert hyperparameters object into hashmap
+    Map<String, SetupParameters.Parameter> params = setupDetails.getParametersAsMap();
+    // obtain the value of the hyperparameter we are interested in
+    Double hyperparameterValue = Double.parseDouble(params.get(hyperparameter).getValue());
+    // and add this to our data structure
+    if (!hyperparameterEffect.containsKey(hyperparameterValue)) {
+      hyperparameterEffect.put(hyperparameterValue, new TreeMap<Integer, Double>());
+    }
+    hyperparameterEffect.get(hyperparameterValue).put(e.getTask_id(), e.getValue());
+    
+  }
+
+  // initialize the csv writer and the header
+  BufferedWriter bw = new BufferedWriter(new FileWriter(resultsFile));
+  bw.write("\"" + hyperparameter + "\"");
+  for (int taskId : taskIds) { bw.write("\t\"Task " + taskId + "\""); }
+  bw.write("\n");
+  
+  // loops over the results and print to csv
+  for (Iterator<Double> itt = hyperparameterEffect.keySet().iterator(); itt.hasNext();) {
+    Double paramVal = itt.next();
+    bw.append(""+paramVal);
+    for (int taskId : taskIds) {
+      if (hyperparameterEffect.get(paramVal).containsKey(taskId)) {
+        bw.append("\t" + hyperparameterEffect.get(paramVal).get(taskId));
+      } else {
+        bw.append(",");
+      }
+    }
+    bw.append("\n");
+  }
+  bw.close();
+
+  // now the file can be plotted with a GNUplot command like "plot for [i=2:10] "results.csv" using 1:i with lp title columnheader"
 }
 ```
 
