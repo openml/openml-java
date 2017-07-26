@@ -1,10 +1,12 @@
 package org.openml.apiconnector.xml;
 
 import java.io.Serializable;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.openml.apiconnector.settings.Constants;
 
-public class Task_new implements Serializable {
+public class TaskInputs implements Serializable {
 	
 	private static final long serialVersionUID = -313419200748747105L;
 	private final String oml = Constants.OPENML_XMLNS;
@@ -13,7 +15,7 @@ public class Task_new implements Serializable {
 	private Input[] inputs;
 	private String[] tags;
 	
-	public Task_new(Integer task_id, Integer task_type_id, Input[] inputs, String[] tags) {
+	public TaskInputs(Integer task_id, Integer task_type_id, Input[] inputs, String[] tags) {
 		this.task_id = task_id;
 		this.task_type_id = task_type_id;
 		this.inputs = inputs;
@@ -38,6 +40,14 @@ public class Task_new implements Serializable {
 	
 	public String[] getTags() {
 		return tags;
+	}
+	
+	public Map<String, String> getInputsAsMap() {
+		Map<String, String> result = new TreeMap<String, String>();
+		for (Input i : getInput()) {
+			result.put(i.getName(), i.getValue());
+		}
+		return result;
 	}
 
 	public static class Input implements Serializable {

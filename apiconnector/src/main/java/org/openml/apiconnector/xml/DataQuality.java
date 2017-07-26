@@ -28,21 +28,28 @@ public class DataQuality {
 
 	private final String oml = Constants.OPENML_XMLNS;
 	private Integer did;
+	private Integer evaluation_engine_id;
 	private String error;
 	private Quality[] qualities;
 
-	public DataQuality(Integer did, Quality[] qualities) {
+	public DataQuality(Integer did, Integer evaluation_engine_id, Quality[] qualities) {
 		this.did = did;
+		this.evaluation_engine_id = evaluation_engine_id;
 		this.qualities = qualities;
 	}
 
-	public DataQuality(Integer did, String error) {
+	public DataQuality(Integer did, Integer evaluation_engine_id, String error) {
 		this.did = did;
+		this.evaluation_engine_id = evaluation_engine_id;
 		this.error = error;
 	}
 
 	public Integer getDid() {
 		return did;
+	}
+	
+	public Integer getEvaluation_engine_id() {
+		return evaluation_engine_id;
 	}
 
 	public String getError() {

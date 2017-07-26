@@ -27,6 +27,7 @@ import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataQualityUpload;
 import org.openml.apiconnector.xml.DataTag;
+import org.openml.apiconnector.xml.DataUnprocessed;
 import org.openml.apiconnector.xml.DataUntag;
 import org.openml.apiconnector.xml.EvaluationList;
 import org.openml.apiconnector.xml.EvaluationRequest;
@@ -61,7 +62,7 @@ import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskDelete;
 import org.openml.apiconnector.xml.TaskTag;
 import org.openml.apiconnector.xml.TaskUntag;
-import org.openml.apiconnector.xml.Task_new;
+import org.openml.apiconnector.xml.TaskInputs;
 import org.openml.apiconnector.xml.Tasks;
 import org.openml.apiconnector.xml.RunTrace;
 import org.openml.apiconnector.xml.UploadDataSet;
@@ -97,6 +98,7 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(DataSetDescription.class);
 		xstream.processAnnotations(DataTag.class);
 		xstream.processAnnotations(DataUntag.class);
+		xstream.processAnnotations(DataUnprocessed.class);
 		
 		xstream.processAnnotations(TaskTag.class);
 		xstream.processAnnotations(TaskUntag.class);
@@ -124,6 +126,7 @@ public class XstreamXmlMapping {
 		// data feature
 		xstream.alias("oml:data_features", DataFeature.class);
 		xstream.aliasField("oml:did", DataFeature.class, "did");
+		xstream.aliasField("oml:evaluation_engine_id", DataFeature.class, "evaluation_engine_id");
 		xstream.aliasField("oml:error", DataFeature.class, "error");
 		xstream.aliasAttribute(DataFeature.class, "oml", "xmlns:oml");
 		xstream.addImplicitCollection(DataFeature.class, "features", "oml:feature", DataFeature.Feature.class);
@@ -150,6 +153,7 @@ public class XstreamXmlMapping {
 		// data quality
 		xstream.alias("oml:data_qualities", DataQuality.class);
 		xstream.aliasField("oml:did", DataQuality.class, "did");
+		xstream.aliasField("oml:evaluation_engine_id", DataQuality.class, "evaluation_engine_id");
 		xstream.aliasField("oml:error", DataQuality.class, "error");
 		xstream.aliasAttribute(DataQuality.class, "oml", "xmlns:oml");
 		xstream.addImplicitCollection(DataQuality.class, "qualities", "oml:quality", DataQuality.Quality.class);
@@ -257,19 +261,19 @@ public class XstreamXmlMapping {
 		xstream.alias("oml:upload_task", UploadTask.class);
 		xstream.aliasField("oml:id", UploadTask.class, "id");
 		
-		// task new
-		xstream.alias("oml:task_new", Task_new.class);
-		xstream.aliasAttribute(Task_new.class, "oml", "xmlns:oml");
+		// task inputs (used for uploading tasks)
+		xstream.alias("oml:task_inputs", TaskInputs.class);
+		xstream.aliasAttribute(TaskInputs.class, "oml", "xmlns:oml");
 		
-		xstream.alias("oml:input", Task_new.Input.class);
+		xstream.alias("oml:input", TaskInputs.Input.class);
 		
-		xstream.aliasField("oml:task_id", Task_new.class, "task_id");
-		xstream.aliasField("oml:task_type_id", Task_new.class, "task_type_id");
-		xstream.addImplicitCollection(Task_new.class, "inputs", "oml:input", Task_new.Input.class);
-		xstream.addImplicitCollection(Task_new.class, "tags", "oml:tag", String.class);
+		xstream.aliasField("oml:task_id", TaskInputs.class, "task_id");
+		xstream.aliasField("oml:task_type_id", TaskInputs.class, "task_type_id");
+		xstream.addImplicitCollection(TaskInputs.class, "inputs", "oml:input", TaskInputs.Input.class);
+		xstream.addImplicitCollection(TaskInputs.class, "tags", "oml:tag", String.class);
 		
-		xstream.useAttributeFor(Task_new.Input.class, "name");
-		xstream.registerConverter(new ToAttributedValueConverter(Task_new.Input.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
+		xstream.useAttributeFor(TaskInputs.Input.class, "name");
+		xstream.registerConverter(new ToAttributedValueConverter(TaskInputs.Input.class, xstream.getMapper(), xstream.getReflectionProvider(), xstream.getConverterLookup(), "value"));
 
 		// task delete
 		xstream.alias("oml:task_delete", TaskDelete.class);

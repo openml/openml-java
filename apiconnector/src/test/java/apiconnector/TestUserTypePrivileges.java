@@ -16,7 +16,7 @@ import org.openml.apiconnector.xml.Flow;
 import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.RunEvaluation;
 import org.openml.apiconnector.xml.RunTrace;
-import org.openml.apiconnector.xml.Task_new;
+import org.openml.apiconnector.xml.TaskInputs;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 import com.thoughtworks.xstream.XStream;
@@ -28,10 +28,11 @@ public class TestUserTypePrivileges {
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
 	private static final OpenmlConnector client_write = new OpenmlConnector(url,"8baa83ecddfe44b561fd3d92442e3319");
 	private static final OpenmlConnector client_read = new OpenmlConnector(url,"c1994bdb7ecb3c6f3c8f3b35f4b47f1f"); // R-TEAM
+	private static final Integer EVAL_ID = 2;
 	
 	@Test(expected=ApiException.class)
 	public void testApiDataQualityUpload() throws Exception {
-		DataQuality dq = new DataQuality(1, new Quality[0]);
+		DataQuality dq = new DataQuality(1, EVAL_ID, new Quality[0]);
 		String xml = xstream.toXML(dq);
 		File description = Conversion.stringToTempFile(xml, "data-qualities", "xml");
 		try {
@@ -44,7 +45,7 @@ public class TestUserTypePrivileges {
 	
 	@Test(expected=ApiException.class)
 	public void testApiDataFeatureUpload() throws Exception {
-		DataFeature df = new DataFeature(1, new DataFeature.Feature[0]);
+		DataFeature df = new DataFeature(1, EVAL_ID, new DataFeature.Feature[0]);
 		String xml = xstream.toXML(df);
 		File description = Conversion.stringToTempFile(xml, "data-features", "xml");
 		try {
@@ -140,7 +141,7 @@ public class TestUserTypePrivileges {
 
 	@Test(expected=ApiException.class)
 	public void testApiTaskUpload() throws Exception {
-		Task_new task = new Task_new(1, 1, null, null);
+		TaskInputs task = new TaskInputs(1, 1, null, null);
 		String xml = xstream.toXML(task);
 		File description = Conversion.stringToTempFile(xml, "flow", "xml");
 		try {

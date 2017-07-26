@@ -62,11 +62,11 @@ import org.openml.apiconnector.xml.DataUntag;
 import org.openml.apiconnector.xml.TaskDelete;
 import org.openml.apiconnector.xml.TaskTag;
 import org.openml.apiconnector.xml.TaskUntag;
-import org.openml.apiconnector.xml.Task_new;
+import org.openml.apiconnector.xml.TaskInputs;
 import org.openml.apiconnector.xml.UploadDataSet;
 import org.openml.apiconnector.xml.UploadTask;
 import org.openml.apiconnector.xml.Data.DataSet;
-import org.openml.apiconnector.xml.Task_new.Input;
+import org.openml.apiconnector.xml.TaskInputs.Input;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -117,6 +117,13 @@ public class TestDataFunctionality {
 		assertTrue(dsd.getId() == probe);
 		assertTrue(features.getFeatures().length > 0);
 		assertTrue(qualities.getQualities().length > 0);
+	}
+	
+	@Test
+	public void testApiDataUnprocessed() throws Exception {
+		client_read.dataUnprocessed(2, "normal");
+		client_read.dataUnprocessed(2, "random");
+		client_read.dataUnprocessed(2, "reverse");
 	}
 
 	@Test
@@ -278,7 +285,7 @@ public class TestDataFunctionality {
 	}
 	
 	public static File inputsToTaskFile(Input[] inputs, int ttid) throws IOException {
-		Task_new task = new Task_new(null, ttid, inputs, null);
+		TaskInputs task = new TaskInputs(null, ttid, inputs, null);
 		File taskFile = Conversion.stringToTempFile(xstream.toXML(task), "task", "xml");
 		return taskFile;
 	}

@@ -12,8 +12,9 @@ import org.openml.apiconnector.io.HttpConnector;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.Task;
+import org.openml.apiconnector.xml.TaskInputs;
 import org.openml.apiconnector.xml.Tasks;
-import org.openml.apiconnector.xml.Task_new.Input;
+import org.openml.apiconnector.xml.TaskInputs.Input;
 
 public class TestTaskFunctions {
 
@@ -28,6 +29,9 @@ public class TestTaskFunctions {
 	@Test
 	public void testApiAdditional() throws Exception {
 		Task t = client_read.taskGet(taskId);
+		
+		TaskInputs ti = client_read.taskInputs(taskId);
+		assertTrue(ti.getInputsAsMap().size() > 2);
 		
 		String splitsUrl = TaskInformation.getEstimationProcedure(t).getData_splits_url();
 		

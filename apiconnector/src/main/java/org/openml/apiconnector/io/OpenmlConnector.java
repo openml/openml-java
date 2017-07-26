@@ -24,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
-import org.json.JSONObject;
 import org.openml.apiconnector.algorithms.Caching;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.settings.Constants;
@@ -421,6 +420,40 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	public DataUnprocessed dataUnprocessed(int evaluationEngineId, String mode) throws Exception {
+		String suffix = "data/unprocessed/" + evaluationEngineId + "/" + mode;
+		URL request = new URL(OPENML_URL + API_PART + suffix);
+		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
+		if (apiResult instanceof DataUnprocessed) {
+			return (DataUnprocessed) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to DataUnprocessed");
+		}
+	}
+	
+	public DataUnprocessed dataqualitiesUnprocessed(int evaluationEngineId, String mode, boolean featureQualities, List<String> qualitiesToCalculate) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (String s : qualitiesToCalculate) {
+			sb.append("," + s);
+		}
+		
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("features", new StringBody(sb.toString().substring(1)));
+		
+		String suffix = "data/qualities/unprocessed/" + evaluationEngineId + "/" + mode;
+		if (featureQualities) {
+			suffix += "/features";
+		}
+		
+		URL request = new URL(OPENML_URL + API_PART + suffix);
+		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
+		if (apiResult instanceof DataUnprocessed) {
+			return (DataUnprocessed) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to DataUnprocessed");
+		}
+	}
+	
 	/**
 	 * @param task_id
 	 *            - The numeric id of the task to be obtained.
@@ -448,6 +481,17 @@ public class OpenmlConnector implements Serializable {
 			return (Task) apiResult;
 		} else {
 			throw new DataFormatException("Casting Api Object to Task");
+		}
+	}
+	
+	public TaskInputs taskInputs(int task_id) throws Exception {
+		URL request = new URL(OPENML_URL + API_PART + "task/inputs/" + task_id);
+		setVerboseLevel(1);
+		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
+		if (apiResult instanceof TaskInputs) {
+			return (TaskInputs) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to TaskInputs");
 		}
 	}
 	
@@ -1241,32 +1285,11 @@ public class OpenmlConnector implements Serializable {
 	public Study studyGet(int studyId, String dataType) throws Exception {
 		return studyGet("" + studyId, dataType);
 	}
-	
-	/**
-	 * Does a free query to openml
-	 * 
-	 * @param sql
-	 *            - The query to be executed
-	 * @return An JSON object containing the result of the query, along with
-	 *         meta data
-	 * @throws Exception
-	 */
-	public JSONObject freeQuery(String sql) throws Exception {
-		
-		URL request = new URL(OPENML_URL + "api_query/?q=" + URLEncoder.encode(sql, "ISO-8859-1") + "&hash=" + getApiKey());
-		String res = HttpConnector.getStringFromUrl(request, false);
-		
-		if (verboseLevel >= Constants.VERBOSE_LEVEL_XML) {
-			System.out.println(res + "\n==========\n");
-		}
-		
-		return new JSONObject(res);
-	}
 
 	public URL getOpenmlFileUrl(Integer file_id, String filename) throws Exception {
 		if (filename == null) {
 			filename = "file"; }
 		String suffix = api_key == null ? "" : "?api_key=" + getApiKey();
-		return new URL(OPENML_URL + "data/download/" + file_id + "/" + URLEncoder.encode(filename, "UTF-8") +  suffix );
+		return new URL(OPENML_URL + "data/v1/download/" + file_id + "/" + URLEncoder.encode(filename, "UTF-8") +  suffix );
 	}
 }
