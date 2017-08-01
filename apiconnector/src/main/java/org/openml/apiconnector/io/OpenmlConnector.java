@@ -438,7 +438,7 @@ public class OpenmlConnector implements Serializable {
 		}
 		
 		MultipartEntity params = new MultipartEntity();
-		params.addPart("features", new StringBody(sb.toString().substring(1)));
+		params.addPart("qualities", new StringBody(sb.toString().substring(1)));
 		
 		String suffix = "data/qualities/unprocessed/" + evaluationEngineId + "/" + mode;
 		if (featureQualities) {
