@@ -156,8 +156,10 @@ public class Run {
 	
 	public Map<String, File> getOutputFileAsMap() {
 		Map<String, File> result = new TreeMap<String, Run.Data.File>();
-		for (File f : output_data.file) {
-			result.put(f.name, f);
+		if (output_data != null) {
+			for (File f : output_data.file) {
+				result.put(f.name, f);
+			}
 		}
 		return result;
 	}
