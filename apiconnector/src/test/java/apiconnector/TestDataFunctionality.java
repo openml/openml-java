@@ -123,7 +123,6 @@ public class TestDataFunctionality {
 	public void testApiDataUnprocessed() throws Exception {
 		client_read.dataUnprocessed(2, "normal");
 		client_read.dataUnprocessed(2, "random");
-		client_read.dataUnprocessed(2, "reverse");
 	}
 
 	@Test
@@ -239,7 +238,8 @@ public class TestDataFunctionality {
 			try {
 				if (numInst != null) {
 					int numberOfInstances = (int) Double.parseDouble(numInst);
-					assertEquals(parser.getRecords().size(), numberOfInstances);
+					int foundRecords = parser.getRecords().size() - 1; // -1 because of csv header
+					assertEquals(foundRecords, numberOfInstances);
 				}
 			} finally {
 			    parser.close();

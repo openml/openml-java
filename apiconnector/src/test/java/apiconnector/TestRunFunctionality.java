@@ -132,7 +132,7 @@ public class TestRunFunctionality {
 		// gives evaluation id "42", which does not exist. 
 		// therefore we get an actual run that is not evaluated by this engine back. 
 		Map<String, String> filters = new TreeMap<String, String>();
-		int ttid = 3;
+		int ttid = 1;
 		filters.put("ttid", "" + ttid);
 		EvaluationRequest er = client_write_test.evaluationRequest(42, "random", filters);
 		assertTrue(er.getRuns().length == 1);

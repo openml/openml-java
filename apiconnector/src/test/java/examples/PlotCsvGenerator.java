@@ -206,8 +206,8 @@ public class PlotCsvGenerator {
 			if (flowId == null) {
 				flowId = setupDetails.getFlow_id();
 			} else {
-				if (flowId != setupDetails.getFlow_id()) { 
-					throw new RuntimeException("Flow id of setups does not match"); 
+				if (!flowId.equals(setupDetails.getFlow_id())) {
+					throw new RuntimeException("Flow id of setups does not match. Expected: " + flowId + ", found: " + setupDetails.getFlow_id()); 
 				}
 			}
 			
