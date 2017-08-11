@@ -212,7 +212,7 @@ public class TestDataFunctionality {
 	}
 	
 	@Test
-	public void testGetDataAsCsv() throws Exception{
+	public void testGetDataAsCsv() throws Exception {
 		//client_read.setVerboseLevel(1);
 		Random random = new Random();
 

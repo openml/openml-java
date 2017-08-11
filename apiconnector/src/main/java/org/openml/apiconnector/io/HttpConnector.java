@@ -46,12 +46,11 @@ public class HttpConnector implements Serializable {
 	}
 	
 	public static Object doApiRequest(URL url, String ash, int apiVerboseLevel) throws Exception {
-		if (ash == null) {
-			throw new Exception("Api key not set. ");
+		if (ash != null) {
+			url = new URL(url + "?api_key=" + ash);
 		}
-		
 		CloseableHttpClient httpclient = HttpClients.createDefault();
-		HttpGet httpget = new HttpGet(url + "?api_key=" + ash);
+		HttpGet httpget = new HttpGet(url.toString());
         CloseableHttpResponse response = httpclient.execute(httpget);
         return wrapHttpResponse(response, url, "GET", apiVerboseLevel);
 	}
