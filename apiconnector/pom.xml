@@ -17,8 +17,8 @@
   </organization>
   <licenses>
     <license>
-      <name>GNU General Public License 3</name>
-      <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+      <name>BSD-3-Clause</name>
+      <url>https://opensource.org/licenses/BSD-3-Clause</url>
       <distribution>repo</distribution>
     </license>
   </licenses>

@@ -1,7 +1,8 @@
+# Java Apiconnector
 [![Build Status](https://travis-ci.org/openml/java.svg?branch=master)](https://travis-ci.org/openml/java)
 [![Coverage Status](https://coveralls.io/repos/github/openml/java/badge.svg?branch=master)](https://coveralls.io/github/openml/java?branch=master)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
-# Java Apiconnector
 Library for interfacing between OpenML and Java. Designed to not rely on Weka. For conveniently uploading of Weka Classifiers to OpenML, please consider using [OpenML Weka](https://github.com/openml/openml-weka/), either as Java library or as Weka package (available on the [Weka marketplace](http://weka.sourceforge.net/packageMetaData/)). 
 
 # Obtain results from OpenML
