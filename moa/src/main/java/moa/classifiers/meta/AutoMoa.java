@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.reflections.Reflections;
+//import org.reflections.Reflections;
 
 import com.github.javacliparser.FloatOption;
 import com.github.javacliparser.IntOption;
@@ -114,7 +114,7 @@ public class AutoMoa extends AbstractClassifier {
 		return null;
 	}
 	
-	@Override
+	/*@Override
     public void prepareForUseImpl(TaskMonitor monitor, ObjectRepository repository) {
 		allAvailableClasses = new HashSet<Class<? extends AbstractClassifier>>();
     	Reflections reflections = new Reflections("moa.classifiers");
@@ -156,7 +156,7 @@ public class AutoMoa extends AbstractClassifier {
         super.prepareForUseImpl(monitor, repository);
         
         topK = topK(historyTotal, activeClassifiers);
-    }
+    } */
 	
 
 	protected Class<? extends AbstractClassifier> getRamdonClassifier() {

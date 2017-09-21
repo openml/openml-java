@@ -14,8 +14,8 @@ import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.algorithms.MathHelper;
 import org.openml.apiconnector.algorithms.TaskInformation;
 import org.openml.apiconnector.io.OpenmlConnector;
-import org.openml.apiconnector.models.Metric;
 import org.openml.apiconnector.models.MetricScore;
+import org.openml.apiconnector.xml.EvaluationScore;
 import org.openml.apiconnector.xml.Flow;
 import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.UploadRun;
@@ -68,7 +68,7 @@ public class ResultListener {
 		results = null;
 	}
 
-	public boolean sendToOpenML(Classifier classifier, Map<Metric, MetricScore> userdefinedMeasures) throws Exception {
+	public boolean sendToOpenML(Classifier classifier, Map<String, MetricScore> userdefinedMeasures) throws Exception {
 		if (predictionsBatch == 0) {
 			return false;
 		}
@@ -91,9 +91,9 @@ public class ResultListener {
 		Run run = new Run(openmlTaskId, null, implementation_id, classifier.getCLICreationString(Classifier.class),
 				ps.toArray(new Parameter_setting[ps.size()]), MOA_TAGS);
 		if (userdefinedMeasures != null) {
-			for (Metric m : userdefinedMeasures.keySet()) {
+			for (String m : userdefinedMeasures.keySet()) {
 				MetricScore score = userdefinedMeasures.get(m);
-				run.addOutputEvaluation(m.name, m.implementation, score.getScore(), score.getArrayAsString(df));
+				run.addOutputEvaluation(new EvaluationScore(m, "" + score.getScore(), null, score.getArrayAsString(df)));
 			}
 		}
 		String runxml = XstreamXmlMapping.getInstance().toXML(run);

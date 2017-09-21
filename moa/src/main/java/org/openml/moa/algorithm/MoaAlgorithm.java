@@ -119,7 +119,7 @@ public class MoaAlgorithm {
 		String language = "English";
 		String dependencies = MoaSettings.MOA_VERSION; 
 		
-		Flow i = new Flow(name, dependencies + "_" + version, description, language, dependencies);
+		Flow i = new Flow(name, classPath, dependencies + "_" + version, description, language, dependencies);
 		for (Option option : classifier.getOptions().getOptionArray()) {
 			if (option instanceof FlagOption) {
 				FlagOption fo = (FlagOption) option;

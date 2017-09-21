@@ -9,12 +9,10 @@ import java.util.Map;
 
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.OpenmlConnector;
-import org.openml.apiconnector.models.Metric;
 import org.openml.apiconnector.models.MetricScore;
 import org.openml.apiconnector.settings.Config;
 import org.openml.apiconnector.settings.Constants;
 import org.openml.moa.ResultListener;
-import org.openml.moa.algorithm.GeneralHelpers;
 import org.openml.moa.algorithm.InstancesHelper;
 
 import moa.classifiers.Classifier;
@@ -251,19 +249,15 @@ public class OpenmlDataStreamClassification extends MainTask {
 			evaluatorResults.put(m.getName(), m.getValue());
 		}
 
-		Map<Metric, MetricScore> m = new HashMap<Metric, MetricScore>();
-		m.put(new Metric("ram_hours", "openml.userdefined.ram_hours(1.0)"),
-				new MetricScore(RAMHours, instancesProcessed));
-		m.put(new Metric("run_cpu_time", "openml.evaluation.run_cpu_time(1.0)"),
-				new MetricScore(secondsElapsed * 1.0, instancesProcessed));
+		Map<String, MetricScore> m = new HashMap<String, MetricScore>();
+		m.put("ram_hours", new MetricScore(RAMHours, instancesProcessed));
+		m.put("run_cpu_time", new MetricScore(secondsElapsed * 1.0, instancesProcessed));
 		// TODO! Keys "Kappa Statistic (percent)" and "classifications correct
 		// (percent)" are dangerous to use in this way.
 
 		// division 100 for percentages to (openml) pred_acc
-		m.put(new Metric("predictive_accuracy", "openml.evaluation.predictive_accuracy(1.0)"),
-				new MetricScore(evaluatorResults.get("classifications correct (percent)") / 100, instancesProcessed));
-		m.put(new Metric("kappa", "openml.evaluation.kappa(1.0)"),
-				new MetricScore((evaluatorResults.get("Kappa Statistic (percent)") / 100), instancesProcessed));
+		m.put("predictive_accuracy", new MetricScore(evaluatorResults.get("classifications correct (percent)") / 100, instancesProcessed));
+		m.put("kappa", new MetricScore((evaluatorResults.get("Kappa Statistic (percent)") / 100), instancesProcessed));
 
 		try {
 			resultListener.sendToOpenML(learner, m);
