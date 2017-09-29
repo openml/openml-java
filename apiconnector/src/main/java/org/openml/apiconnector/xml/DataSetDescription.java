@@ -37,6 +37,7 @@ import java.util.Arrays;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.openml.apiconnector.algorithms.ArffHelper;
+import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Constants;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -292,15 +293,11 @@ public class DataSetDescription implements Serializable {
 		return md5_checksum;
 	}
 
-	public File getDataset(String api_key) throws Exception {
+	public File getDataset(OpenmlConnector openml) throws Exception {
 		// for privacy settings
-		String url_suffix = "";
-		if (api_key != null) {
-			url_suffix = "?api_key=" + api_key;
-		}
-
 		if (dataset_cache == null) {
-			dataset_cache = ArffHelper.downloadAndCache("dataset", getId(), getFormat(), new URL(getUrl() + url_suffix), getMd5_checksum());
+			URL url = openml.getOpenmlFileUrl(getFile_id(), getName());
+			dataset_cache = ArffHelper.downloadAndCache("dataset", getId(), getFormat(), url, getMd5_checksum());
 		}
 		return dataset_cache;
 	}
