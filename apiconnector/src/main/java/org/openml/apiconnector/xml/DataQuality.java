@@ -79,8 +79,8 @@ public class DataQuality {
 		return result;
 	}
 	
-	public Map<String,String> getQualitiesMap() {
-		Map<String,String> qm = new HashMap<String, String>();
+	public Map<String,Double> getQualitiesMap() {
+		Map<String,Double> qm = new HashMap<String, Double>();
 		for (Quality q : qualities) {
 			qm.put(q.getName(), q.getValue());
 		}
@@ -94,17 +94,17 @@ public class DataQuality {
 	public static class Quality {
 		private String name;
 		private Integer feature_index;
-		private String value;
+		private Double value;
 		private Integer interval_start;
 		private Integer interval_end;
 
-		public Quality(String name, String value) {
+		public Quality(String name, Double value) {
 			this.name = name;
 			this.value = value;
 			this.feature_index = null;
 		}
 
-		public Quality(String name, String value, Integer intervat_start, Integer interval_end, Integer index) {
+		public Quality(String name, Double value, Integer intervat_start, Integer interval_end, Integer index) {
 			this.name = name;
 			this.value = value;
 			this.interval_start = intervat_start;
@@ -116,7 +116,7 @@ public class DataQuality {
 			return name;
 		}
 
-		public String getValue() {
+		public Double getValue() {
 			return value;
 		}
 

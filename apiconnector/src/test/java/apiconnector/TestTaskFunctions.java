@@ -69,7 +69,7 @@ public class TestTaskFunctions {
 		Integer dataId = TaskInformation.getSourceData(t).getData_set_id();
 		String[] splits = HttpConnector.getStringFromUrl(new URL(splitsUrl), false).split("\n");
 		DataQuality dq = client_read.dataQualities(dataId);
-		int numInstances = (int) Double.parseDouble(dq.getQualitiesMap().get("NumberOfInstances"));
+		int numInstances = dq.getQualitiesMap().get("NumberOfInstances").intValue();
 		
 		assertTrue(splits.length > numInstances); // basic check
 
