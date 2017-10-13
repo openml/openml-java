@@ -57,15 +57,15 @@ public class OpenmlConnector implements Serializable {
 	/**
 	 * When set to true, API will output information.
 	 */
-	private int verboseLevel = 0;
+	protected int verboseLevel = 0;
 	
-	private String api_key;
+	protected String api_key;
 	
-	private final String OPENML_URL;
+	protected final String OPENML_URL;
 	
-	private String API_PART = "api_new/v1/";
+	protected String API_PART = "api_new/v1/";
 	
-	private boolean apiKeySet = false;
+	protected boolean apiKeySet = false;
 
 	/**
 	 * Creates a OpenML Connector with url and authentication
@@ -150,7 +150,7 @@ public class OpenmlConnector implements Serializable {
 	 * 
 	 * api_key - the api key
 	 */
-	public void setApiKey(String api_key) {
+	public void setApiKey(String api_key) { 
 		this.api_key = api_key;
 		
 		if (api_key != null) {
