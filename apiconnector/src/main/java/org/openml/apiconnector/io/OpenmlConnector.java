@@ -369,6 +369,27 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	/**
+	 * Retrieves the qualities (meta-features) of a specified data set.
+	 * 
+	 * @param did
+	 *            - The data_id of the data features to download.
+ 	 *            - The id of the evaluation engine whose qualities to download
+	 * @return DataFeatures - An object containing the qualities of the data
+	 * @throws Exception
+	 *             - Can be: API Error (see documentation at openml.org), server
+	 *             down, etc.
+	 */
+	public DataQuality dataQualities(int did, int evalEngine) throws Exception {
+		URL request = new URL(OPENML_URL + API_PART + "data/qualities/" + did + "/" + evalEngine);
+		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
+
+		if (apiResult instanceof DataQuality) {
+			return (DataQuality) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to DataQuality");
+		}
+	}
 	
 	/**
 	 * Uploads data features (requires admin account)
@@ -453,7 +474,7 @@ public class OpenmlConnector implements Serializable {
 		
 		String suffix = "data/qualities/unprocessed/" + evaluationEngineId + "/" + mode;
 		if (featureQualities) {
-			suffix += "/features";
+			suffix += "/feature";
 		}
 		
 		URL request = new URL(OPENML_URL + API_PART + suffix);
