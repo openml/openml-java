@@ -33,6 +33,7 @@ package apiconnector;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.junit.Ignore;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.Study;
 
