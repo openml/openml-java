@@ -10,7 +10,7 @@ deploy:
   skip_cleanup: true
   github_token: $AUTH
   on:
-    branch: development
+    branch: master
   local_dir: ./target/apidocs
 name: Minion
 after_success: mvn jacoco:report coveralls:report

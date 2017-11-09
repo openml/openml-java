@@ -33,11 +33,10 @@ package apiconnector;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.junit.Ignore;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.Study;
 
-@Ignore public class TestMisc {
+        public class TestMisc {
 	private static final String key_read = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f";
 	private static final String url_live = "https://www.openml.org/";
 	private static final String url_test = "https://test.openml.org/";
