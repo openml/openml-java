@@ -5,4 +5,12 @@ jdk:
   - oraclejdk7
 before_script: cd apiconnector
 script: mvn clean verify
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $AUTH
+  on:
+    branch: development
+  local_dir: ./target/apidocs
+name: Minion
 after_success: mvn jacoco:report coveralls:report
