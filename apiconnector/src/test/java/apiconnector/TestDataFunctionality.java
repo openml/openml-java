@@ -47,6 +47,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.io.input.BOMInputStream;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.algorithms.Hashing;
 import org.openml.apiconnector.io.ApiException;
@@ -211,7 +212,7 @@ public class TestDataFunctionality {
 		client_read.dataQualitiesList();
 	}
 	
-	@Test
+	@Ignore @Test
 	public void testGetDataAsCsv() throws Exception {
 		//client_read.setVerboseLevel(1);
 		Random random = new Random();
