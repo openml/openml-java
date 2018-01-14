@@ -183,7 +183,7 @@ public class TaskInformation {
 	public static String[] getClassNames( OpenmlConnector apiconnector, Task t ) throws Exception {
 		DataSetDescription dsd = getSourceData(t).getDataSetDescription( apiconnector );
 		String targetFeature = getSourceData(t).getTarget_feature();
-		return getClassNames(dsd.getDataset(apiconnector), t.getTask_id(), targetFeature);
+		return getClassNames(apiconnector.datasetGet(dsd), t.getTask_id(), targetFeature);
 	}
 	
 	public static String[] getClassNames( File dataset, int task_id, String targetFeature ) throws Exception {

@@ -35,11 +35,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.openml.apiconnector.algorithms.ArffHelper;
 import org.openml.apiconnector.algorithms.Caching;
 import org.openml.apiconnector.algorithms.Conversion;
+import org.openml.apiconnector.algorithms.TaskInformation;
 import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xml.*;
+import org.openml.apiconnector.xml.Task.Input.Estimation_procedure;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 import java.io.File;
@@ -208,7 +211,7 @@ public class OpenmlConnector implements Serializable {
 	 */
 	public DataSetDescription dataGet(int did) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "data/" + did);
-		if (Caching.in_cache(request, "datadescription", did, "xml") || Settings.LOCAL_OPERATIONS) {
+		if (Caching.in_cache(request, "datadescription", did, "xml")) {
 			String dsdString = Conversion.fileToString(Caching.cached(request, "datadescription", did, "xml"));
 			return (DataSetDescription) XstreamXmlMapping.getInstance().fromXML(dsdString);
 		}
@@ -217,7 +220,7 @@ public class OpenmlConnector implements Serializable {
 		if (apiResult instanceof DataSetDescription) {
 			if (Settings.CACHE_ALLOWED) {
 				try {
-					Caching.cache(request, apiResult, "datadescription", did, "xml");
+					Caching.cacheXML(request, apiResult, "datadescription", did, "xml");
 				} catch(IOException e) {
 					Conversion.log("Warning", "DataGet", "Cache Store Exception: " + e.getMessage());
 				}
@@ -226,6 +229,11 @@ public class OpenmlConnector implements Serializable {
 		} else {
 			throw new DataFormatException("Casting Api Object to DataSetDescription");
 		}
+	}
+	
+	public File datasetGet(DataSetDescription dsd) throws Exception {
+		URL fileUrl = getOpenmlFileUrl(dsd.getFile_id(), dsd.getName());
+		return ArffHelper.downloadAdCache("dataset", dsd.getId(), dsd.getFormat(), fileUrl, dsd.getMd5_checksum());
 	}
 	
 	/**
@@ -496,7 +504,7 @@ public class OpenmlConnector implements Serializable {
 	 */
 	public Task taskGet(int task_id) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "task/" + task_id);
-		if (Caching.in_cache(request, "task", task_id, "xml") || Settings.LOCAL_OPERATIONS) {
+		if (Caching.in_cache(request, "task", task_id, "xml")) {
 			String taskXml = Conversion.fileToString(Caching.cached(request, "task", task_id, "xml"));
 			return (Task) XstreamXmlMapping.getInstance().fromXML(taskXml);
 		}
@@ -505,7 +513,7 @@ public class OpenmlConnector implements Serializable {
 		if (apiResult instanceof Task) {
 			if (Settings.CACHE_ALLOWED) {
 				try {
-					Caching.cache(request, apiResult, "task", task_id, "xml");
+					Caching.cacheXML(request, apiResult, "task", task_id, "xml");
 				} catch(IOException e) {
 					Conversion.log("Warning", "TaskGet", "Cache Store Exception: " + e.getMessage());
 				}
@@ -514,6 +522,12 @@ public class OpenmlConnector implements Serializable {
 		} else {
 			throw new DataFormatException("Casting Api Object to Task");
 		}
+	}
+
+	
+	public File taskSplitsGet(Task task) throws Exception {
+		Estimation_procedure ep = TaskInformation.getEstimationProcedure(task);
+		return ArffHelper.downloadAdCache("splits", task.getTask_id(), "arff", ep.getData_splits_url(), null);
 	}
 	
 	public TaskInputs taskInputs(int task_id) throws Exception {

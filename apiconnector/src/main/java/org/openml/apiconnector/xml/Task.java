@@ -30,20 +30,17 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import java.io.File;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.openml.apiconnector.algorithms.ArffHelper;
 import org.openml.apiconnector.algorithms.OptionParser;
-import org.openml.apiconnector.io.HttpConnector;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Constants;
-import org.openml.apiconnector.settings.Settings;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
@@ -370,34 +367,18 @@ public class Task implements Serializable {
 			@XStreamImplicit(itemFieldName="oml:parameter")
 			private Parameter[] parameters;
 			
-			@XStreamOmitField
-			private File data_splits_cache;
 			
 			public String getType() {
 				return type;
 			}
 
-			public String getData_splits_url() {
-				return data_splits_url;
+			public URL getData_splits_url() throws MalformedURLException {
+				return new URL(data_splits_url);
 			}
 
 			public Parameter[] getParameters() {
 				return parameters;
 			}
-			
-			public File getDataSplits( int task_id ) throws Exception {
-				if( data_splits_cache == null ) {
-					// TODO: we want to get rid of the server calculated Md5 ... 
-					String serverMd5 = null;
-					if( Settings.LOCAL_OPERATIONS ) {
-						serverMd5 = HttpConnector.getStringFromUrl(new URL(getData_splits_url().replace("/get/", "/md5/")), false);
-					}
-					//	String identifier = getData_splits_url().substring( getData_splits_url().lastIndexOf('/') + 1 );
-					data_splits_cache = ArffHelper.downloadAndCache("splits", task_id, "arff", new URL(getData_splits_url()), serverMd5 );
-				}
-				return data_splits_cache;
-			}
-			
 
 			@XStreamConverter(value=ToAttributedValueConverter.class, strings={"value"})
 			public class Parameter implements Serializable {

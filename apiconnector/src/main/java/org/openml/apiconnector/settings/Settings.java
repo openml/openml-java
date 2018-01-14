@@ -45,9 +45,5 @@ public class Settings {
 	 * Whether caching is allowed. Keep value to true.
 	 */
 	public static boolean CACHE_ALLOWED = true;
-	/**
-	 * Use on servers. In this case no download / upload operations will be used, just cache. 
-	 */
-	public static boolean LOCAL_OPERATIONS = false;
 	
 }

@@ -49,7 +49,7 @@ public class ArffHelper {
 	 * @return A file pointer to the specified arff file.
 	 * @throws IOException
 	 */
-	public static File downloadAndCache(String type, int identifier, String extension, URL url, String serverMd5) throws Exception {
+	public static File downloadAdCache(String type, int identifier, String extension, URL url, String serverMd5) throws Exception {
 		if(Caching.in_cache(url, type, identifier, extension)) {
 			File file = Caching.cached(url, type, identifier, extension);
 			String clientMd5 = Hashing.md5(file);
@@ -60,22 +60,17 @@ public class ArffHelper {
 			}
 		}
 		
-		if( Settings.LOCAL_OPERATIONS ) {
-			throw new IOException("Cache file of " + type + " #" + identifier + " not available, and only local operations are allowed. ");
-		}
-		
 		File dataset;
 		if( Settings.CACHE_ALLOWED ) {
-			dataset = Caching.cache(url, type, identifier, extension);
+			dataset = Caching.cacheFile(url, type, identifier, extension);
 		} else {
 			dataset = Conversion.stringToTempFile(HttpConnector.getStringFromUrl(url, false), type + "_" + identifier + "", extension );
 		}
 		String hash = Hashing.md5(dataset);
-        if(serverMd5 == null || serverMd5.equals("NotApplicable") || hash.equals( serverMd5.trim())) {
+        if (serverMd5 == null || serverMd5.equals("NotApplicable") || hash.equals(serverMd5.trim())) {
             return dataset;
-        }
-        else {
-            throw new IOException("Hash of the downloaded file does not correspond to the server hash");
+        } else {
+            throw new IOException("Md5 hashes do not correspond. File: " + dataset.getAbsolutePath() + ", hash: " + hash);
         }
 	}
 	

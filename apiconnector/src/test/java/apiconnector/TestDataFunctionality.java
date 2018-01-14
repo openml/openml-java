@@ -139,7 +139,7 @@ public class TestDataFunctionality {
 		
 		// Download dataset and check md5 thingy
 		DataSetDescription dsd_downloaded = client_read.dataGet(ud.getId());
-		File dataset = dsd_downloaded.getDataset(client_read);
+		File dataset = client_read.datasetGet(dsd_downloaded);
 		assertEquals(Hashing.md5(dataset), Hashing.md5(toUpload));
 		
 		// create task upon it
@@ -188,7 +188,7 @@ public class TestDataFunctionality {
 		
 		// Download dataset and check md5 thingy
 		DataSetDescription dsd_downloaded = client_read.dataGet(ud.getId());
-		File dataset = dsd_downloaded.getDataset(client_read);
+		File dataset = client_read.datasetGet(dsd_downloaded);
 
 		assertEquals(Hashing.md5(dataset), Hashing.md5(HttpConnector.getStringFromUrl(new URL(dataUrl), false)));
 		

@@ -30,6 +30,7 @@
  ******************************************************************************/
 package org.openml.apiconnector.algorithms;
 
+import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.HttpConnector;
 import org.openml.apiconnector.settings.Config;
 import org.openml.apiconnector.settings.Settings;
@@ -45,29 +46,17 @@ import java.net.URL;
 
 public class Caching {
 
-	public static void cache(URL apiUrl, String s, String type, int identifier, String extension) throws IOException {
-		String directoryPath = Settings.CACHE_DIRECTORY + "/" + Config.getChachePrefixFromUrl(apiUrl) + type;
-		File directory = new File(directoryPath);
-		directory.mkdirs();
-		String name = type + "_" + identifier + "." + extension;
-		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(directory.getAbsolutePath() + "/" + name)));
-		bw.append(s);
-		bw.close();
-		Conversion.log("OK", "Cache", "Stored to cache: " + type + "/" + name);
-	}
-	
-
-	public static File cache(URL url, String type, int identifier, String extension) throws IOException, URISyntaxException {
+	public static File cacheFile(URL url, String type, int identifier, String extension) throws IOException, URISyntaxException, ApiException {
 		String directoryPath = Settings.CACHE_DIRECTORY + "/" + Config.getChachePrefixFromUrl(url) + type;
 		File directory = new File(directoryPath);
 		directory.mkdirs();
 		String name = type + "_" + identifier + "." + extension;
-		File current = HttpConnector.getFileFromUrl(url,directory.getAbsolutePath() + "/" + name, false);
+		File current = HttpConnector.getFileFromUrl(url, directory.getAbsolutePath() + "/" + name, false);
 		Conversion.log("OK", "Cache", "Stored to cache: " + type + "/" + name);
 		return current;
 	}
 
-	public static void cache(URL apiUrl, Object o, String type, int identifier, String extension) throws IOException {
+	public static void cacheXML(URL apiUrl, Object o, String type, int identifier, String extension) throws IOException {
 		String directoryPath = Settings.CACHE_DIRECTORY + "/" + Config.getChachePrefixFromUrl(apiUrl) + type;
 		File directory = new File(directoryPath);
 		directory.mkdirs();
