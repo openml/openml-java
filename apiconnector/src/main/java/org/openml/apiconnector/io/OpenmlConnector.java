@@ -236,6 +236,11 @@ public class OpenmlConnector implements Serializable {
 		return ArffHelper.downloadAdCache("dataset", dsd.getId(), dsd.getFormat(), fileUrl, dsd.getMd5_checksum());
 	}
 	
+	public File datasetGetCcv(DataSetDescription dsd) throws Exception {
+		URL fileUrl = getOpenmlFileUrl(dsd.getFile_id(), dsd.getName(), "get_csv");
+		return ArffHelper.downloadAdCache("dataset_csv", dsd.getId(), dsd.getFormat(), fileUrl, dsd.getMd5_checksum());
+	}
+	
 	/**
 	 * Uploads a new dataset
 	 * 
@@ -1332,10 +1337,15 @@ public class OpenmlConnector implements Serializable {
 		return studyGet("" + studyId, dataType);
 	}
 
+
 	public URL getOpenmlFileUrl(Integer file_id, String filename) throws Exception {
+		return getOpenmlFileUrl(file_id, filename, "download");
+	}
+	
+	public URL getOpenmlFileUrl(Integer file_id, String filename, String phpFunction) throws Exception {
 		if (filename == null) {
 			filename = "file"; }
 		String suffix = api_key == null ? "" : "?api_key=" + getApiKey();
-		return new URL(OPENML_URL + "data/v1/download/" + file_id + "/" + URLEncoder.encode(filename, "UTF-8") +  suffix );
+		return new URL(OPENML_URL + "data/v1/" + phpFunction + "/" + file_id + "/" + URLEncoder.encode(filename, "UTF-8") +  suffix );
 	}
 }
