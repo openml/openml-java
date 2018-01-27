@@ -1,0 +1,10 @@
+% for unit testing only
+% please ignore
+@relation unit-test-data
+@attribute 'number' numeric
+@attribute 'animal' {cat, dog}    % TODO: add more animals in the future
+@attribute 'class' {good, bad}
+@data
+3.14, cat, good
+42, cat, bad
+-1.23456789, dog, good
