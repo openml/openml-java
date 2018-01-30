@@ -109,6 +109,9 @@ public class HttpConnector implements Serializable {
 	
 	private static Object wrapHttpResponse(CloseableHttpResponse response, URL url, String requestType, int apiVerboseLevel) throws Exception {
 		String result = readHttpResponse(response, url, requestType, apiVerboseLevel);
+		if (result.length() == 0) {
+			throw new ApiException(1, "Webserver returned empty result (possibly due to temporarily high load). Please try again. ");
+		}
 		XStream xstreamClient = XstreamXmlMapping.getInstance();
 		Object apiResult = xstreamClient.fromXML(result);
 		if(apiResult instanceof ApiError) {
@@ -156,22 +159,25 @@ public class HttpConnector implements Serializable {
 	 *             - Can be: server down, etc.
 	 * @throws URISyntaxException 
 	 */
-	public static File getFileFromUrl(URL url, String filepath, boolean accept_all) throws IOException, URISyntaxException {
+	public static File getFileFromUrl(URL url, String filepath, boolean accept_all) throws IOException, URISyntaxException, ApiException {
 		File file = new File(filepath);
         HttpClient httpClient = HttpClientBuilder.create().build();
         // Compared to FileUtils.copyURLToFile this can handle http -> https redirects
         HttpGet httpget = new HttpGet(url.toURI());
         HttpResponse response = httpClient.execute(httpget);
+        
         int code = response.getStatusLine().getStatusCode();
 		if (!accept_all && code != HttpStatus.SC_OK) {
 			throw new IOException("Problem getting URL, status " + code + ": " + url);
 		}
         HttpEntity entity = response.getEntity();
-        if (entity != null) {
-            FileOutputStream fos = new java.io.FileOutputStream(file);
-            entity.writeTo(fos);
-            fos.close();
+        if (entity.getContentLength() == 0) {
+        	throw new ApiException(1, "Webserver returned empty result (possibly due to temporarily high load). Please try again. ");
         }
+        FileOutputStream fos = new java.io.FileOutputStream(file);
+        entity.writeTo(fos);
+        fos.close();
+        
 		return file;
 	}
 	

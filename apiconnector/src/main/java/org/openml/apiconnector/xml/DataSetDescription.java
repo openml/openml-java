@@ -30,20 +30,15 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import java.io.File;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.openml.apiconnector.algorithms.ArffHelper;
-import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Constants;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 @XStreamAlias("oml:data_set_description")
 public class DataSetDescription implements Serializable {
@@ -121,10 +116,6 @@ public class DataSetDescription implements Serializable {
 
 	@XStreamAlias("oml:md5_checksum")
 	private String md5_checksum;
-
-	// do not serialize
-	@XStreamOmitField
-	private File dataset_cache;
 
 	/*
 	 * Constructor used from the Register Dataset Dialog. Set "null" for
@@ -243,6 +234,7 @@ public class DataSetDescription implements Serializable {
 		return licence;
 	}
 
+	@Deprecated
 	public String getUrl() {
 		return url;
 	}
@@ -291,14 +283,5 @@ public class DataSetDescription implements Serializable {
 
 	public String getMd5_checksum() {
 		return md5_checksum;
-	}
-
-	public File getDataset(OpenmlConnector openml) throws Exception {
-		// for privacy settings
-		if (dataset_cache == null) {
-			URL url = openml.getOpenmlFileUrl(getFile_id(), getName());
-			dataset_cache = ArffHelper.downloadAndCache("dataset", getId(), getFormat(), url, getMd5_checksum());
-		}
-		return dataset_cache;
 	}
 }
