@@ -28,6 +28,12 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.net.URL;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
@@ -77,6 +83,7 @@ import com.thoughtworks.xstream.XStream;
 
 public class TestDataFunctionality {
 	private static final String data_file = "data/iris.arff";
+	private static final String DATASETPATH = "data" + File.separator + "arff_test" + File.separator;
 	private static final int probe = 61;
 	private static final String tag = "junittest";
 
@@ -171,6 +178,49 @@ public class TestDataFunctionality {
 		
 		DataDelete dd = client_write.dataDelete(ud.getId());
 		assertTrue(ud.getId() == dd.get_id());
+	}
+	
+	@Test
+	public void testUploadDataset() throws IOException {
+		
+		client_write.setVerboseLevel(1);
+		// Test XML description
+		DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
+		final String dsdXML = xstream.toXML(dsd);
+		Path path = Paths.get(DATASETPATH);
+		// Pass through each dataset on the directory
+		Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+		@Override
+		public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
+					
+			System.out.println(file.getFileName());
+			File description = Conversion.stringToTempFile(dsdXML, "test-data", "arff");
+			File toUpload = new File(file.toString());
+			int id = -1;
+			if(file.getFileName().toString().startsWith("invalid")) {
+				try {
+					UploadDataSet ud = client_write.dataUpload(description, toUpload);
+					id = ud.getId();
+					client_write.dataDelete(id);
+				} catch(Exception e) {
+					e.printStackTrace();
+				} finally {
+					assertTrue(id == -1);
+				}
+			} else {
+				try {
+					UploadDataSet ud = client_write.dataUpload(description, toUpload);
+					id = ud.getId();
+					client_write.dataDelete(id);
+				} catch(Exception e ) {
+					e.printStackTrace();
+				} finally {
+					assertTrue(id != -1);
+				}
+			}
+			// Keep going through datasets
+			return FileVisitResult.CONTINUE;
+		}});
 	}
 	
 	@Test
