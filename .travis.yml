@@ -10,6 +10,6 @@ deploy:
   github_token: $AUTH
   on:
     branch: development
-  local_dir: /target/apidocs
+  local_dir: apiconnector/target/apidocs
 name: Minion
 after_success: mvn jacoco:report coveralls:report
