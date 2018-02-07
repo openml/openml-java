@@ -52,6 +52,7 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.io.input.BOMInputStream;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.algorithms.Hashing;
