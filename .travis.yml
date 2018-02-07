@@ -2,7 +2,6 @@ language: java
 sudo: false
 jdk:
   - oraclejdk8
-  - oraclejdk7
 before_script: cd apiconnector
 script: mvn clean verify
 deploy:
