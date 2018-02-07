@@ -81,6 +81,7 @@ import org.xml.sax.InputSource;
 
 import com.thoughtworks.xstream.XStream;
 
+@Ignore
 public class TestDataFunctionality {
 	private static final String data_file = "data/iris.arff";
 	private static final String DATASETPATH = "data" + File.separator + "arff_test" + File.separator;
