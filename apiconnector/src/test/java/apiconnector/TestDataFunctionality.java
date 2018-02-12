@@ -52,7 +52,6 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.io.input.BOMInputStream;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.algorithms.Hashing;
@@ -82,7 +81,6 @@ import org.xml.sax.InputSource;
 
 import com.thoughtworks.xstream.XStream;
 
-@Ignore
 public class TestDataFunctionality {
 	private static final String data_file = "data/iris.arff";
 	private static final String DATASETPATH = "data" + File.separator + "arff_test" + File.separator;
@@ -182,8 +180,7 @@ public class TestDataFunctionality {
 	private File createTestDatasetDescription() throws IOException {
 		
 		DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
-		String dsdXML = xstream.toXML(dsd);
-		return Conversion.stringToTempFile(dsdXML, "test-data", "arff");
+		return Conversion.stringToTempFile(xstream.toXML(dsd), "test-data", "arff");
 	}
 	
 	@Test
