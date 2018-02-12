@@ -546,8 +546,21 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-	public Tasks taskList(String tag) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "task/list/tag/" + tag);
+	/**
+	 * Returns a list of all of the tasks with a certain tag and type
+	 * @param type - the task type
+	 * @param tag - the task tag
+	 * @return
+	 * @throws DataFormatException
+	 */
+	public Tasks taskList(Map<String, String> filters) throws Exception {
+		String suffix = "task/list/";
+		if (filters != null) {
+			for (String filter : filters.keySet()) {
+				suffix += filter + "/" + filters.get(filter) + "/";
+			}
+		}
+		URL request = new URL(OPENML_URL + API_PART + suffix);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
 		if (apiResult instanceof Tasks) {
 			return (Tasks) apiResult;
@@ -556,21 +569,8 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-	/**
-	 * Returns a list of all of the tasks with a certain tag and type
-	 * @param type - the task type
-	 * @param tag - the task tag
-	 * @return
-	 * @throws DataFormatException
-	 */
-	public Tasks taskList(int type, String tag) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "task/list/tag/" + tag + "/type/" + type + "/");
-		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof Tasks) {
-			return (Tasks) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to Tasks");
-		}
+	public Tasks taskList() throws Exception {
+		return taskList(null);
 	}
 	
 	/**
