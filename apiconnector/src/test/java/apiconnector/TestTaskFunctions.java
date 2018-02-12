@@ -34,6 +34,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.TaskInformation;
@@ -111,7 +113,9 @@ public class TestTaskFunctions {
 	@Test
 	public void testApiTaskList() throws Exception {
 		client_read.setVerboseLevel(1);
-		Tasks tasks = client_read.taskList("study_14");
+		Map<String, String> filters = new HashMap<String, String>();
+		filters.put("tag", "study_14");
+		Tasks tasks = client_read.taskList(filters);
 		assertTrue(tasks.getTask().length > 20);
 		for (org.openml.apiconnector.xml.Tasks.Task t : tasks.getTask()) {
 			// assertTrue(t.getQualities().length > 5);
