@@ -90,6 +90,30 @@ public class DataQuality {
 	public String getOml() {
 		return oml;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		
+		if(o != null) {
+			if(o instanceof DataQuality) {
+				DataQuality qualities = (DataQuality) o;
+				if(this.getQualitiesMap().equals(qualities.getQualitiesMap())) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		return 11 * this.getQualitiesMap().hashCode();
+	}
 
 	public static class Quality {
 		private String name;

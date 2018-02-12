@@ -236,9 +236,10 @@ public class OpenmlConnector implements Serializable {
 		return ArffHelper.downloadAdCache("dataset", dsd.getId(), dsd.getFormat(), fileUrl, dsd.getMd5_checksum());
 	}
 	
-	public File datasetGetCcv(DataSetDescription dsd) throws Exception {
+	public File datasetGetCsv(DataSetDescription dsd) throws Exception {
 		URL fileUrl = getOpenmlFileUrl(dsd.getFile_id(), dsd.getName(), "get_csv");
-		return ArffHelper.downloadAdCache("dataset_csv", dsd.getId(), dsd.getFormat(), fileUrl, dsd.getMd5_checksum());
+		// Not passing the server md5 because it does not match with the csv md5
+		return ArffHelper.downloadAdCache("dataset_csv", dsd.getId(), dsd.getFormat(), fileUrl, null);
 	}
 	
 	/**
