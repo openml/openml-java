@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.algorithms.TaskInformation;
 import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.HttpConnector;
@@ -68,7 +69,8 @@ public class TestTaskFunctions {
 		URL splitsUrl = TaskInformation.getEstimationProcedure(t).getData_splits_url();
 		
 		Integer dataId = TaskInformation.getSourceData(t).getData_set_id();
-		String[] splits = HttpConnector.getStringFromUrl(splitsUrl, false).split("\n");
+		File splitsFile = HttpConnector.getFileFromUrl(splitsUrl, false, "arff");
+		String[] splits = Conversion.fileToString(splitsFile).split("\n");
 		DataQuality dq = client_read.dataQualities(dataId);
 		int numInstances = dq.getQualitiesMap().get("NumberOfInstances").intValue();
 		

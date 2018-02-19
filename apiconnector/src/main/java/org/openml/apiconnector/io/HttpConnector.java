@@ -96,7 +96,7 @@ public class HttpConnector implements Serializable {
 		return wrapHttpResponse(response, url, "DELETE", apiVerboseLevel);
 	}
 	
-	public static String getStringFromUrl(URL url, boolean accept_all) throws Exception {
+	public static File getFileFromUrl(URL url, boolean accept_all, String extension) throws Exception {
 		CloseableHttpClient client = HttpClients.createDefault();
 		HttpGet httpget = new HttpGet(url.toString());
 		HttpResponse httpResp = client.execute(httpget);
@@ -104,7 +104,7 @@ public class HttpConnector implements Serializable {
 		if (!accept_all && code != HttpStatus.SC_OK) {
 			throw new IOException("Problem getting URL, status " + code + ": " + url);
 		}
-		return httpEntitiToString(httpResp.getEntity());
+		return httpEntityToFile(httpResp.getEntity(), extension);
 	}
 	
 	private static Object wrapHttpResponse(CloseableHttpResponse response, URL url, String requestType, int apiVerboseLevel) throws Exception {
@@ -181,6 +181,16 @@ public class HttpConnector implements Serializable {
 		return file;
 	}
 	
+	protected static File httpEntityToFile(HttpEntity resEntity, String extension) throws IOException {
+		File tempFile = File.createTempFile("openml-", extension);
+		tempFile.deleteOnExit();
+		FileOutputStream fos = new FileOutputStream(tempFile);
+		resEntity.writeTo(fos);
+	    fos.close();
+	    return tempFile;
+	}
+	
+	@Deprecated
 	protected static String httpEntitiToString(HttpEntity resEntity) throws IOException {
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(new InputStreamReader( resEntity.getContent() ), writer );

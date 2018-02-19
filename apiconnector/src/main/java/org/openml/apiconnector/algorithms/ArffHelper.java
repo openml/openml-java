@@ -64,7 +64,7 @@ public class ArffHelper {
 		if( Settings.CACHE_ALLOWED ) {
 			dataset = Caching.cacheFile(url, type, identifier, extension);
 		} else {
-			dataset = Conversion.stringToTempFile(HttpConnector.getStringFromUrl(url, false), type + "_" + identifier + "", extension );
+			dataset = HttpConnector.getFileFromUrl(url, false, extension);
 		}
 		String hash = Hashing.md5(dataset);
         if (serverMd5 == null || serverMd5.equals("NotApplicable") || hash.equals(serverMd5.trim())) {

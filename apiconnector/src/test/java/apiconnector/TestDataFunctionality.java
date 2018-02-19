@@ -103,7 +103,8 @@ public class TestDataFunctionality {
 		File tempXsd = client_read.getXSD("openml.data.upload");
 		
 		String url = client_read.getApiUrl() + "data/" + probe;
-		String raw = HttpConnector.getStringFromUrl(new URL(url + "?api_key=" + client_read.getApiKey()), false);
+		File rawFile = HttpConnector.getFileFromUrl(new URL(url + "?api_key=" + client_read.getApiKey()), false, "xml");
+		String raw = Conversion.fileToString(rawFile);
 		
 		assertTrue(Conversion.validateXML(tempDsd, tempXsd));
 		
@@ -238,7 +239,8 @@ public class TestDataFunctionality {
 		DataSetDescription dsd_downloaded = client_read.dataGet(ud.getId());
 		File dataset = client_read.datasetGet(dsd_downloaded);
 
-		assertEquals(Hashing.md5(dataset), Hashing.md5(HttpConnector.getStringFromUrl(new URL(dataUrl), false)));
+		File obtainedFile = HttpConnector.getFileFromUrl(new URL(dataUrl), false, "xml");
+		assertEquals(Hashing.md5(dataset), Hashing.md5(obtainedFile));
 		
 	}
 
