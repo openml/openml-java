@@ -66,6 +66,10 @@ public class RunList {
 
 		@XStreamAlias("oml:task_id")
 		private int task_id;
+		
+		// should become int later
+		@XStreamAlias("oml:task_type_id")
+		private Integer task_type_id;
 
 		@XStreamAlias("oml:setup_id")
 		private int setup_id;
@@ -84,6 +88,9 @@ public class RunList {
 		}
 		public int getTask_id() {
 			return task_id;
+		}
+		public Integer getTask_type_id() {
+			return task_type_id;
 		}
 		public int getSetup_id() {
 			return setup_id;
