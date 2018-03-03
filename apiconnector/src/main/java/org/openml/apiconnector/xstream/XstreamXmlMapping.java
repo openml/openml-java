@@ -99,7 +99,7 @@ public class XstreamXmlMapping {
 	 * OpenmlApiConnector Objects to each other. 
 	 */
 	public static XStream getInstance(ClassLoaderReference clr) {
-		XStream xstream = new XStream(null,new DomDriver("UFT-8", new NoNameCoder()),clr);
+		XStream xstream = new XStream(null,new DomDriver("UTF-8", new NoNameCoder()),clr);
 		xstream.processAnnotations(SetupParameters.class);
 		xstream.processAnnotations(SetupExists.class);
 		xstream.processAnnotations(SetupTag.class);
