@@ -477,7 +477,7 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-	public DataUnprocessed dataqualitiesUnprocessed(int evaluationEngineId, String mode, boolean featureQualities, List<String> qualitiesToCalculate) throws Exception {
+	public DataUnprocessed dataqualitiesUnprocessed(int evaluationEngineId, String mode, boolean featureQualities, List<String> qualitiesToCalculate, String priorityTag) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (String s : qualitiesToCalculate) {
 			sb.append("," + s);
@@ -489,6 +489,9 @@ public class OpenmlConnector implements Serializable {
 		String suffix = "data/qualities/unprocessed/" + evaluationEngineId + "/" + mode;
 		if (featureQualities) {
 			suffix += "/feature";
+		}
+		if (priorityTag != null) {
+			suffix += "/" + priorityTag;
 		}
 		
 		URL request = new URL(OPENML_URL + API_PART + suffix);
