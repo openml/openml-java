@@ -36,6 +36,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
@@ -51,79 +52,111 @@ import org.openml.apiconnector.xml.TaskInputs.Input;
 
 public class TestTaskFunctions {
 
-
 	private static final String url = "https://test.openml.org/";
 	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");
 	private static final OpenmlConnector client_read = new OpenmlConnector(url, "c1994bdb7ecb3c6f3c8f3b35f4b47f1f");
-	
+
 	private static final Integer taskId = 1;
-	
-	
+	private static final Random random = new Random(System.currentTimeMillis());
+
 	@Test
 	public void testApiAdditional() throws Exception {
 		Task t = client_read.taskGet(taskId);
-		
+
 		TaskInputs ti = client_read.taskInputs(taskId);
 		assertTrue(ti.getInputsAsMap().size() > 2);
-		
+
 		URL splitsUrl = TaskInformation.getEstimationProcedure(t).getData_splits_url();
-		
+
 		Integer dataId = TaskInformation.getSourceData(t).getData_set_id();
 		File splitsFile = HttpConnector.getFileFromUrl(splitsUrl, false, "arff");
 		String[] splits = Conversion.fileToString(splitsFile).split("\n");
 		DataQuality dq = client_read.dataQualities(dataId);
 		int numInstances = dq.getQualitiesMap().get("NumberOfInstances").intValue();
-		
+
 		assertTrue(splits.length > numInstances); // basic check
 
 	}
-	
 
-	@Test(expected=ApiException.class)
+	@Test(expected = ApiException.class)
 	public void testTaskCreationNoInputs() throws Exception {
-		Input estimation_procedure = new Input("estimation_procedure", "1"); 
+		Input estimation_procedure = new Input("estimation_procedure", "1");
 		Input data_set = new Input("source_data", "1");
 		Input target_feature = new Input("target_feature", "class");
-		Input[] inputs = {estimation_procedure, data_set, target_feature };
+		Input[] inputs = { estimation_procedure, data_set, target_feature };
 		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 1);
-		
-		client_write.taskUpload(taskFile);
-	}
-	
-	@Test(expected=ApiException.class)
-	public void testTaskCreationIllegalValues() throws Exception {
-		Input estimation_procedure = new Input("estimation_procedure", "15"); 
-		Input data_set = new Input("illegal_source_data", "-1");
-		Input target_feature = new Input("target_feature", "class");
-		Input[] inputs = {estimation_procedure, data_set, target_feature };
-		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 4);
-		
+
 		client_write.taskUpload(taskFile);
 	}
 
-	@Test(expected=ApiException.class)
+	@Test(expected = ApiException.class)
+	public void testTaskCreationIllegalValues() throws Exception {
+		Input estimation_procedure = new Input("estimation_procedure", "15");
+		Input data_set = new Input("illegal_source_data", "-1");
+		Input target_feature = new Input("target_feature", "class");
+		Input[] inputs = { estimation_procedure, data_set, target_feature };
+		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 4);
+
+		client_write.taskUpload(taskFile);
+	}
+
+	@Test(expected = ApiException.class)
 	public void testTaskCreationDuplicateValue() throws Exception {
-		Input estimation_procedure = new Input("estimation_procedure", "15"); 
+		Input estimation_procedure = new Input("estimation_procedure", "15");
 		Input data_set = new Input("source_data", "1");
 		Input data_set2 = new Input("source_data", "1");
 		Input target_feature = new Input("target_feature", "class");
-		Input[] inputs = {estimation_procedure, data_set, target_feature, data_set2};
+		Input[] inputs = { estimation_procedure, data_set, target_feature, data_set2 };
 		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 4);
-		
-		client_write.taskUpload( taskFile );
+
+		client_write.taskUpload(taskFile);
 	}
 
-	@Test(expected=ApiException.class)
+	@Test(expected = ApiException.class)
 	public void testTaskCreationNotRequiredValues() throws Exception {
-		Input estimation_procedure = new Input("estimation_procedure", "15"); 
+		Input estimation_procedure = new Input("estimation_procedure", "15");
 		Input target_feature = new Input("target_feature", "class");
-		Input[] inputs = {estimation_procedure, target_feature};
+		Input[] inputs = { estimation_procedure, target_feature };
 		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 4);
-		
-		client_write.taskUpload( taskFile );
+
+		client_write.taskUpload(taskFile);
+	}
+
+	@Test(expected = ApiException.class)
+	public void testTaskAlreadyExists() throws Exception {
+		// try to create it twice, as it might not exists yet the first time. 
+		for (int i = 0; i < 2; ++i) {
+			Input estimation_procedure = new Input("estimation_procedure", "1");
+			Input data_set = new Input("source_data", "1");
+			Input target_feature = new Input("target_feature", "class");
+			Input[] inputs = { estimation_procedure, data_set, target_feature };
+			File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 1);
+			client_write.taskUpload(taskFile);
+		}
 	}
 	
-	
+	@Test
+	public void testCreateTask() throws Exception {
+		// try to create it twice, as it might not exists yet the first time. 
+		int randomInt = random.nextInt();
+		client_write.setVerboseLevel(1);
+		// make sure that the task does not exists yet (so no error)
+		Input estimation_procedure = new Input("estimation_procedure", "1");
+		Input data_set = new Input("source_data", "1");
+		Input target_feature = new Input("target_feature", "class_" + randomInt);
+		Input evaluation_measure = new Input("evaluation_measures", "predictive_accuracy");
+		
+		// create task object
+		Input[] inputs = { estimation_procedure, data_set, target_feature, evaluation_measure};
+		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 1);
+		client_write.taskUpload(taskFile);
+		
+		// create task similar task object (with one value less)
+		Input[] inputs2 = { estimation_procedure, data_set, target_feature };
+		File taskFile2 = TestDataFunctionality.inputsToTaskFile(inputs2, 1);
+		client_write.taskUpload(taskFile2);
+	}
+
 	@Test
 	public void testApiTaskList() throws Exception {
 		client_read.setVerboseLevel(1);
@@ -136,5 +169,5 @@ public class TestTaskFunctions {
 			assertTrue(t.getInputs().length > 2);
 		}
 	}
-	
+
 }
