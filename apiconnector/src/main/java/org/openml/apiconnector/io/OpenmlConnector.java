@@ -911,7 +911,7 @@ public class OpenmlConnector implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	public EvaluationList evaluationList(List<Integer> task_id, List<Integer> setup_id, String function) throws Exception {
+	public EvaluationList evaluationList(List<Integer> task_id, List<Integer> setup_id, String function, Integer limit) throws Exception {
 		String suffix = "";
 		
 		if (task_id != null) {
@@ -922,6 +922,9 @@ public class OpenmlConnector implements Serializable {
 		}
 		if (function != null) {
 			suffix += "/function/" + function;
+		}
+		if (limit != null) {
+			suffix += "/limit/" + limit;
 		}
 		
 		URL request = new URL(OPENML_URL + API_PART + "evaluation/list" + suffix);

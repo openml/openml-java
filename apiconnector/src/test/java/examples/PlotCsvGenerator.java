@@ -56,6 +56,8 @@ public class PlotCsvGenerator {
 	private static final String url = "https://www.openml.org/";
 	private static final OpenmlConnector openml = new OpenmlConnector(url, key_read);
 	
+	private static final int evaluationLimit = 100;
+	
 	@Test
 	public void testCompareSetups() throws Exception {
 		Study study = openml.studyGet(34);
@@ -90,7 +92,7 @@ public class PlotCsvGenerator {
 	
 	public static void compareClassifiersAcrossTasks(OpenmlConnector openml, List<Integer> taskIds, List<Integer> setupIds, String evaluationMeasure, File resultsFile) throws Exception {
 		// obtains all evaluations that comply to the three filters
-		EvaluationList results = openml.evaluationList(taskIds, setupIds, evaluationMeasure);
+		EvaluationList results = openml.evaluationList(taskIds, setupIds, evaluationMeasure, evaluationLimit);
 		// initialize data structure for storing the results, mapping from
 		// param value to a mapping from task id to result value
 		Map<Integer, Map<Integer, Double>> resultMap = new TreeMap<Integer, Map<Integer, Double>>();
@@ -150,7 +152,7 @@ public class PlotCsvGenerator {
 		taskIds.add(taskId);
 
 		// obtains the results from OpenML
-		EvaluationList results = openml.evaluationList(taskIds, null, evaluationMeasure);
+		EvaluationList results = openml.evaluationList(taskIds, null, evaluationMeasure, evaluationLimit);
 
 		// prepare our data structures:
 		for (Evaluation e : results.getEvaluations()) {
@@ -219,7 +221,7 @@ public class PlotCsvGenerator {
 	public static void hyperparameterEffect(OpenmlConnector openml, List<Integer> taskIds, List<Integer> setupIds,
 			String hyperparameter, String evaluationMeasure, File resultsFile) throws Exception {
 		// obtains all evaluations that comply to the three filters
-		EvaluationList results = openml.evaluationList(taskIds, setupIds, evaluationMeasure);
+		EvaluationList results = openml.evaluationList(taskIds, setupIds, evaluationMeasure, evaluationLimit);
 
 		// initialize data structure for storing the results, mapping from
 		// param value to a mapping from task id to result value
