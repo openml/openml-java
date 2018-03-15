@@ -77,7 +77,19 @@ public class TestTaskFunctions {
 		assertTrue(splits.length > numInstances); // basic check
 
 	}
+	
 
+	@Test(expected=ApiException.class)
+	public void testTaskCreationNoInputs() throws Exception {
+		Input estimation_procedure = new Input("estimation_procedure", "1"); 
+		Input data_set = new Input("source_data", "1");
+		Input target_feature = new Input("target_feature", "class");
+		Input[] inputs = {estimation_procedure, data_set, target_feature };
+		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 1);
+		
+		client_write.taskUpload(taskFile);
+	}
+	
 	@Test(expected=ApiException.class)
 	public void testTaskCreationIllegalValues() throws Exception {
 		Input estimation_procedure = new Input("estimation_procedure", "15"); 
