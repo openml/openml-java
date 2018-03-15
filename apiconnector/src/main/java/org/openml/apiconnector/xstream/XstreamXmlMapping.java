@@ -100,6 +100,7 @@ public class XstreamXmlMapping {
 	 */
 	public static XStream getInstance(ClassLoaderReference clr) {
 		XStream xstream = new XStream(null,new DomDriver("UTF-8", new NoNameCoder()),clr);
+		xstream.registerConverter(new DoubleConverter());
 		xstream.processAnnotations(SetupParameters.class);
 		xstream.processAnnotations(SetupExists.class);
 		xstream.processAnnotations(SetupTag.class);
