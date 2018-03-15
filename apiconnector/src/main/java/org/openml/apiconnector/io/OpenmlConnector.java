@@ -552,8 +552,7 @@ public class OpenmlConnector implements Serializable {
 	
 	/**
 	 * Returns a list of all of the tasks with a certain tag and type
-	 * @param type - the task type
-	 * @param tag - the task tag
+	 * @param filters - a map of filters
 	 * @return
 	 * @throws DataFormatException
 	 */
