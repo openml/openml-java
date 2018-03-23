@@ -51,7 +51,6 @@ import org.openml.apiconnector.xml.RunEvaluate;
 import org.openml.apiconnector.xml.RunEvaluation;
 import org.openml.apiconnector.xml.FlowDelete;
 import org.openml.apiconnector.xml.FlowExists;
-import org.openml.apiconnector.xml.Authenticate;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.ApiError;
 import org.openml.apiconnector.xml.Flow;
@@ -111,6 +110,7 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(DataTag.class);
 		xstream.processAnnotations(DataUntag.class);
 		xstream.processAnnotations(DataUnprocessed.class);
+		xstream.processAnnotations(DataQuality.class);
 		
 		xstream.processAnnotations(TaskTag.class);
 		xstream.processAnnotations(TaskUntag.class);
@@ -160,22 +160,6 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:MeanValue", DataFeature.Feature.class, "MeanValue" );
 		xstream.aliasField("oml:StandardDeviation", DataFeature.Feature.class, "StandardDeviation" );
 		xstream.aliasField("oml:ClassDistribution", DataFeature.Feature.class, "ClassDistribution" );
-
-		
-		// data quality
-		xstream.alias("oml:data_qualities", DataQuality.class);
-		xstream.aliasField("oml:did", DataQuality.class, "did");
-		xstream.aliasField("oml:evaluation_engine_id", DataQuality.class, "evaluation_engine_id");
-		xstream.aliasField("oml:error", DataQuality.class, "error");
-		xstream.aliasAttribute(DataQuality.class, "oml", "xmlns:oml");
-		xstream.addImplicitCollection(DataQuality.class, "qualities", "oml:quality", DataQuality.Quality.class);
-		
-		xstream.alias("oml:data_quality", DataQuality.Quality.class);
-		xstream.aliasField("oml:name", DataQuality.Quality.class, "name");
-		xstream.aliasField("oml:feature_index", DataQuality.Quality.class, "feature_index");
-        xstream.aliasField("oml:value", DataQuality.Quality.class, "value");
-		xstream.useAttributeFor(DataQuality.Quality.class, "interval_start");
-		xstream.useAttributeFor(DataQuality.Quality.class, "interval_end");
 		
 		// data qualities upload
 		xstream.alias("oml:data_qualities_upload", DataQualityUpload.class);
@@ -262,12 +246,6 @@ public class XstreamXmlMapping {
 		xstream.aliasField("oml:code", ApiError.class, "code");
 		xstream.aliasField("oml:message", ApiError.class, "message");
 		xstream.aliasField("oml:additional_information", ApiError.class, "additional_information");
-		
-		// authenticate
-		xstream.alias("oml:authenticate", Authenticate.class);
-		xstream.aliasField("oml:session_hash", Authenticate.class, "sessionHash");
-		xstream.aliasField("oml:valid_until", Authenticate.class, "validUntil");
-		xstream.aliasField("oml:timezone", Authenticate.class, "timezone");
 
 		// upload task
 		xstream.alias("oml:upload_task", UploadTask.class);

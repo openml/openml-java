@@ -35,12 +35,28 @@ import java.util.Map;
 
 import org.openml.apiconnector.settings.Constants;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+
+@XStreamAlias("oml:data_qualities")
 public class DataQuality {
 
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:oml")
 	private final String oml = Constants.OPENML_XMLNS;
+	
+	@XStreamAlias("xmlns:did")
 	private Integer did;
+
+	@XStreamAlias("oml:evaluation_engine_id")
 	private Integer evaluation_engine_id;
+
+	@XStreamAlias("oml:error")
 	private String error;
+	
+	@XStreamImplicit
+	@XStreamAlias("oml:quality")
 	private Quality[] qualities;
 
 	public DataQuality(Integer did, Integer evaluation_engine_id, Quality[] qualities) {
@@ -115,11 +131,21 @@ public class DataQuality {
 		return 11 * this.getQualitiesMap().hashCode();
 	}
 
+	@XStreamAlias("oml:quality")
 	public static class Quality {
+		@XStreamAlias("oml:name")
 		private String name;
+		@XStreamAlias("oml:feature_index")
 		private Integer feature_index;
+		@XStreamAlias("oml:value")
 		private Double value;
+
+		@XStreamAsAttribute
+		@XStreamAlias("oml:interval_start")
 		private Integer interval_start;
+		
+		@XStreamAsAttribute
+		@XStreamAlias("oml:interval_end")
 		private Integer interval_end;
 
 		public Quality(String name, Double value) {
