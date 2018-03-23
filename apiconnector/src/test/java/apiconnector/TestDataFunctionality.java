@@ -35,6 +35,8 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
@@ -91,6 +93,7 @@ public class TestDataFunctionality {
 	private static final String key_read = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f"; // mlr ..  sorry i borrowed it
 	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");
 	private static final OpenmlConnector client_read = new OpenmlConnector(url, key_read); 
+	private static final OpenmlConnector live_client_read = new OpenmlConnector(key_read); 
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
 
 	@Test
@@ -135,7 +138,6 @@ public class TestDataFunctionality {
 
 	@Test
 	public void testApiUploadDownload() throws Exception {
-		client_write.setVerboseLevel(1);
 		File description = createTestDatasetDescription();
 		File toUpload = new File(data_file);
 		UploadDataSet ud = client_write.dataUpload(description, toUpload);
@@ -178,8 +180,16 @@ public class TestDataFunctionality {
 		assertTrue(ud.getId() == dd.get_id());
 	}
 	
-	private File createTestDatasetDescription() throws IOException {
+	@Test
+	public void testDataQualitiesWithNullValues() throws Exception {
+		DataQuality dq = live_client_read.dataQualities(3);
 		
+		// check if test is actually up to date (otherwise we should use other dataset that contains null values)
+		Collection<Double> qualityValues = dq.getQualitiesMap().values();
+		assertTrue(qualityValues.contains(null));
+	}
+	
+	private File createTestDatasetDescription() throws IOException {
 		DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
 		return Conversion.stringToTempFile(xstream.toXML(dsd), "test-data", "arff");
 	}
