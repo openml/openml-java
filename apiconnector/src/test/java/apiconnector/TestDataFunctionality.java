@@ -36,7 +36,6 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
@@ -187,6 +186,9 @@ public class TestDataFunctionality {
 		// check if test is actually up to date (otherwise we should use other dataset that contains null values)
 		Collection<Double> qualityValues = dq.getQualitiesMap().values();
 		assertTrue(qualityValues.contains(null));
+		
+		// test if converting back doesn't break anything
+		xstream.toXML(dq);
 	}
 	
 	private File createTestDatasetDescription() throws IOException {
