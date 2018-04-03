@@ -541,7 +541,6 @@ public class OpenmlConnector implements Serializable {
 	
 	public TaskInputs taskInputs(int task_id) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "task/inputs/" + task_id);
-		setVerboseLevel(1);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
 		if (apiResult instanceof TaskInputs) {
 			return (TaskInputs) apiResult;
