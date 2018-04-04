@@ -46,7 +46,7 @@ public class DataQuality {
 	@XStreamAlias("xmlns:oml")
 	private final String oml = Constants.OPENML_XMLNS;
 	
-	@XStreamAlias("xmlns:did")
+	@XStreamAlias("oml:did")
 	private Integer did;
 
 	@XStreamAlias("oml:evaluation_engine_id")
