@@ -74,13 +74,23 @@ public class RunEvaluation {
 		evaluation = ArrayUtils.addAll( this.evaluation, em );
 	}
 	
-	public void setError(String error, int max_length) {
+	public void setError(String errorMessage, int max_length) {
 		String truncateMessage = "... (message cut-off due to excessive length)";
-		if (error.length() <= max_length) {
-			this.error = error;
+		if (errorMessage.length() <= max_length) {
+			this.error = errorMessage;
 		} else {
-			this.error = error.substring(0, max_length - truncateMessage.length()) + truncateMessage;
+			this.error = errorMessage.substring(0, max_length - truncateMessage.length()) + truncateMessage;
 		}
+	}
+	
+	public void setError(Exception error, int max_length) {
+		String errorMessage = error.getClass().getName();
+		
+		if (error.getMessage() != null) {
+			errorMessage += ": " + errorMessage;
+		}
+		
+		setError(errorMessage, max_length);
 	}
 	
 	public void setWarning(String warning, int max_length) {
