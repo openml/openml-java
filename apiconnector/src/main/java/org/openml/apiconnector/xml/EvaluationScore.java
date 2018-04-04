@@ -46,7 +46,7 @@ public class EvaluationScore {
 	private final String function;
 
 	@XStreamAlias("oml:value")
-	private final String value;
+	private final Double value;
 	
 	@XStreamAlias("oml:stdev")
 	private final Double stdev;
@@ -67,7 +67,7 @@ public class EvaluationScore {
 	@XStreamAlias("sample")
 	private final Integer sample;
 	
-	public EvaluationScore(String function, String value, Double stdev, String array_data) {
+	public EvaluationScore(String function, Double value, Double stdev, String array_data) {
 		super();
 		this.function = function;
 		this.value = value;
@@ -81,7 +81,7 @@ public class EvaluationScore {
 		this.sample_size = null;
 	}
 
-	public EvaluationScore(String function, String value, String array_data, Integer repeat, Integer fold) {
+	public EvaluationScore(String function, Double value, String array_data, Integer repeat, Integer fold) {
 		super();
 		this.function = function;
 		this.value = value;
@@ -95,7 +95,7 @@ public class EvaluationScore {
 		this.stdev = null;
 	}
 
-	public EvaluationScore(String function, String value, 
+	public EvaluationScore(String function, Double value, 
 			String array_data, Integer repeat, Integer fold,
 			Integer sample, Integer sample_size) {
 		super();
@@ -115,7 +115,7 @@ public class EvaluationScore {
 		return function;
 	}
 
-	public String getValue() {
+	public Double getValue() {
 		return value;
 	}
 
@@ -155,14 +155,7 @@ public class EvaluationScore {
 	}
 	
 	public boolean sameValue( EvaluationScore other ) {
-		try {
-			double myValue = Double.parseDouble( value );
-			double otherValue = Double.parseDouble( other.getValue() );
-			
-			return Math.abs( myValue - otherValue ) < MathHelper.EPSILON;
-		} catch( NumberFormatException e ) {
-			return false;
-		}
+		return Math.abs(value - other.getValue()) < MathHelper.EPSILON;
 	}
 	
 	@Override
