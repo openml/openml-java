@@ -102,7 +102,6 @@ public class TestTaskFunctions {
 
 	@Test(expected = ApiException.class)
 	public void testTaskCreationDuplicateValue() throws Exception {
-		client_write.setVerboseLevel(1);
 		Input estimation_procedure = new Input("estimation_procedure", "15");
 		Input data_set = new Input("source_data", "1");
 		Input data_set2 = new Input("source_data", "1");
