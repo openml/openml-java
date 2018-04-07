@@ -853,20 +853,6 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-	public UploadRunAttach runUploadAttach(int run_id, int index, File description, File predictions) throws Exception {
-		MultipartEntity params = new MultipartEntity();
-		params.addPart("description", new FileBody(description));
-		params.addPart("predictions", new FileBody(predictions));
-		
-		URL request = new URL(OPENML_URL + API_PART + "run/" + run_id + "/" + index);
-		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof UploadRunAttach) {
-			return (UploadRunAttach) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to UploadRunAttach");
-		}
-	}
-	
 	/**
 	 * Returns a list with run results. Must be restricted with tasks, setups or both. 
 	 * 

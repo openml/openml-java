@@ -53,14 +53,12 @@ import org.openml.apiconnector.xml.RunTag;
 import org.openml.apiconnector.xml.RunUntag;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.UploadRun;
-import org.openml.apiconnector.xml.UploadRunAttach;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 import com.thoughtworks.xstream.XStream;
 
 public class TestRunFunctionality {
 	private static final int probe = 67;
-	private static final int probeChallenge = 13976;
 	private static final String predictions_path = "data/predictions_task53.arff";
 	private static final int FLOW_ID = 10;
 
@@ -136,20 +134,6 @@ public class TestRunFunctionality {
 		assertTrue(Arrays.asList(ru.getTags()).contains(tag) == false);
 		
 		client_write_test.runDelete(ur.getRun_id());
-	}
-	
-	// skip for now, add to test server later
-	public void testApiUploadRunAttach() throws Exception {
-		Run r = new Run(probeChallenge, null, FLOW_ID, null, null, null);
-		String runXML = xstream.toXML(r);
-		File runFile = Conversion.stringToTempFile(runXML, "runtest",  "xml");
-		File predictions = new File(predictions_path); 
-		UploadRun ur = client_write_test.runUpload(runFile, null);
-		for (int i = 0; i < 5; i+=1) {
-			UploadRunAttach ura = client_write_test.runUploadAttach(ur.getRun_id(), i , runFile, predictions);
-			
-			assertTrue(ura.getPredictionFiles().length == i+1);
-		}
 	}
 	
 	@Test

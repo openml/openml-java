@@ -348,6 +348,7 @@ public class TestDataFunctionality {
 	
 	public static File inputsToTaskFile(Input[] inputs, int ttid) throws IOException {
 		TaskInputs task = new TaskInputs(null, ttid, inputs, null);
+		System.out.println(XstreamXmlMapping.getInstance().toXML(task));
 		File taskFile = Conversion.stringToTempFile(xstream.toXML(task), "task", "xml");
 		return taskFile;
 	}

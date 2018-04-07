@@ -78,7 +78,6 @@ import org.openml.apiconnector.xml.RunTrace;
 import org.openml.apiconnector.xml.UploadDataSet;
 import org.openml.apiconnector.xml.UploadFlow;
 import org.openml.apiconnector.xml.UploadRun;
-import org.openml.apiconnector.xml.UploadRunAttach;
 import org.openml.apiconnector.xml.UploadTask;
 
 import com.thoughtworks.xstream.XStream;
@@ -130,8 +129,6 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(EvaluationRequest.class);
 		xstream.processAnnotations(RunEvaluation.class);
 		xstream.processAnnotations(EvaluationScore.class);
-		
-		xstream.processAnnotations(UploadRunAttach.class);
 		
 		xstream.ignoreUnknownElements();
 		
