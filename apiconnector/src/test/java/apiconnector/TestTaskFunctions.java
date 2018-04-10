@@ -160,6 +160,27 @@ public class TestTaskFunctions {
 		}
 	}
 	
+	@Test(expected = ApiException.class)
+	public void testCreateClassificationTaskNumericTarget() throws Exception {
+		Input[] inputs = new Input[4];
+		inputs[0] = new Input("estimation_procedure", "1");
+		inputs[1] = new Input("source_data", "1");
+		inputs[2] = new Input("target_feature", "carbon");
+		
+		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 1);
+		client_write.taskUpload(taskFile);
+	}
+	
+	@Test(expected = ApiException.class)
+	public void testCreateRegressionTaskNominalTarget() throws Exception {
+		Input[] inputs = new Input[4];
+		inputs[0] = new Input("estimation_procedure", "7");
+		inputs[1] = new Input("source_data", "1");
+		inputs[2] = new Input("target_feature", "class");
+		
+		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 2);
+		client_write.taskUpload(taskFile);
+	}
 	
 	@Test
 	public void testCreateTask() throws Exception {
