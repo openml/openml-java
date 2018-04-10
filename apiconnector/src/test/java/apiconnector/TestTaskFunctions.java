@@ -195,8 +195,8 @@ public class TestTaskFunctions {
 			}
 		} finally {
 			// make sure that the task does not exists anymore
-			if (uploadId1 != null) {client_write.taskDelete(uploadId1);}
-			if (uploadId2 != null) {client_write.taskDelete(uploadId2);}
+			if (uploadId1 != null) { try { client_write.taskDelete(uploadId1); } catch(ApiException a) {} }
+			if (uploadId2 != null) { try { client_write.taskDelete(uploadId2); } catch(ApiException a) {} }
 		}
 	}
 
