@@ -44,7 +44,8 @@ import org.openml.apiconnector.xml.Task.Input.Stream_schedule;
 import org.openml.apiconnector.xml.Task.Output.Predictions;
 
 public class TaskInformation {
-
+	public static final int TASK_EXISTS_ERROR_CODE = 614;
+	
 	/**
 	 * @param t - Input Task. 
 	 * @return The number of repeats
@@ -211,8 +212,8 @@ public class TaskInformation {
 	
 	public static Integer[] getTaskIdsFromErrorMessage(ApiException e) {
 		// returns task id from error message 
-		if (e.getCode() != 614) {
-			throw new RuntimeException("wrong error code, only works on 614");
+		if (e.getCode() != TASK_EXISTS_ERROR_CODE) {
+			throw new RuntimeException("wrong error code, expected " + TASK_EXISTS_ERROR_CODE);
 		}
 		String[] result = e.getMessage().substring(e.getMessage().indexOf('[') + 1, e.getMessage().indexOf(']')).split(",");
 		Integer[] parsed = new Integer[result.length];

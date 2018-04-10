@@ -34,8 +34,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
@@ -51,6 +53,7 @@ import org.openml.apiconnector.xml.TaskInputs.Input;
 
 public class TestTaskFunctions {
 
+	public static final Integer[] TASK_ILLEGAL_INPUT_CODES = {621, 622};
 	private static final String url = "https://test.openml.org/";
 	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");
 	private static final OpenmlConnector client_read = new OpenmlConnector(url, "c1994bdb7ecb3c6f3c8f3b35f4b47f1f");
@@ -134,17 +137,41 @@ public class TestTaskFunctions {
 	}
 	
 	@Test
+	public void testCreateTaskIllegalValues() throws Exception {
+		Random random = new Random();
+		
+		Input[] inputs = new Input[4];
+		inputs[0] = new Input("estimation_procedure", "1");
+		inputs[1] = new Input("source_data", "2");
+		inputs[2] = new Input("target_feature", "class");
+		inputs[3] = new Input("evaluation_measures", "predictive_accuracy");
+		
+		for (int i = 0; i < 4; ++i) {
+			Input[] derived = Arrays.copyOf(inputs, inputs.length);
+			derived[i] = new Input(derived[i].getName(), derived[i].getValue() + "_" + random.nextInt());
+			File taskFile = TestDataFunctionality.inputsToTaskFile(derived, 1);
+			try {
+				client_write.taskUpload(taskFile);
+				// previous statement should not terminate without ApiException.
+				throw new Exception("Tasks did not get blocked by Api");
+			} catch(ApiException e) {
+				assertTrue(Arrays.asList(TASK_ILLEGAL_INPUT_CODES).contains(e.getCode()));
+			}
+		}
+	}
+	
+	
+	@Test
 	public void testCreateTask() throws Exception {
 		Integer uploadId1 = null;
 		Integer uploadId2 = null;
-		client_write.setVerboseLevel(1);
+		
+		Input estimation_procedure = new Input("estimation_procedure", "1");
+		Input data_set = new Input("source_data", "2");
+		Input target_feature = new Input("target_feature", "class");
+		Input evaluation_measure = new Input("evaluation_measures", "predictive_accuracy");
 		
 		try {
-			Input estimation_procedure = new Input("estimation_procedure", "4");
-			Input data_set = new Input("source_data", "2");
-			Input target_feature = new Input("target_feature", "class");
-			Input evaluation_measure = new Input("evaluation_measures", "predictive_accuracy");
-			
 			// create task object
 			Input[] inputs = { estimation_procedure, data_set, target_feature, evaluation_measure};
 			File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 1);
