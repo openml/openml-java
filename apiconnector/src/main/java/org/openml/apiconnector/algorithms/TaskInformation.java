@@ -34,6 +34,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
+import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.Task;
@@ -206,5 +207,18 @@ public class TaskInformation {
 		}
 		br.close();
 		throw new Exception("Attribute not found (task_id="+task_id+")");
+	}
+	
+	public static Integer[] getTaskIdsFromErrorMessage(ApiException e) {
+		// returns task id from error message 
+		if (e.getCode() != 614) {
+			throw new RuntimeException("wrong error code, only works on 614");
+		}
+		String[] result = e.getMessage().substring(e.getMessage().indexOf('[') + 1, e.getMessage().indexOf(']')).split(",");
+		Integer[] parsed = new Integer[result.length];
+		for (int i = 0; i < result.length; ++i) {
+			parsed[i] = Integer.parseInt(result[i]);
+		}
+		return parsed;
 	}
 }

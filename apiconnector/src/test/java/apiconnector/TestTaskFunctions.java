@@ -36,7 +36,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
@@ -57,7 +56,6 @@ public class TestTaskFunctions {
 	private static final OpenmlConnector client_read = new OpenmlConnector(url, "c1994bdb7ecb3c6f3c8f3b35f4b47f1f");
 
 	private static final Integer taskId = 1;
-	private static final Random random = new Random(System.currentTimeMillis());
 
 	@Test
 	public void testApiAdditional() throws Exception {
@@ -137,24 +135,42 @@ public class TestTaskFunctions {
 	
 	@Test
 	public void testCreateTask() throws Exception {
-		// try to create it twice, as it might not exists yet the first time. 
-		int randomInt = random.nextInt();
+		Integer uploadId1 = null;
+		Integer uploadId2 = null;
 		client_write.setVerboseLevel(1);
-		// make sure that the task does not exists yet (so no error)
-		Input estimation_procedure = new Input("estimation_procedure", "1");
-		Input data_set = new Input("source_data", "1");
-		Input target_feature = new Input("target_feature", "class_" + randomInt);
-		Input evaluation_measure = new Input("evaluation_measures", "predictive_accuracy");
 		
-		// create task object
-		Input[] inputs = { estimation_procedure, data_set, target_feature, evaluation_measure};
-		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 1);
-		client_write.taskUpload(taskFile);
-		
-		// create task similar task object (with one value less)
-		Input[] inputs2 = { estimation_procedure, data_set, target_feature };
-		File taskFile2 = TestDataFunctionality.inputsToTaskFile(inputs2, 1);
-		client_write.taskUpload(taskFile2);
+		try {
+			Input estimation_procedure = new Input("estimation_procedure", "4");
+			Input data_set = new Input("source_data", "2");
+			Input target_feature = new Input("target_feature", "class");
+			Input evaluation_measure = new Input("evaluation_measures", "predictive_accuracy");
+			
+			// create task object
+			Input[] inputs = { estimation_procedure, data_set, target_feature, evaluation_measure};
+			File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 1);
+			try {
+				// try catch for deleting tasks that were already on the server
+				uploadId1 = client_write.taskUpload(taskFile).getId();
+			} catch(ApiException e) {
+				uploadId1 = TaskInformation.getTaskIdsFromErrorMessage(e)[0];
+				throw e;
+			}
+			
+			// create task similar task object (with one value less)
+			Input[] inputs2 = { estimation_procedure, data_set, target_feature };
+			File taskFile2 = TestDataFunctionality.inputsToTaskFile(inputs2, 1);
+			try {
+				// try catch for deleting tasks that were already on the server
+				uploadId2 = client_write.taskUpload(taskFile2).getId();
+			} catch(ApiException e) {
+				uploadId2 = TaskInformation.getTaskIdsFromErrorMessage(e)[0];
+				throw e;
+			}
+		} finally {
+			// make sure that the task does not exists anymore
+			if (uploadId1 != null) {client_write.taskDelete(uploadId1);}
+			if (uploadId2 != null) {client_write.taskDelete(uploadId2);}
+		}
 	}
 
 	@Test
