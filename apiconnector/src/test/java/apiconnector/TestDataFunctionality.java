@@ -52,7 +52,6 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import org.apache.commons.io.input.BOMInputStream;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.algorithms.Hashing;
@@ -295,7 +294,7 @@ public class TestDataFunctionality {
 			String fullUrl = url + "data/get_csv/" + current.getFileId() + "/" + current.getName() + ".csv";
 			System.out.println(fullUrl);
 			final URL url = new URL(fullUrl);
-			final Reader reader = new InputStreamReader(new BOMInputStream(url.openStream()), "UTF-8");
+			final Reader reader = new InputStreamReader(url.openStream(), "UTF-8");
 			final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);
 			try {
 				if (numInst != null) {
