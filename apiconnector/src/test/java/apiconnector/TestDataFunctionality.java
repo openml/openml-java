@@ -147,12 +147,12 @@ public class TestDataFunctionality {
 		File dataset = client_read.datasetGet(dsd_downloaded);
 		assertEquals(Hashing.md5(dataset), Hashing.md5(toUpload));
 		
-		// create task upon it
-		Input estimation_procedure = new Input("estimation_procedure", "1");
+		// create task upon it (clustering task)
+		Input estimation_procedure = new Input("estimation_procedure", "17");
 		Input data_set = new Input("source_data", "" + ud.getId());
-		Input target_feature = new Input("target_feature", "class");
-		Input[] inputs = {estimation_procedure, data_set, target_feature};
-		UploadTask ut = client_write.taskUpload(inputsToTaskFile(inputs, 1));
+		Input measure = new Input("evaluation_measures", "predictive_accuracy");
+		Input[] inputs = {estimation_procedure, data_set, measure};
+		UploadTask ut = client_write.taskUpload(inputsToTaskFile(inputs, 5));
 		
 		TaskTag tt = client_write.taskTag(ut.getId(), tag);
 		assertTrue(Arrays.asList(tt.getTags()).contains(tag));
