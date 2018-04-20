@@ -30,6 +30,8 @@
  ******************************************************************************/
 package examples;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -42,6 +44,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.EvaluationList;
@@ -59,10 +62,14 @@ public class PlotCsvGenerator {
 	private static final int evaluationLimit = 100;
 	
 	@Test
+	@Ignore
 	public void testCompareSetups() throws Exception {
 		Study study = openml.studyGet(34);
 		String measure = "predictive_accuracy";
 		File resultFile = new File("results.csv");
+		assertTrue(study != null);
+		assertTrue(study.getTasks() != null);
+		assertTrue(study.getSetups() != null);
 		compareClassifiersAcrossTasks(openml, 
 				Arrays.asList(study.getTasks()), 
 				Arrays.asList(study.getSetups()), 
@@ -108,9 +115,12 @@ public class PlotCsvGenerator {
 		// initialize the csv writer and the header
 		BufferedWriter bw = new BufferedWriter(new FileWriter(resultsFile));
 		bw.write("\"Task id\"");
-		for (int setupId : setupIds) { bw.write("\t\"" + formatSetupid(setupId) + "\""); }
+		for (int setupId : setupIds) { 
+			bw.write("\t\"" + formatSetupid(setupId) + "\""); 
+		}
 		
 		for (int taskId : taskIds) {
+			assertTrue("results doens't contain task " + taskId, resultMap.containsKey(taskId));
 			bw.write("\n" + taskId);
 			for (int setupId : setupIds) {
 				if (resultMap.get(taskId).containsKey(setupId)) {
