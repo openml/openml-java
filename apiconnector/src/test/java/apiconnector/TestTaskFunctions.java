@@ -189,7 +189,7 @@ public class TestTaskFunctions {
 		
 		Input estimation_procedure = new Input("estimation_procedure", "1");
 		Input data_set = new Input("source_data", "2");
-		Input target_feature = new Input("target_feature", "class");
+		Input target_feature = new Input("target_feature", "bkblk"); // some random attribute that is unlikely to have tasks
 		Input evaluation_measure = new Input("evaluation_measures", "predictive_accuracy");
 		
 		try {
