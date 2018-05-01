@@ -47,10 +47,10 @@ public class RunList {
 
 	@XStreamImplicit
 	@XStreamAlias("oml:run")
-	private Run[] runs;
+	private Run[] run;
 
 	public Run[] getRuns() {
-		return runs;
+		return run;
 	}
 
 	public String getOml() {
