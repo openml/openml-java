@@ -1,0 +1,24 @@
+% Python_3.6.0.
+% Sklearn_0.19.1.
+% NumPy_1.14.0.
+% SciPy_1.0.0.
+% Wed Apr 11 21:56:33 2018
+% Created by run_task()
+@RELATION openml_task_3_predictions
+
+@ATTRIBUTE repeat NUMERIC
+@ATTRIBUTE fold NUMERIC
+@ATTRIBUTE sample NUMERIC
+@ATTRIBUTE row_id NUMERIC
+@ATTRIBUTE confidence.won NUMERIC
+@ATTRIBUTE confidence.nowin NUMERIC
+@ATTRIBUTE prediction {won, nowin}
+@ATTRIBUTE correct {won, nowin}
+
+@DATA
+0,0,0,2702,0.0,1.0,nowin,nowin
+0,0,0,2649,0.0,1.0,nowin,nowin
+0,0,0,2667,0.0,1.0,nowin,nowin
+0,0,0,2468,0.0,1.0,nowin,nowin
+0,0,0,1315,0.0,1.0,nowin,nowin
+0,0,0,1321,0.0,1.0,nowin,nowin

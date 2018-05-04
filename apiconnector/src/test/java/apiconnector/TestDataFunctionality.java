@@ -28,12 +28,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.net.URL;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
@@ -84,7 +78,6 @@ import com.thoughtworks.xstream.XStream;
 
 public class TestDataFunctionality {
 	private static final String data_file = "data/iris.arff";
-	private static final String DATASETPATH = "data" + File.separator + "arff_test" + File.separator;
 	private static final int probe = 61;
 	private static final String tag = "junittest";
 
@@ -94,7 +87,12 @@ public class TestDataFunctionality {
 	private static final OpenmlConnector client_read = new OpenmlConnector(url, key_read); 
 	private static final OpenmlConnector live_client_read = new OpenmlConnector(key_read); 
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
-
+	
+	public static File createTestDatasetDescription() throws IOException {
+		DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
+		return Conversion.stringToTempFile(xstream.toXML(dsd), "test-data", "arff");
+	}
+	
 	@Test
 	public void testApiDataDownload() throws Exception {
 		DataSetDescription dsd = client_read.dataGet(probe);
@@ -189,49 +187,6 @@ public class TestDataFunctionality {
 		
 		// test if converting back doesn't break anything
 		xstream.toXML(dq);
-	}
-	
-	private File createTestDatasetDescription() throws IOException {
-		DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
-		return Conversion.stringToTempFile(xstream.toXML(dsd), "test-data", "arff");
-	}
-	
-	@Test
-	public void testUploadDataset() throws IOException {
-		
-		client_write.setVerboseLevel(1);
-		// Test XML description
-		final File description = createTestDatasetDescription();
-		Path path = Paths.get(DATASETPATH);
-		// Pass through each dataset on the directory
-		Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-		@Override
-		public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
-					
-			File toUpload = new File(file.toString());
-			int id = -1;
-			// boolean to signal the validity of a dataset
-			boolean invalid = file.getFileName().toString().startsWith("invalid");
-			
-			try {
-				UploadDataSet ud = client_write.dataUpload(description, toUpload);
-				id = ud.getId();
-				// Only reached by a dataset (ARFF file) that gets uploaded.
-				client_write.dataDelete(id);
-			} catch(Exception e) {
-				e.printStackTrace();
-			} finally {
-				if(invalid) {
-					assertTrue(id == -1);
-				} else {
-					assertTrue(id != -1);
-				}
-				// Reset the dataset id
-				id = -1;
-			}
-			// Keep going through datasets
-			return FileVisitResult.CONTINUE;
-		}});
 	}
 	
 	@Test
