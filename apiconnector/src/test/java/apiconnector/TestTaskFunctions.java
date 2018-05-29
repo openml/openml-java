@@ -49,6 +49,7 @@ import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskInputs;
 import org.openml.apiconnector.xml.Tasks;
+import org.openml.apiconnector.xml.UploadTask;
 import org.openml.apiconnector.xml.TaskInputs.Input;
 
 public class TestTaskFunctions {
@@ -160,9 +161,31 @@ public class TestTaskFunctions {
 		}
 	}
 	
+	@Test
+	public void testCreateChallengeTask() throws Exception {
+		Input[] inputs = new Input[4];
+		inputs[0] = new Input("estimation_procedure", "18");
+		inputs[1] = new Input("source_data", "128");
+		inputs[2] = new Input("source_data_labeled", "129");
+		inputs[3] = new Input("target_feature", "class");
+		
+		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 6);
+		
+		int uploadId = 0;
+		try {
+			UploadTask ut = client_write.taskUpload(taskFile);
+			uploadId = ut.getId();
+		} catch (ApiException e) {
+			uploadId = TaskInformation.getTaskIdsFromErrorMessage(e)[0];
+			throw e;
+		} finally {
+			client_write.taskDelete(uploadId);
+		}
+	}
+	
 	@Test(expected = ApiException.class)
 	public void testCreateClassificationTaskNumericTarget() throws Exception {
-		Input[] inputs = new Input[4];
+		Input[] inputs = new Input[3];
 		inputs[0] = new Input("estimation_procedure", "1");
 		inputs[1] = new Input("source_data", "1");
 		inputs[2] = new Input("target_feature", "carbon");
