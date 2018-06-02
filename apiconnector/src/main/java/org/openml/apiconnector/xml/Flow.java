@@ -251,24 +251,9 @@ public class Flow {
 		this.parameter = ArrayUtils.addAll(this.parameter, p);
 	}
 	
-	public Flow getComponentByName( String name ) throws Exception {
-		for( Component c : getComponent() ) {
-			if( c.getImplementation().getName().equals( name ) )
-				return c.getImplementation();
-		}
-		throw new Exception("Subimplementation not present.");
-	}
-	
-	public void addComponent( String identifier, Flow implementation, boolean updateName ) {
-		Component c = new Component( identifier, implementation );
-		this.component = ArrayUtils.addAll( this.component, c );
-		if (updateName) {
-			this.name += "_" + implementation.getLastName();
-		}
-	}
-	
-	public void addComponent( String identifier, Flow implementation ) {
-		addComponent(identifier, implementation, true);
+	public void addComponent(String identifier, Flow implementation) {
+		Component c = new Component(identifier, implementation);
+		this.component = ArrayUtils.addAll(this.component, c);
 	}
 	
 	public boolean parameter_exists( String name ) {
