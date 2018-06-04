@@ -98,11 +98,11 @@ public class TestMisc {
 
 	@Test
 	public void testApiGetStudyByAlias() throws Exception {
-		Study s = client_test_read.studyGet("OpenML100", "data");
+		Study s = client_test_read.studyGet("OpenML100", "tasks");
 		assertTrue(s.getTag().length > 0);
-		assertTrue(s.getDataset().length > 10);
+		assertTrue(s.getDataset() == null);
 		assertTrue(s.getFlows() == null);
-		assertTrue(s.getTasks() == null);
+		assertTrue(s.getTasks().length > 10);
 		assertTrue(s.getSetups() == null);
 	}
 }

@@ -238,7 +238,7 @@ public class TestDataFunctionality {
 		Random random = new Random();
 
 		Map<String,String> filters = new TreeMap<String, String>();
-		filters.put("tag", "study_14");
+		filters.put("limit", "100");
 		
 		DataSet[] all = client_read.dataList(filters).getData();
 		
