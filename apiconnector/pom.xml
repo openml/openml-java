@@ -36,7 +36,10 @@
       </roles>
     </developer>
   </developers>
-
+  
+  <!-- this refers to the following file: 
+       https://github.com/sonatype/oss-parents/blob/master/oss-parent/pom.xml
+  -->
   <parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
