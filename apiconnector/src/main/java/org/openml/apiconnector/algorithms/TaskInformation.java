@@ -30,13 +30,8 @@
  ******************************************************************************/
 package org.openml.apiconnector.algorithms;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-
+import org.json.JSONArray;
 import org.openml.apiconnector.io.ApiException;
-import org.openml.apiconnector.io.OpenmlConnector;
-import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.Task.Input.Data_set;
 import org.openml.apiconnector.xml.Task.Input.Estimation_procedure;
@@ -140,7 +135,7 @@ public class TaskInformation {
 	 * @return The cost matrix
 	 * @throws Exception
 	 */
-	public static double[][] getCostMatrix( Task t ) throws Exception {
+	public static JSONArray getCostMatrix( Task t ) throws Exception {
 		for( int i = 0; i < t.getInputs().length; ++i ) {
 			if(t.getInputs()[i].getName().equals("cost_matrix") ) {
 				return t.getInputs()[i].getCost_Matrix();
@@ -175,39 +170,6 @@ public class TaskInformation {
 			}
 		}
 		throw new Exception("Task does not define an predictions (task_id="+t.getTask_id()+")");
-	}
-	
-	/**
-	 * @param t - Input Task. 
-	 * @return The classnames of the input data
-	 * @throws Exception
-	 */
-	public static String[] getClassNames( OpenmlConnector apiconnector, Task t ) throws Exception {
-		DataSetDescription dsd = getSourceData(t).getDataSetDescription( apiconnector );
-		String targetFeature = getSourceData(t).getTarget_feature();
-		return getClassNames(apiconnector.datasetGet(dsd), t.getTask_id(), targetFeature);
-	}
-	
-	public static String[] getClassNames( File dataset, int task_id, String targetFeature ) throws Exception {
-		BufferedReader br = new BufferedReader( new FileReader( dataset ) );
-		
-		String line;
-		
-		while( (line = br.readLine()) != null) {
-			if( ArffHelper.isDataDeclaration(line) ) {
-				throw new Exception("Attribute not found before data declaration (task_id="+task_id+")");
-			}
-			if( ArffHelper.isAttributeDeclaration(line) ) {
-				try {
-					if( ArffHelper.getAttributeName( line ).equals( targetFeature ) ) {
-						br.close();
-						return ArffHelper.getNominalValues( line );
-					}
-				} catch( Exception e ) {/*Not going to happen*/}
-			}
-		}
-		br.close();
-		throw new Exception("Attribute not found (task_id="+task_id+")");
 	}
 	
 	public static Integer[] getTaskIdsFromErrorMessage(ApiException e) {

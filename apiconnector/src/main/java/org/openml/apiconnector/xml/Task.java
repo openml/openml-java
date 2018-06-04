@@ -38,7 +38,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.openml.apiconnector.algorithms.OptionParser;
+import org.json.JSONArray;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Constants;
 
@@ -208,12 +208,8 @@ public class Task implements Serializable {
 			return quality_measure;
 		}
 		
-		public double[][] getCost_Matrix() throws Exception {
-			if( cost_matrix != null && cost_matrix.equals("") == false ) {
-				return OptionParser.stringToArray(cost_matrix);
-			} else { 
-				return null;
-			}
+		public JSONArray getCost_Matrix() throws Exception {
+			return new JSONArray(cost_matrix);
 		}
 		
 		public Estimation_procedure getEstimation_procedure() {

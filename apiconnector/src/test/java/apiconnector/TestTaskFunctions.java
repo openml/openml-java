@@ -30,6 +30,7 @@
  ******************************************************************************/
 package apiconnector;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -39,6 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import org.json.JSONArray;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.algorithms.TaskInformation;
@@ -175,6 +177,34 @@ public class TestTaskFunctions {
 		try {
 			UploadTask ut = client_write.taskUpload(taskFile);
 			uploadId = ut.getId();
+		} catch (ApiException e) {
+			uploadId = TaskInformation.getTaskIdsFromErrorMessage(e)[0];
+			throw e;
+		} finally {
+			client_write.taskDelete(uploadId);
+		}
+	}
+	
+	@Test
+	public void testCreateTaskWithCostMatrix() throws Exception {
+		JSONArray costMatrixOrig = new JSONArray("[[0, 1], [10, 0]]");
+		
+		Input[] inputs = new Input[4];
+		inputs[0] = new Input("estimation_procedure", "1");
+		inputs[1] = new Input("source_data", "2");
+		inputs[2] = new Input("target_feature", "class");
+		inputs[3] = new Input("cost_matrix", costMatrixOrig.toString());
+		
+		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 1);
+		
+		int uploadId = 0;
+		try {
+			UploadTask ut = client_write.taskUpload(taskFile);
+			uploadId = ut.getId();
+			
+			Task downloaded = client_read.taskGet(ut.getId());
+			JSONArray costMatrixDownloaded = TaskInformation.getCostMatrix(downloaded);
+			assertEquals(costMatrixOrig.toString(), costMatrixDownloaded.toString());
 		} catch (ApiException e) {
 			uploadId = TaskInformation.getTaskIdsFromErrorMessage(e)[0];
 			throw e;
