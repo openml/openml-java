@@ -7,3 +7,7 @@ To release on maven central, go to:
 
 https://oss.sonatype.org/
 (username: janvanrijn)
+
+Guide:
+https://central.sonatype.org/pages/ossrh-guide.html
+
