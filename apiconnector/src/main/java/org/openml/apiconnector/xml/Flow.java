@@ -267,7 +267,27 @@ public class Flow {
 		return false;
 	}
 	
-	public Flow getSubImplementation( String identifier ) throws Exception {
+	public int countComponents() {
+		int count = 1;
+		if (getComponent() != null) {
+			for (Flow.Component sub : getComponent()) {
+				count += sub.getImplementation().countComponents();
+			}
+		}
+		return count;
+	}
+	
+	public int countParameters() {
+		int count = getParameter().length;
+		if (getComponent() != null) {
+			for (Flow.Component sub : getComponent()) {
+				count += sub.getImplementation().countParameters();
+			}
+		}
+		return count;
+	}
+	
+	public Flow getSubImplementation(String identifier) throws Exception {
 		if( component != null ) {
 			for( Component p : component ) {
 				if( p.identifier.equals(identifier)) {
@@ -276,24 +296,6 @@ public class Flow {
 			}
 		}
 		throw new Exception("Component with identifier " + identifier + " not found. ");
-	}
-
-	public static class Bibliographical_reference {
-		private String citation;
-		private String url;
-
-		public Bibliographical_reference(String citation, String url) {
-			this.citation = citation;
-			this.url = url;
-		}
-
-		public String getCitation() {
-			return citation;
-		}
-
-		public String getUrl() {
-			return url;
-		}
 	}
 
 	public static class Parameter {
