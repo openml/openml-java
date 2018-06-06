@@ -53,6 +53,12 @@ public class SetupParameters {
 	@XStreamImplicit
 	@XStreamAlias("oml:parameter")
 	private Parameter[] parameters;
+
+	public SetupParameters(Integer flow_id, Parameter[] parameters) {
+		super();
+		this.flow_id = flow_id;
+		this.parameters = parameters;
+	}
 	
 	public Integer getFlow_id() {
 		return flow_id;
@@ -86,6 +92,17 @@ public class SetupParameters {
 		private String default_value;
 		@XStreamAlias("oml:value")
 		private String value;
+		
+		public Parameter(Integer flow_id, String full_name, String parameter_name, String data_type,
+				String default_value, String value) {
+			super();
+			this.flow_id = flow_id;
+			this.full_name = full_name;
+			this.parameter_name = parameter_name;
+			this.data_type = data_type;
+			this.default_value = default_value;
+			this.value = value;
+		}
 		
 		public Integer getFlow_id() {
 			return flow_id;

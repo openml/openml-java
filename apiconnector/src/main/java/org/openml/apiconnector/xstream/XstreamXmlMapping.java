@@ -121,6 +121,7 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(RunList.class);
 		xstream.processAnnotations(Run.class);
 		
+		xstream.processAnnotations(Flow.class);
 		xstream.processAnnotations(FlowTag.class);
 		xstream.processAnnotations(FlowUntag.class);
 		
@@ -177,52 +178,6 @@ public class XstreamXmlMapping {
 		// data delete
 		xstream.alias("oml:data_delete", DataDelete.class);
 		xstream.aliasField("oml:id", DataDelete.class, "id");
-		
-		// flow 
-		xstream.alias("oml:flow", Flow.class);
-		xstream.aliasAttribute(Flow.class, "oml", "xmlns:oml");
-		
-		xstream.addImplicitCollection(Flow.class, "creator", "oml:creator", String.class);
-		xstream.addImplicitCollection(Flow.class, "contributor", "oml:contributor", String.class);
-		xstream.addImplicitCollection(Flow.class, "parameter", "oml:parameter", Flow.Parameter.class);
-		xstream.addImplicitCollection(Flow.class, "component", "oml:component", Flow.Component.class);
-		xstream.addImplicitCollection(Flow.class, "tag", "oml:tag", String.class);
-		
-		xstream.aliasField("oml:id", Flow.class, "id");
-		xstream.aliasField("oml:fullName", Flow.class, "fullName");
-		xstream.aliasField("oml:name", Flow.class, "name");
-		xstream.aliasField("oml:custom_name", Flow.class, "custom_name");
-		xstream.aliasField("oml:class_name", Flow.class, "class_name");
-		xstream.aliasField("oml:version", Flow.class, "version");
-		xstream.aliasField("oml:external_version", Flow.class, "external_version");
-		xstream.aliasField("oml:uploader", Flow.class, "uploader");
-		xstream.aliasField("oml:upload_date", Flow.class, "upload_date");
-		xstream.aliasField("oml:description", Flow.class, "description");
-		xstream.aliasField("oml:licence", Flow.class, "licence");
-		xstream.aliasField("oml:language", Flow.class, "language");
-		xstream.aliasField("oml:full_description", Flow.class, "full_description");
-		xstream.aliasField("oml:installation_notes", Flow.class, "installation_notes");
-		xstream.aliasField("oml:dependencies", Flow.class, "dependencies");
-		
-		xstream.aliasField("oml:source_url", Flow.class, "source_url");
-		xstream.aliasField("oml:source_format", Flow.class, "source_format");
-		xstream.aliasField("oml:source_md5", Flow.class, "source_md5");
-		
-		xstream.aliasField("oml:binary_url", Flow.class, "binary_url");
-		xstream.aliasField("oml:binary_format", Flow.class, "binary_format");
-		xstream.aliasField("oml:binary_md5", Flow.class, "binary_md5");
-		
-		// flow component
-		xstream.alias("oml:flow_component", Flow.Component.class);
-		xstream.aliasField("oml:identifier", Flow.Component.class, "identifier");
-		xstream.aliasField("oml:flow", Flow.Component.class, "flow");
-		
-		// parameter
-		xstream.alias("oml:parameter", Flow.Parameter.class);
-		xstream.aliasField("oml:name", Flow.Parameter.class, "name");
-		xstream.aliasField("oml:data_type", Flow.Parameter.class, "data_type");
-		xstream.aliasField("oml:default_value", Flow.Parameter.class, "default_value");
-		xstream.aliasField("oml:description", Flow.Parameter.class, "description");
 		
 		// upload flow
 		xstream.alias("oml:upload_flow", UploadFlow.class);

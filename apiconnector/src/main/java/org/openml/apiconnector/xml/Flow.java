@@ -33,37 +33,95 @@ package org.openml.apiconnector.xml;
 import java.util.Arrays;
 
 import org.openml.apiconnector.settings.Constants;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+
 import org.apache.commons.lang3.ArrayUtils;
 
+@XStreamAlias("oml:flow")
 public class Flow {
-	private final String oml = Constants.OPENML_XMLNS;
 	
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:oml")
+	private final String oml = Constants.OPENML_XMLNS;
+
+	@XStreamAlias("oml:id")
 	private Integer id;
-	private String fullName;
+	
+	@XStreamAlias("oml:uploader")
 	private Integer uploader;
+	
+	@XStreamAlias("oml:name")
 	private String name;
+	
+	@XStreamAlias("oml:custom_name")
 	private String custom_name;
+
+	@XStreamAlias("oml:class_name")
 	private String class_name;
+	
+	@XStreamAlias("oml:version")
 	private String version;
+	
+	@XStreamAlias("oml:external_version")
 	private String external_version;
+
+	@XStreamAlias("oml:description")
 	private String description;
+
+	@XStreamImplicit(itemFieldName = "oml:creator")
 	private String[] creator;
+
+	@XStreamImplicit(itemFieldName = "oml:contributor")
 	private String[] contributor;
+
+	@XStreamAlias("oml:upload_date")
 	private String upload_date;
+
+	@XStreamAlias("oml:licence")
 	private String licence;
+
+	@XStreamAlias("oml:language")
 	private String language;
+	
+	@XStreamAlias("oml:full_description")
 	private String full_description;
+
+	@XStreamAlias("oml:installation_notes")
 	private String installation_notes;
+
+	@XStreamAlias("oml:dependencies")
 	private String dependencies;
-	private String implement;
+	
+	@XStreamImplicit
+	@XStreamAlias("oml:parameter")
 	private Parameter[] parameter;
+
+	@XStreamImplicit
+	@XStreamAlias("oml:component")
 	private Component[] component;
+
+	@XStreamImplicit(itemFieldName = "oml:tag")
 	private String[] tag;
+	
+	@XStreamAlias("oml:source_url")
 	private String source_url;
+	
+	@XStreamAlias("oml:binary_url")
 	private String binary_url;
+
+	@XStreamAlias("oml:source_format")
 	private String source_format;
+	
+	@XStreamAlias("oml:binary_format")
 	private String binary_format;
+
+	@XStreamAlias("oml:source_md5")
 	private String source_md5;
+
+	@XStreamAlias("oml:binary_md5")
 	private String binary_md5;
 
 	public Flow(String name, String class_name, String external_version, String description, String language, String dependencies ) {
@@ -103,10 +161,6 @@ public class Flow {
 	public Integer getId() {
 		return id;
 	}
-
-	public String getFullName() {
-		return fullName;
-	}
 	
 	public void setName(String name) {
 		this.name = name;
@@ -122,10 +176,6 @@ public class Flow {
 
 	public String getClass_name() {
 		return class_name;
-	}
-
-	public void setClass_name(String class_name) {
-		this.class_name = class_name;
 	}
 
 	public String getExternal_version() {
@@ -192,10 +242,6 @@ public class Flow {
 		return dependencies;
 	}
 
-	public String getImplement() {
-		return implement;
-	}
-
 	public Parameter[] getParameter() {
 		return parameter;
 	}
@@ -231,35 +277,35 @@ public class Flow {
 	public String getBinary_md5() {
 		return binary_md5;
 	}
-	
-	public void addTag( String new_tag ) {
+
+	public void addTag(String new_tag) throws Exception {
 		// check if tag is not already present
-		if( tag != null ) {
-			if( Arrays.asList(tag).contains(new_tag) == true ) {
-				return;
+		if (tag != null) {
+			if (Arrays.asList(tag).contains(new_tag) == true) {
+				throw new Exception("Tag already exists.");
 			}
 		}
-		tag = ArrayUtils.addAll( tag, new_tag );
+		tag = ArrayUtils.addAll(tag, new_tag);
 	}
 
 	public void addParameter(String name, String data_type, String default_value, String description) {
 		Parameter p = new Parameter(name, data_type, default_value, description);
-		this.parameter = ArrayUtils.addAll(this.parameter, p);
+		this.parameter = ArrayUtils.add(this.parameter, p);
 	}
 	
 	public void addParameter(Parameter p) {
-		this.parameter = ArrayUtils.addAll(this.parameter, p);
+		this.parameter = ArrayUtils.add(this.parameter, p);
 	}
 	
 	public void addComponent(String identifier, Flow implementation) {
 		Component c = new Component(identifier, implementation);
-		this.component = ArrayUtils.addAll(this.component, c);
+		this.component = ArrayUtils.add(this.component, c);
 	}
 	
-	public boolean parameter_exists( String name ) {
-		if( parameter != null ) {
-			for( Parameter p : parameter ) {
-				if( p.getName().equals( name ) ) {
+	public boolean parameter_exists(String name) {
+		if (parameter != null) {
+			for (Parameter p : parameter) {
+				if (p.getName().equals(name)) {
 					return true;
 				}
 			}
@@ -298,10 +344,19 @@ public class Flow {
 		throw new Exception("Component with identifier " + identifier + " not found. ");
 	}
 
+	@XStreamAlias("oml:parameter")
 	public static class Parameter {
+		
+		@XStreamAlias("oml:name")
 		private String name;
+		
+		@XStreamAlias("oml:data_type")
 		private String data_type;
+
+		@XStreamAlias("oml:default_value")
 		private String default_value;
+
+		@XStreamAlias("oml:description")
 		private String description;
 		
 		public Parameter(String name, String data_type, String default_value,
@@ -328,9 +383,13 @@ public class Flow {
 			return description;
 		}
 	}
-	
+
+	@XStreamAlias("oml:component")
 	public static class Component {
+		@XStreamAlias("oml:identifier")
 		private String identifier;
+
+		@XStreamAlias("oml:flow")
 		private Flow flow;
 		
 		public Component( String identifier, Flow flow ) {

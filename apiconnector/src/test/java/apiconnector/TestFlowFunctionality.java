@@ -81,8 +81,6 @@ public class TestFlowFunctionality {
 			created.addComponent("B", new Flow("test2", "weka.classifiers.test.janistesting.subflow", "test2", "test should be deleted", "english", "UnitTest") );
 			String flowXML = xstream.toXML(created);
 			
-			System.out.println(flowXML);
-			
 			File f = Conversion.stringToTempFile(flowXML, "test", "xml");
 			
 			UploadFlow uf = client_write.flowUpload(f, f, f);
