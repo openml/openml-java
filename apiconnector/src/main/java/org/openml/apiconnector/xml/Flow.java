@@ -325,7 +325,10 @@ public class Flow {
 	}
 	
 	public int countParameters() {
-		int count = getParameter().length;
+		int count = 0;
+		if (getParameter() != null) {
+			count += getParameter().length;
+		}
 		if (getComponent() != null) {
 			for (Flow.Component sub : getComponent()) {
 				count += sub.getImplementation().countParameters();
@@ -336,9 +339,11 @@ public class Flow {
 	
 	public Parameter[] getParametersRecursive() {
 		List<Parameter> parameters = new ArrayList<Parameter>();
-		for (Parameter param : getParameter()) {
-			// adds flow id to the parameter
-			parameters.add(new Parameter(null, id, name + "_" + param.getName(), param.getName(), param.getData_type(), param.getDefault_value(), null));
+		if (getParameter() != null) {
+			for (Parameter param : getParameter()) {
+				// adds flow id to the parameter
+				parameters.add(new Parameter(null, id, name + "_" + param.getName(), param.getName(), param.getData_type(), param.getDefault_value(), null));
+			}
 		}
 		if (getComponent() != null) {
 			for (Flow.Component sub : getComponent()) {
