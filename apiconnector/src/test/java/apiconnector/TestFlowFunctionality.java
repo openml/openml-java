@@ -102,6 +102,8 @@ public class TestFlowFunctionality {
 			assertTrue(fu.getTags() == null);
 			
 			Flow downloaded = client_read.flowGet(uf.getId());
+			assertEquals(3, created.getParameter().length);
+			assertEquals(3, created.getComponent().length);
 			assertEquals(created.getParameter().length, downloaded.getParameter().length);
 			assertEquals(created.getComponent().length, downloaded.getComponent().length);
 		} catch (Exception e) {
