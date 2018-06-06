@@ -54,7 +54,6 @@ public class SetupParameters {
 	private Parameter[] parameters;
 
 	public SetupParameters(Integer flow_id, Parameter[] parameters) {
-		super();
 		this.flow_id = flow_id;
 		this.parameters = parameters;
 	}

@@ -30,6 +30,7 @@
  ******************************************************************************/
 package apiconnector;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -43,7 +44,6 @@ import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.Flow;
-import org.openml.apiconnector.xml.FlowDelete;
 import org.openml.apiconnector.xml.FlowTag;
 import org.openml.apiconnector.xml.FlowUntag;
 import org.openml.apiconnector.xml.Parameter;
@@ -79,24 +79,29 @@ public class TestFlowFunctionality {
 	
 	@Test
 	public void testApiFlowUpload() throws Exception {
+		Integer uploaded_id = -1;
 		try {
 			Flow created = new Flow("test2", "weka.classifiers.test.janistesting", "test", "test should be deleted", "english", "UnitTest");
-			created.addComponent("B", new Flow("test2", "weka.classifiers.test.janistesting.subflow", "test2", "test should be deleted", "english", "UnitTest") );
-			created.addParameter(new Parameter("test_p", "option", "bla", "more bla"));
-			String flowXML = xstream.toXML(created);
+			created.addComponent("B", new Flow("test2", "weka.classifiers.test.janistesting.subflow", "test", "test should be deleted", "english", "UnitTest") );
+			created.addComponent("C", new Flow("test2", "weka.classifiers.test.janistesting.subflow2", "test2", "test should be deleted", "english", "UnitTest") );
+			created.addComponent("D", new Flow("test3", "weka.classifiers.test.janistesting.subflow3", "test4", "test should be deleted", "english", "UnitTest") );
 			
+			created.addParameter(new Parameter("test_a", "option", "bla1", "more bla1"));
+			created.addParameter(new Parameter("test_p", "option", "bla2", "more bla2"));
+			created.addParameter(new Parameter("test_q", "option", "blaq", "more blaqq"));
+			String flowXML = xstream.toXML(created);
 			File f = Conversion.stringToTempFile(flowXML, "test", "xml");
 			
 			UploadFlow uf = client_write.flowUpload(f, f, f);
-			
+			uploaded_id = uf.getId();
 			FlowTag ft = client_write.flowTag(uf.getId(), tag);
 			assertTrue(Arrays.asList(ft.getTags()).contains(tag));
 			FlowUntag fu = client_write.flowUntag(uf.getId(), tag);
 			assertTrue(fu.getTags() == null);
 			
-			FlowDelete fd = client_write.flowDelete(uf.getId());
-			System.out.println(fd.getId());
-			
+			Flow downloaded = client_read.flowGet(uf.getId());
+			assertEquals(created.getParameter().length, downloaded.getParameter().length);
+			assertEquals(created.getComponent().length, downloaded.getComponent().length);
 		} catch (Exception e) {
 			e.printStackTrace();
 			// possibly the previous test failed, and left the exact same flow on the server.
@@ -104,17 +109,12 @@ public class TestFlowFunctionality {
 				ApiException apiException = (ApiException) e;
 				if (apiException.getCode() == 171) {
 					int index = apiException.getMessage().indexOf("implementation_id") + "implementation_id".length()+1;
-					Integer implementation_id = Integer.parseInt(apiException.getMessage().substring(index));
-					// delete it
-					client_write.flowDelete(implementation_id);
-					// and try again
-					testApiFlowUpload();
-					
-				} else {
-					fail("Test failed: " + e.getMessage());
+					uploaded_id = Integer.parseInt(apiException.getMessage().substring(index));
 				}
 			}
-			
+			fail("Test failed: " + e.getMessage());
+		} finally {
+			client_write.flowDelete(uploaded_id);
 		}
 	}
 

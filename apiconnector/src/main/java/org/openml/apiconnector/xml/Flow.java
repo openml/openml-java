@@ -97,8 +97,7 @@ public class Flow {
 	@XStreamAlias("oml:dependencies")
 	private String dependencies;
 	
-	@XStreamImplicit
-	@XStreamAlias("oml:parameter")
+	@XStreamImplicit(itemFieldName="oml:parameter")
 	private Parameter[] parameter;
 
 	@XStreamImplicit

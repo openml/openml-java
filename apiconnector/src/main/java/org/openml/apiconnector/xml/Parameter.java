@@ -2,7 +2,6 @@ package org.openml.apiconnector.xml;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@XStreamAlias("oml:parameter")
 public class Parameter {
 	
 	@XStreamAlias("oml:id")
