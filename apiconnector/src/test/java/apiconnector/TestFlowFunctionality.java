@@ -66,7 +66,9 @@ public class TestFlowFunctionality {
 
 		File tempXml = Conversion.stringToTempFile(xstream.toXML(flow), "flow", "xml");
 		File tempXsd = client_read.getXSD("openml.implementation.upload");
-
+		
+		System.out.println(Conversion.fileToString(tempXml));
+		
 		assertTrue(Conversion.validateXML(tempXml, tempXsd));
 
 		// very easy checks, should all pass

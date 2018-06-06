@@ -50,6 +50,7 @@ import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.EvaluationList;
 import org.openml.apiconnector.xml.EvaluationList.Evaluation;
 import org.openml.apiconnector.xml.Flow;
+import org.openml.apiconnector.xml.Parameter;
 import org.openml.apiconnector.xml.SetupParameters;
 import org.openml.apiconnector.xml.Study;
 
@@ -254,7 +255,7 @@ public class PlotCsvGenerator {
 			}
 			
 			// use convenience function to convert hyperparameters object into hashmap
-			Map<String, SetupParameters.Parameter> params = setupDetails.getParametersAsMap();
+			Map<String, Parameter> params = setupDetails.getParametersAsMap();
 			// obtain the value of the hyperparameter we are interested in
 			Double hyperparameterValue = Double.parseDouble(params.get(hyperparameter).getValue());
 			// and add this to our data structure

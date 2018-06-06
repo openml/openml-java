@@ -344,46 +344,6 @@ public class Flow {
 		throw new Exception("Component with identifier " + identifier + " not found. ");
 	}
 
-	@XStreamAlias("oml:parameter")
-	public static class Parameter {
-		
-		@XStreamAlias("oml:name")
-		private String name;
-		
-		@XStreamAlias("oml:data_type")
-		private String data_type;
-
-		@XStreamAlias("oml:default_value")
-		private String default_value;
-
-		@XStreamAlias("oml:description")
-		private String description;
-		
-		public Parameter(String name, String data_type, String default_value,
-				String description) {
-			this.name = name;
-			this.data_type = data_type;
-			this.default_value = default_value;
-			this.description = description;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public String getData_type() {
-			return data_type;
-		}
-
-		public String getDefault_value() {
-			return default_value;
-		}
-
-		public String getDescription() {
-			return description;
-		}
-	}
-
 	@XStreamAlias("oml:component")
 	public static class Component {
 		@XStreamAlias("oml:identifier")

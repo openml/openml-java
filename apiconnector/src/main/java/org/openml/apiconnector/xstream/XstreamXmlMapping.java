@@ -55,6 +55,7 @@ import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.ApiError;
 import org.openml.apiconnector.xml.Flow;
 import org.openml.apiconnector.xml.Job;
+import org.openml.apiconnector.xml.Parameter;
 import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.RunList;
 import org.openml.apiconnector.xml.RunReset;
@@ -130,6 +131,7 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(EvaluationRequest.class);
 		xstream.processAnnotations(RunEvaluation.class);
 		xstream.processAnnotations(EvaluationScore.class);
+		xstream.processAnnotations(Parameter.class);
 		
 		xstream.ignoreUnknownElements();
 		
