@@ -79,17 +79,19 @@ public class TestFlowFunctionality {
 	
 	@Test
 	public void testApiFlowUpload() throws Exception {
+		
 		Integer uploaded_id = -1;
 		try {
-			Flow created = new Flow("test2", "weka.classifiers.test.janistesting", "test", "test should be deleted", "english", "UnitTest");
-			created.addComponent("B", new Flow("test2", "weka.classifiers.test.janistesting.subflow", "test", "test should be deleted", "english", "UnitTest") );
-			created.addComponent("C", new Flow("test2", "weka.classifiers.test.janistesting.subflow2", "test2", "test should be deleted", "english", "UnitTest") );
-			created.addComponent("D", new Flow("test3", "weka.classifiers.test.janistesting.subflow3", "test4", "test should be deleted", "english", "UnitTest") );
+			Flow created = new Flow("test", "weka.classifiers.test.janistesting", "test", "test should be deleted", "english", "UnitTest");
+			created.addComponent("B", new Flow("test2", "weka.classifiers.test.janistesting.subflow2", "test2", "test should be deleted", "english", "UnitTest") );
+			created.addComponent("C", new Flow("test3", "weka.classifiers.test.janistesting.subflow3", "test3", "test should be deleted", "english", "UnitTest") );
+			created.addComponent("D", new Flow("test4", "weka.classifiers.test.janistesting.subflow4", "test4", "test should be deleted", "english", "UnitTest") );
 			
 			created.addParameter(new Parameter("test_a", "option", "bla1", "more bla1"));
 			created.addParameter(new Parameter("test_p", "option", "bla2", "more bla2"));
 			created.addParameter(new Parameter("test_q", "option", "blaq", "more blaqq"));
 			String flowXML = xstream.toXML(created);
+			
 			File f = Conversion.stringToTempFile(flowXML, "test", "xml");
 			
 			UploadFlow uf = client_write.flowUpload(f, f, f);
