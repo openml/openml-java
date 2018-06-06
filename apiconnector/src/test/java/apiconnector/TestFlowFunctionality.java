@@ -46,6 +46,7 @@ import org.openml.apiconnector.xml.Flow;
 import org.openml.apiconnector.xml.FlowDelete;
 import org.openml.apiconnector.xml.FlowTag;
 import org.openml.apiconnector.xml.FlowUntag;
+import org.openml.apiconnector.xml.Parameter;
 import org.openml.apiconnector.xml.UploadFlow;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
@@ -81,6 +82,7 @@ public class TestFlowFunctionality {
 		try {
 			Flow created = new Flow("test2", "weka.classifiers.test.janistesting", "test", "test should be deleted", "english", "UnitTest");
 			created.addComponent("B", new Flow("test2", "weka.classifiers.test.janistesting.subflow", "test2", "test should be deleted", "english", "UnitTest") );
+			created.addParameter(new Parameter("test_p", "option", "bla", "more bla"));
 			String flowXML = xstream.toXML(created);
 			
 			File f = Conversion.stringToTempFile(flowXML, "test", "xml");
@@ -122,6 +124,7 @@ public class TestFlowFunctionality {
 				"english", "UnitTest");
 		created.addComponent("B", new Flow("test2", "weka.classifiers.test.janistesting", "test2",
 				"test should be deleted", "english", "UnitTest"));
+		created.addParameter(new Parameter("test_p", "option", "bla", "more bla"));
 		created.setCustom_name("Jans flow");
 		String flowXML = xstream.toXML(created);
 

@@ -30,7 +30,9 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.openml.apiconnector.settings.Constants;
 
@@ -331,6 +333,17 @@ public class Flow {
 			}
 		}
 		return count;
+	}
+	
+	public Parameter[] getParametersRecursive() {
+		List<Parameter> parameters = new ArrayList<Parameter>();
+		parameters.addAll(Arrays.asList(getParameter()));
+		if (getComponent() != null) {
+			for (Flow.Component sub : getComponent()) {
+				parameters.addAll(Arrays.asList(sub.getImplementation().getParametersRecursive()));
+			}
+		}
+		return parameters.toArray(new Parameter[parameters.size()]);
 	}
 	
 	public Flow getSubImplementation(String identifier) throws Exception {

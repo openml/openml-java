@@ -26,12 +26,15 @@ public class Parameter {
 	@XStreamAlias("oml:value")
 	private String value;
 	
+	@XStreamAlias("oml:description")
+	private String description;
+	
 
-	public Parameter(String name, String data_type, String default_value, String value) {
+	public Parameter(String name, String data_type, String default_value, String description) {
 		this.name = name;
 		this.data_type = data_type;
 		this.default_value = default_value;
-		this.value = value;
+		this.description = description;
 	}
 	
 	public Parameter(Integer id, Integer flow_id, String full_name, String name, String data_type, String default_value, String value) {
@@ -70,5 +73,8 @@ public class Parameter {
 	public String getValue() {
 		return value;
 	}
-
+	
+	public String getDescription() {
+		return description;
+	}
 }
