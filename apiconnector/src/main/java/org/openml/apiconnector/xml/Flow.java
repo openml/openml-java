@@ -336,7 +336,7 @@ public class Flow {
 	
 	public Parameter[] getParametersRecursive() {
 		List<Parameter> parameters = new ArrayList<Parameter>();
-		for (Parameter param : parameters) {
+		for (Parameter param : getParameter()) {
 			// adds flow id to the parameter
 			parameters.add(new Parameter(null, id, name + "_" + param.getName(), param.getName(), param.getData_type(), param.getDefault_value(), null));
 		}
@@ -345,6 +345,7 @@ public class Flow {
 				parameters.addAll(Arrays.asList(sub.getImplementation().getParametersRecursive()));
 			}
 		}
+		
 		return parameters.toArray(new Parameter[parameters.size()]);
 	}
 	
