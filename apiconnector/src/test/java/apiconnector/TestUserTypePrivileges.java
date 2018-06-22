@@ -33,6 +33,7 @@ package apiconnector;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
@@ -56,9 +57,16 @@ public class TestUserTypePrivileges {
 	private static final String data_file = "data/iris.arff";
 	private static final String url = "https://test.openml.org/";
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
+	
+	// User #1 on test server, make sure to NEVER put a live admin key here
+	private static final OpenmlConnector client_admin = new OpenmlConnector(url,"d488d8afd93b32331cf6ea9d7003d4c3"); 
+	// Plain writing key, make sure to not put a live write key here
 	private static final OpenmlConnector client_write = new OpenmlConnector(url,"8baa83ecddfe44b561fd3d92442e3319");
-	private static final OpenmlConnector client_read = new OpenmlConnector(url,"c1994bdb7ecb3c6f3c8f3b35f4b47f1f"); // R-TEAM
+	// read only key from R-TEAM
+	private static final OpenmlConnector client_read = new OpenmlConnector(url,"c1994bdb7ecb3c6f3c8f3b35f4b47f1f"); 
 	private static final Integer EVAL_ID = 2;
+	
+	private static final int PRIVATE_DATASET_ID = 130;
 	
 	@Test(expected=ApiException.class)
 	public void testApiDataQualityUpload() throws Exception {
@@ -71,6 +79,38 @@ public class TestUserTypePrivileges {
 			assertTrue(e.getCode() == 106);
 			throw e;
 		}
+	}
+	
+	@Test(expected=ApiException.class)
+	public void testApiAttemptDownloadPrivateDataset() throws Exception {
+		client_read.dataGet(PRIVATE_DATASET_ID);
+	}
+	@Test(expected=ApiException.class)
+	public void testApiAttemptDownloadPrivateDataFeatures() throws Exception {
+		client_read.dataFeatures(PRIVATE_DATASET_ID);
+	}
+	@Test(expected=ApiException.class)
+	public void testApiAttemptDownloadPrivateDataQualities() throws Exception {
+		client_read.dataQualities(PRIVATE_DATASET_ID);
+	}
+	@Test(expected=IOException.class)
+	public void testApiAttemptDownloadPrivateDataFile() throws Exception {
+		DataSetDescription dsd = client_admin.dataGet(PRIVATE_DATASET_ID);
+		client_read.datasetGet(dsd);
+	}
+	
+	public void testApiAdminDownloadPrivateDataset() throws Exception {
+		client_admin.dataGet(PRIVATE_DATASET_ID);
+	}
+	public void testApiAdminDownloadPrivateDataFeatures() throws Exception {
+		client_admin.dataFeatures(PRIVATE_DATASET_ID);
+	}
+	public void testApiAdminDownloadPrivateDataQualities() throws Exception {
+		client_admin.dataQualities(PRIVATE_DATASET_ID);
+	}
+	public void testApiAdminDownloadPrivateDataFile() throws Exception {
+		DataSetDescription dsd = client_admin.dataGet(PRIVATE_DATASET_ID);
+		client_admin.datasetGet(dsd);
 	}
 	
 	@Test(expected=ApiException.class)
