@@ -35,12 +35,28 @@ import java.util.Map;
 
 import org.openml.apiconnector.settings.Constants;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+
+@XStreamAlias("oml:data_features")
 public class DataFeature {
-	
+
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:oml")
 	private final String oml = Constants.OPENML_XMLNS;
+	
+	@XStreamAlias("oml:did")
 	private Integer did;
+	
+	@XStreamAlias("oml:evaluation_engine_id")
 	private Integer evaluation_engine_id;
+	
+	@XStreamAlias("oml:error")
 	private String error;
+	
+	@XStreamImplicit
+	@XStreamAlias("oml:feature")
 	private Feature[] features;
 
 	public DataFeature( Integer did, Integer evaluation_engine_id, Feature[] features ) {
@@ -82,27 +98,47 @@ public class DataFeature {
 	public String getOml() {
 		return oml;
 	}
-	
+
+	@XStreamAlias("oml:feature")
 	public static class Feature {
+		@XStreamAlias("oml:index")
 		private Integer index;
+		@XStreamAlias("oml:name")
 		private String name;
+		@XStreamAlias("oml:data_type")
 		private String data_type;
+		@XStreamAlias("oml:nominal_values")
+		private String nominal_values;
+		@XStreamAlias("oml:is_target")
 		private Boolean is_target;
+		@XStreamAlias("oml:NumberOfDistinctValues")
 		private Integer NumberOfDistinctValues;
+		@XStreamAlias("oml:NumberOfUniqueValues")
 		private Integer NumberOfUniqueValues;
+		@XStreamAlias("oml:NumberOfMissingValues")
 		private Integer NumberOfMissingValues;
+		@XStreamAlias("oml:NumberOfIntegerValues")
 		private Integer NumberOfIntegerValues;
+		@XStreamAlias("oml:NumberOfRealValues")
 		private Integer NumberOfRealValues;
+		@XStreamAlias("oml:NumberOfNominalValues")
 		private Integer NumberOfNominalValues;
+		@XStreamAlias("oml:NumberOfValues")
 		private Integer NumberOfValues;
+		@XStreamAlias("oml:MaximumValue")
 		private Double MaximumValue;
+		@XStreamAlias("oml:MinimumValue")
 		private Double MinimumValue;
+		@XStreamAlias("oml:MeanValue")
 		private Double MeanValue;
+		@XStreamAlias("oml:StandardDeviation")
 		private Double StandardDeviation;
+		@XStreamAlias("oml:ClassDistribution")
 		private String ClassDistribution;
 
 		
-		public Feature(Integer index, String name, String data_type,
+		public Feature(Integer index, String name, String data_type, 
+				String nominal_values,
 				Boolean is_target, Integer numberOfDistinctValues,
 				Integer numberOfUniqueValues, Integer numberOfMissingValues,
 				Integer numberOfIntegerValues, Integer numberOfRealValues,
@@ -113,6 +149,7 @@ public class DataFeature {
 			this.index = index;
 			this.name = name;
 			this.data_type = data_type;
+			this.nominal_values = nominal_values;
 			this.is_target = is_target;
 			NumberOfDistinctValues = numberOfDistinctValues;
 			NumberOfUniqueValues = numberOfUniqueValues;
@@ -133,6 +170,9 @@ public class DataFeature {
 		}
 		public String getDataType() {
 			return data_type;
+		}
+		public String getNominalValues() {
+			return nominal_values;
 		}
 		public Integer getIndex() {
 			return index;

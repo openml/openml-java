@@ -105,6 +105,7 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(SetupTag.class);
 		xstream.processAnnotations(SetupUntag.class);
 		
+		xstream.processAnnotations(DataFeature.class);
 		xstream.processAnnotations(Data.class);
 		xstream.processAnnotations(DataSetDescription.class);
 		xstream.processAnnotations(DataTag.class);
@@ -134,32 +135,6 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(Parameter.class);
 		
 		xstream.ignoreUnknownElements();
-		
-		// data feature
-		xstream.alias("oml:data_features", DataFeature.class);
-		xstream.aliasField("oml:did", DataFeature.class, "did");
-		xstream.aliasField("oml:evaluation_engine_id", DataFeature.class, "evaluation_engine_id");
-		xstream.aliasField("oml:error", DataFeature.class, "error");
-		xstream.aliasAttribute(DataFeature.class, "oml", "xmlns:oml");
-		xstream.addImplicitCollection(DataFeature.class, "features", "oml:feature", DataFeature.Feature.class);
-		
-		xstream.alias("oml:data_feature", DataFeature.Feature.class);
-		xstream.aliasField("oml:index", DataFeature.Feature.class, "index");
-		xstream.aliasField("oml:name", DataFeature.Feature.class, "name");
-		xstream.aliasField("oml:data_type", DataFeature.Feature.class, "data_type");
-		xstream.aliasField("oml:is_target", DataFeature.Feature.class, "is_target");
-		xstream.aliasField("oml:NumberOfDistinctValues", DataFeature.Feature.class, "NumberOfDistinctValues" );
-		xstream.aliasField("oml:NumberOfUniqueValues", DataFeature.Feature.class, "NumberOfUniqueValues" );
-		xstream.aliasField("oml:NumberOfMissingValues", DataFeature.Feature.class, "NumberOfMissingValues" );
-		xstream.aliasField("oml:NumberOfIntegerValues", DataFeature.Feature.class, "NumberOfIntegerValues" );
-		xstream.aliasField("oml:NumberOfRealValues", DataFeature.Feature.class, "NumberOfRealValues" );
-		xstream.aliasField("oml:NumberOfNominalValues", DataFeature.Feature.class, "NumberOfNominalValues" );
-		xstream.aliasField("oml:NumberOfValues", DataFeature.Feature.class, "NumberOfValues" );
-		xstream.aliasField("oml:MaximumValue", DataFeature.Feature.class, "MaximumValue" );
-		xstream.aliasField("oml:MinimumValue", DataFeature.Feature.class, "MinimumValue" );
-		xstream.aliasField("oml:MeanValue", DataFeature.Feature.class, "MeanValue" );
-		xstream.aliasField("oml:StandardDeviation", DataFeature.Feature.class, "StandardDeviation" );
-		xstream.aliasField("oml:ClassDistribution", DataFeature.Feature.class, "ClassDistribution" );
 		
 		// data qualities upload
 		xstream.alias("oml:data_qualities_upload", DataQualityUpload.class);
