@@ -209,7 +209,11 @@ public class Task implements Serializable {
 		}
 		
 		public JSONArray getCost_Matrix() throws Exception {
-			return new JSONArray(cost_matrix);
+			if (cost_matrix.length() > 0) {
+				return new JSONArray(cost_matrix);
+			} else {
+				return null;
+			}
 		}
 		
 		public Estimation_procedure getEstimation_procedure() {
