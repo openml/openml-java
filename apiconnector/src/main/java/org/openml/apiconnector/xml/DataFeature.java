@@ -45,40 +45,47 @@ public class DataFeature {
 	@XStreamAsAttribute
 	@XStreamAlias("xmlns:oml")
 	private final String oml = Constants.OPENML_XMLNS;
-	
+
 	@XStreamAlias("oml:did")
 	private Integer did;
-	
+
 	@XStreamAlias("oml:evaluation_engine_id")
 	private Integer evaluation_engine_id;
-	
+
 	@XStreamAlias("oml:error")
 	private String error;
-	
+
 	@XStreamImplicit
 	@XStreamAlias("oml:feature")
 	private Feature[] features;
 
-	public DataFeature( Integer did, Integer evaluation_engine_id, Feature[] features ) {
+	public DataFeature(Integer did, Integer evaluation_engine_id, Feature[] features) {
 		this.did = did;
 		this.evaluation_engine_id = evaluation_engine_id;
 		this.features = features;
 	}
-	
-	public DataFeature( Integer did, Integer evaluation_engine_id, String error ) {
+
+	public DataFeature(Integer did, Integer evaluation_engine_id, String error) {
 		this.did = did;
 		this.evaluation_engine_id = evaluation_engine_id;
 		this.error = error;
 	}
-	
+
+	public DataFeature(Integer did, Integer evaluation_engine_id, Feature[] features, String error) {
+		this.did = did;
+		this.evaluation_engine_id = evaluation_engine_id;
+		this.features = features;
+		this.error = error;
+	}
+
 	public Integer getDid() {
 		return did;
 	}
-	
+
 	public Integer getEvaluation_engine_id() {
 		return evaluation_engine_id;
 	}
-	
+
 	public String getError() {
 		return error;
 	}
@@ -86,15 +93,15 @@ public class DataFeature {
 	public Feature[] getFeatures() {
 		return features;
 	}
-	
+
 	public Map<String, Feature> getFeatureMap() {
-		Map<String,Feature> fm = new HashMap<String, Feature>();
+		Map<String, Feature> fm = new HashMap<String, Feature>();
 		for (Feature f : features) {
 			fm.put(f.name, f);
 		}
 		return fm;
 	}
-	
+
 	public String getOml() {
 		return oml;
 	}
@@ -136,14 +143,10 @@ public class DataFeature {
 		@XStreamAlias("oml:ClassDistribution")
 		private String ClassDistribution;
 
-		
-		public Feature(Integer index, String name, String data_type, 
-				String nominal_values,
-				Boolean is_target, Integer numberOfDistinctValues,
-				Integer numberOfUniqueValues, Integer numberOfMissingValues,
-				Integer numberOfIntegerValues, Integer numberOfRealValues,
-				Integer numberOfNominalValues, Integer numberOfValues,
-				Double maximumValue, Double minimumValue, Double meanValue,
+		public Feature(Integer index, String name, String data_type, String nominal_values, Boolean is_target,
+				Integer numberOfDistinctValues, Integer numberOfUniqueValues, Integer numberOfMissingValues,
+				Integer numberOfIntegerValues, Integer numberOfRealValues, Integer numberOfNominalValues,
+				Integer numberOfValues, Double maximumValue, Double minimumValue, Double meanValue,
 				Double standardDeviation, String classDistribution) {
 			super();
 			this.index = index;
@@ -164,58 +167,75 @@ public class DataFeature {
 			StandardDeviation = standardDeviation;
 			ClassDistribution = classDistribution;
 		}
-		
+
 		public String getName() {
 			return name;
 		}
+
 		public String getDataType() {
 			return data_type;
 		}
+
 		public String getNominalValues() {
 			return nominal_values;
 		}
+
 		public Integer getIndex() {
 			return index;
 		}
+
 		public Boolean getIs_target() {
 			return is_target;
 		}
+
 		public Integer getNumberOfDistinctValues() {
 			return NumberOfDistinctValues;
 		}
+
 		public Integer getNumberOfUniqueValues() {
 			return NumberOfUniqueValues;
 		}
+
 		public Integer getNumberOfMissingValues() {
 			return NumberOfMissingValues;
 		}
+
 		public Integer getNumberOfIntegerValues() {
 			return NumberOfIntegerValues;
 		}
+
 		public Integer getNumberOfRealValues() {
 			return NumberOfRealValues;
 		}
+
 		public Integer getNumberOfNominalValues() {
 			return NumberOfNominalValues;
 		}
+
 		public Integer getNumberOfValues() {
 			return NumberOfValues;
 		}
+
 		public Double getMaximumValue() {
 			return MaximumValue;
 		}
+
 		public Double getMinimumValue() {
 			return MinimumValue;
 		}
+
 		public Double getMeanValue() {
 			return MeanValue;
 		}
+
 		public Double getStandardDeviation() {
 			return StandardDeviation;
 		}
+
 		public String getClassDistribution() {
 			return ClassDistribution;
 		}
+
 		@Override
 		public String toString() {
 			return index + " - " + name;
