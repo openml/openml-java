@@ -138,6 +138,7 @@ public class TestDataFunctionality {
 		File description = createTestDatasetDescription();
 		File toUpload = new File(data_file);
 		UploadDataSet ud = client_write.dataUpload(description, toUpload);
+		client_write.dataStatusUpdate(ud.getId(), "active");
 		DataTag dt = client_write.dataTag(ud.getId(), tag);
 		assertTrue(Arrays.asList(dt.getTags()).contains(tag));
 		

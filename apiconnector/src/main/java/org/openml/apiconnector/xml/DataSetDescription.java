@@ -113,6 +113,9 @@ public class DataSetDescription implements Serializable {
 
 	@XStreamAlias("oml:status")
 	private String status;
+	
+	@XStreamAlias("oml:processing_date")
+	private String processing_date;
 
 	@XStreamAlias("oml:md5_checksum")
 	private String md5_checksum;
@@ -279,6 +282,10 @@ public class DataSetDescription implements Serializable {
 
 	public String getVisibility() {
 		return visibility;
+	}
+	
+	public String getProcessingDate() {
+		return processing_date;
 	}
 
 	public String getMd5_checksum() {

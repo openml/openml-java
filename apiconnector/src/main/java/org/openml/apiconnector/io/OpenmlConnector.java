@@ -282,6 +282,20 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	public DataStatusUpdate dataStatusUpdate(int did, String status) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("data_id", new StringBody("" + did));
+		params.addPart("status", new StringBody(status));
+		
+		URL request = new URL(OPENML_URL + API_PART + "data/status/update");
+		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
+		if (apiResult instanceof DataStatusUpdate) {
+			return (DataStatusUpdate) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to DataStatusUpdate");
+		}
+	}
+	
 	/**
 	 * Tags a dataset
 	 * 

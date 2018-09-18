@@ -52,6 +52,7 @@ import org.openml.apiconnector.xml.RunEvaluation;
 import org.openml.apiconnector.xml.FlowDelete;
 import org.openml.apiconnector.xml.FlowExists;
 import org.openml.apiconnector.xml.DataSetDescription;
+import org.openml.apiconnector.xml.DataStatusUpdate;
 import org.openml.apiconnector.xml.ApiError;
 import org.openml.apiconnector.xml.Flow;
 import org.openml.apiconnector.xml.Job;
@@ -112,6 +113,7 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(DataUntag.class);
 		xstream.processAnnotations(DataUnprocessed.class);
 		xstream.processAnnotations(DataQuality.class);
+		xstream.processAnnotations(DataStatusUpdate.class);
 		
 		xstream.processAnnotations(TaskTag.class);
 		xstream.processAnnotations(TaskUntag.class);
