@@ -32,6 +32,7 @@ package apiconnector;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.net.URL;
@@ -51,6 +52,7 @@ import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskInputs;
 import org.openml.apiconnector.xml.Tasks;
+import org.openml.apiconnector.xml.UploadDataSet;
 import org.openml.apiconnector.xml.UploadTask;
 import org.openml.apiconnector.xml.TaskInputs.Input;
 
@@ -148,7 +150,7 @@ public class TestTaskFunctions {
 		inputs[1] = new Input("source_data", "2");
 		inputs[2] = new Input("target_feature", "class");
 		inputs[3] = new Input("evaluation_measures", "predictive_accuracy");
-		
+		client_write.setVerboseLevel(2);
 		for (int i = 0; i < 4; ++i) {
 			Input[] derived = Arrays.copyOf(inputs, inputs.length);
 			derived[i] = new Input(derived[i].getName(), derived[i].getValue() + "_" + random.nextInt());
@@ -161,6 +163,25 @@ public class TestTaskFunctions {
 				assertTrue(Arrays.asList(TASK_ILLEGAL_INPUT_CODES).contains(e.getCode()));
 			}
 		}
+	}
+	
+	@Test
+	public void testAvoidInactiveDataset() throws Exception {
+		File description = TestDataFunctionality.createTestDatasetDescription();
+		File toUpload = new File(TestDataFunctionality.data_file);
+		UploadDataSet ud = client_write.dataUpload(description, toUpload);
+		
+		Input[] inputs = new Input[3];
+		inputs[0] = new Input("estimation_procedure", "1");
+		inputs[1] = new Input("source_data", "" + ud.getId());
+		inputs[2] = new Input("target_feature", "class");
+		
+		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 6);
+		
+		try {
+			client_write.taskUpload(taskFile);
+			fail("Should not be able to upload task.");
+		} catch(Exception e) { }
 	}
 	
 	@Test

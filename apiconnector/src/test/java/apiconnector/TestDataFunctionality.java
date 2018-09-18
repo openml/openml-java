@@ -77,7 +77,7 @@ import org.xml.sax.InputSource;
 import com.thoughtworks.xstream.XStream;
 
 public class TestDataFunctionality {
-	private static final String data_file = "data/iris.arff";
+	public static final String data_file = "data/iris.arff";
 	private static final int probe = 61;
 	private static final String tag = "junittest";
 
