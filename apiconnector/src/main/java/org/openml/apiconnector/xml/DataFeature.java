@@ -114,8 +114,8 @@ public class DataFeature {
 		private String name;
 		@XStreamAlias("oml:data_type")
 		private String data_type;
-		@XStreamAlias("oml:nominal_values")
-		private String nominal_values;
+		@XStreamImplicit(itemFieldName = "oml:nominal_value")
+		private String[] nominal_values;
 		@XStreamAlias("oml:is_target")
 		private Boolean is_target;
 		@XStreamAlias("oml:NumberOfDistinctValues")
@@ -143,7 +143,7 @@ public class DataFeature {
 		@XStreamAlias("oml:ClassDistribution")
 		private String ClassDistribution;
 
-		public Feature(Integer index, String name, String data_type, String nominal_values, Boolean is_target,
+		public Feature(Integer index, String name, String data_type, String[] nominal_values, Boolean is_target,
 				Integer numberOfDistinctValues, Integer numberOfUniqueValues, Integer numberOfMissingValues,
 				Integer numberOfIntegerValues, Integer numberOfRealValues, Integer numberOfNominalValues,
 				Integer numberOfValues, Double maximumValue, Double minimumValue, Double meanValue,
@@ -176,7 +176,7 @@ public class DataFeature {
 			return data_type;
 		}
 
-		public String getNominalValues() {
+		public String[] getNominalValues() {
 			return nominal_values;
 		}
 
