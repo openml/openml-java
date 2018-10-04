@@ -132,7 +132,7 @@ public class DataQuality {
 	}
 
 	@XStreamAlias("oml:quality")
-	public static class Quality {
+	public static class Quality implements Comparable {
 		@XStreamAlias("oml:name")
 		private String name;
 		@XStreamAlias("oml:feature_index")
@@ -185,6 +185,32 @@ public class DataQuality {
 		@Override
 		public String toString() {
 			return name + ":" + value;
+		}
+		
+		private int diff(Integer a, Integer b) {
+			if (a == null && b == null) {
+				return 0;
+			} else if (a == null) {
+				return -1;
+			} else if (b == null) {
+				return 1;
+			} else {
+				return a - b;
+			}
+		}
+
+		@Override
+		public int compareTo(Object o) {
+			Quality other = (Quality) o;
+			if (!getName().equals(other.getName())) {
+				return getName().compareTo(other.getName());
+			} else if (getInterval_start() != other.getInterval_start()) {
+				return diff(getInterval_start(), other.getInterval_start());
+			} else if (getInterval_end() != other.getInterval_end()) {
+				return diff(getInterval_end(), other.getInterval_end());
+			} else {
+				return diff(getFeature_index(), other.getFeature_index());
+			}
 		}
 	}
 }

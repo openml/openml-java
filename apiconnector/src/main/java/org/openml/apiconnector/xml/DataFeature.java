@@ -118,6 +118,10 @@ public class DataFeature {
 		private String[] nominal_values;
 		@XStreamAlias("oml:is_target")
 		private Boolean is_target;
+		@XStreamAlias("oml:is_ignore")
+		private Boolean is_ignore;
+		@XStreamAlias("oml:is_row_identifier")
+		private Boolean is_row_identifier;
 		@XStreamAlias("oml:NumberOfDistinctValues")
 		private Integer NumberOfDistinctValues;
 		@XStreamAlias("oml:NumberOfUniqueValues")
@@ -186,6 +190,14 @@ public class DataFeature {
 
 		public Boolean getIs_target() {
 			return is_target;
+		}
+
+		public Boolean getIs_ignore() {
+			return is_ignore;
+		}
+
+		public Boolean getIs_row_identifier() {
+			return is_row_identifier;
 		}
 
 		public Integer getNumberOfDistinctValues() {
