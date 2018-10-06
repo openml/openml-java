@@ -34,31 +34,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 
 public class Input {
 
 	public static InputStreamReader getURL( URL url ) throws IOException {
-		URLConnection urlConnection = url.openConnection();
+		HttpURLConnection urlConnection = (HttpURLConnection) (url.openConnection());
+		urlConnection.setInstanceFollowRedirects(true);
 		urlConnection.setConnectTimeout(1000);
 		urlConnection.setReadTimeout(30000);
-		return new InputStreamReader( urlConnection.getInputStream() );
+		urlConnection.connect();
+		int responseCode = urlConnection.getResponseCode();
+		Conversion.log("OK", "URL", "HTTP request status code [" + responseCode + "] URL [" + url + "]");
+		return new InputStreamReader(urlConnection.getInputStream());
 	}
-	
-	// same as above, with difference that it can make use of cached files. 
-	/*public static Reader getURL( Integer file_id, OpenmlConnector openml ) throws Exception {
-		if( Caching.in_cache("file", file_id)) {
-			return new FileReader( Caching.cached("file", file_id) );
-		} else {
-			URL url = openml.getOpenmlFileUrl(file_id, "predictions");
-			URLConnection urlConnection = url.openConnection();
-			urlConnection.setConnectTimeout(1000);
-			urlConnection.setReadTimeout(30000);
-			return new InputStreamReader( urlConnection.getInputStream() );
-		}
-	}*/
 	
 	public static InputStreamReader getFile( String filename ) throws IOException {
 		return new InputStreamReader( new FileInputStream( new File( filename ) ) );

@@ -30,6 +30,7 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
@@ -46,6 +47,7 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
@@ -240,13 +242,16 @@ public class TestDataFunctionality {
 
 		Map<String,String> filters = new TreeMap<String, String>();
 		filters.put("limit", "100");
+		filters.put("tag", "study_14");
+		filters.put("number_instances", "10..10000");
 		
 		DataSet[] all = client_read.dataList(filters).getData();
 		
-		for (int i = 0; i < 5; ) {
+		for (int i = 0; i < 5; ++i) {
 			DataSet current = all[random.nextInt(all.length)];
 			
-			String numInst = current.getQualityMap().get("NumberOfInstances");
+			int numInstances = (int) Double.parseDouble(current.getQualityMap().get("NumberOfInstances"));
+			int numFeatures = (int) Double.parseDouble(current.getQualityMap().get("NumberOfFeatures"));
 			
 			if (current.getFileId() == null || !current.getFormat().toLowerCase().equals("arff")) {
 				continue;
@@ -258,20 +263,16 @@ public class TestDataFunctionality {
 			final Reader reader = new InputStreamReader(url.openStream(), "UTF-8");
 			final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);
 			try {
-				if (numInst != null) {
-					int numberOfInstances = (int) Double.parseDouble(numInst);
-					int foundRecords = parser.getRecords().size() - 1; // -1 because of csv header
-					assertEquals(foundRecords, numberOfInstances);
-				}
+				List<CSVRecord> records = parser.getRecords();
+				int foundRecords = (int) parser.getRecordNumber() - 1; // -1 because of csv header
+				assertEquals(numInstances, foundRecords);
+				int foundColumns = records.get(0).size();
+				assertEquals(numFeatures, foundColumns);
 			} finally {
 			    parser.close();
 			    reader.close();
 			}
-
-			// important
-			i += 1;
 		}
-		
 	}
 	
 	// function that formats xml consistently, making it easy to compare them. 
