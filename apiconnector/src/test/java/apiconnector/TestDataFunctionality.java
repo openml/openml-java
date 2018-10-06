@@ -235,8 +235,33 @@ public class TestDataFunctionality {
 		client_read.dataQualitiesList();
 	}
 	
+	public void verifyCsvDataset(DataSet dataset) throws Exception {
+		int numInstances = (int) Double.parseDouble(dataset.getQualityMap().get("NumberOfInstances"));
+		int numFeatures = (int) Double.parseDouble(dataset.getQualityMap().get("NumberOfFeatures"));
+		
+		if (!dataset.getFormat().toLowerCase().equals("arff")) {
+			return;
+		}
+		
+		String fullUrl = url + "data/get_csv/" + dataset.getFileId() + "/" + dataset.getName() + ".csv";
+		System.out.println(fullUrl);
+		final URL url = new URL(fullUrl);
+		final Reader reader = new InputStreamReader(url.openStream(), "UTF-8");
+		final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);
+		try {
+			List<CSVRecord> records = parser.getRecords();
+			int foundRecords = (int) parser.getRecordNumber() - 1; // -1 because of csv header
+			assertEquals(numInstances, foundRecords);
+			int foundColumns = records.get(0).size();
+			assertEquals(numFeatures, foundColumns);
+		} finally {
+		    parser.close();
+		    reader.close();
+		}
+	}
+	
 	@Test
-	public void testGetDataAsCsv() throws Exception {
+	public void testGetDataAsCsvRandom() throws Exception {
 		//client_read.setVerboseLevel(1);
 		Random random = new Random();
 
@@ -249,29 +274,18 @@ public class TestDataFunctionality {
 		
 		for (int i = 0; i < 5; ++i) {
 			DataSet current = all[random.nextInt(all.length)];
-			
-			int numInstances = (int) Double.parseDouble(current.getQualityMap().get("NumberOfInstances"));
-			int numFeatures = (int) Double.parseDouble(current.getQualityMap().get("NumberOfFeatures"));
-			
-			if (current.getFileId() == null || !current.getFormat().toLowerCase().equals("arff")) {
-				continue;
-			}
-			
-			String fullUrl = url + "data/get_csv/" + current.getFileId() + "/" + current.getName() + ".csv";
-			System.out.println(fullUrl);
-			final URL url = new URL(fullUrl);
-			final Reader reader = new InputStreamReader(url.openStream(), "UTF-8");
-			final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);
-			try {
-				List<CSVRecord> records = parser.getRecords();
-				int foundRecords = (int) parser.getRecordNumber() - 1; // -1 because of csv header
-				assertEquals(numInstances, foundRecords);
-				int foundColumns = records.get(0).size();
-				assertEquals(numFeatures, foundColumns);
-			} finally {
-			    parser.close();
-			    reader.close();
-			}
+			verifyCsvDataset(current);
+		}
+	}
+	
+	@Test
+	public void testGetDataAsCsvSingle() throws Exception {
+		Map<String,String> filters = new TreeMap<String, String>();
+		filters.put("data_id", "87");
+		
+		DataSet[] all = client_read.dataList(filters).getData();
+		for (DataSet current : all) {
+			verifyCsvDataset(current);
 		}
 	}
 	
