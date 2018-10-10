@@ -86,6 +86,7 @@ public class TestDataFunctionality {
 	private static final String url = "https://test.openml.org/";
 	private static final String key_read = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f"; // mlr ..  sorry i borrowed it
 	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");
+	private static final OpenmlConnector client_admin = new OpenmlConnector(url, "d488d8afd93b32331cf6ea9d7003d4c3");
 	private static final OpenmlConnector client_read = new OpenmlConnector(url, key_read); 
 	private static final OpenmlConnector live_client_read = new OpenmlConnector(key_read); 
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
@@ -140,7 +141,7 @@ public class TestDataFunctionality {
 		File description = createTestDatasetDescription();
 		File toUpload = new File(data_file);
 		UploadDataSet ud = client_write.dataUpload(description, toUpload);
-		client_write.dataStatusUpdate(ud.getId(), "active");
+		client_admin.dataStatusUpdate(ud.getId(), "active");
 		DataTag dt = client_write.dataTag(ud.getId(), tag);
 		assertTrue(Arrays.asList(dt.getTags()).contains(tag));
 		

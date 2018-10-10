@@ -48,6 +48,7 @@ import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.RunEvaluation;
 import org.openml.apiconnector.xml.RunTrace;
 import org.openml.apiconnector.xml.TaskInputs;
+import org.openml.apiconnector.xml.UploadDataSet;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 import com.thoughtworks.xstream.XStream;
@@ -163,6 +164,22 @@ public class TestUserTypePrivileges {
 			assertTrue(e.getCode() == 104);
 			throw e;
 		}
+	}
+	@Test(expected=ApiException.class)
+	public void testApiStatusActivate() throws Exception {
+		DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
+		String xml = xstream.toXML(dsd);
+		File description = Conversion.stringToTempFile(xml, "test-data", "arff");
+		UploadDataSet ud = client_write.dataUpload(description, new File(data_file));
+		try {
+			client_write.dataStatusUpdate(ud.getId(), "active");
+		} catch(ApiException e) {
+			assertTrue(e.getCode() == 696);
+			throw e;
+		}
+		client_admin.dataStatusUpdate(ud.getId(), "active");
+		client_write.dataStatusUpdate(ud.getId(), "deactivated");
+		client_admin.dataStatusUpdate(ud.getId(), "active");
 	}
 
 	@Test(expected=ApiException.class)
