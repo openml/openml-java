@@ -41,7 +41,7 @@ public class DataDelete {
 	@XStreamAlias("xmlns:oml")
 	private final String oml = Constants.OPENML_XMLNS;
 
-	@XStreamAlias("oml:did")
+	@XStreamAlias("oml:id")
 	private Integer id;
 
 	public Integer get_id() {

@@ -59,6 +59,7 @@ import org.openml.apiconnector.xml.Data;
 import org.openml.apiconnector.xml.DataDelete;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
+import org.openml.apiconnector.xml.DataReset;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.DataTag;
 import org.openml.apiconnector.xml.DataUntag;
@@ -142,7 +143,9 @@ public class TestDataFunctionality {
 		File toUpload = new File(data_file);
 		UploadDataSet ud = client_write.dataUpload(description, toUpload);
 		client_admin.dataStatusUpdate(ud.getId(), "active");
-		client_write.dataReset(ud.getId());
+		DataReset dr = client_write.dataReset(ud.getId());
+		assertTrue(dr.get_id() == ud.getId());
+		client_write.setVerboseLevel(1);
 		DataTag dt = client_write.dataTag(ud.getId(), tag);
 		assertTrue(Arrays.asList(dt.getTags()).contains(tag));
 		
