@@ -32,11 +32,20 @@ package org.openml.apiconnector.xml;
 
 import org.openml.apiconnector.settings.Constants;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+
+@XStreamAlias("oml:error")
 public class ApiError {
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:oml")
 	private final String oml = Constants.OPENML_XMLNS;
-	
+
+	@XStreamAlias("oml:code")
 	private String code;
+	@XStreamAlias("oml:message")
 	private String message;
+	@XStreamAlias("oml:additional_information")
 	private String additional_information;
 	
 	public String getOml() {

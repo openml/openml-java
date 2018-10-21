@@ -56,7 +56,6 @@ import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.DataStatusUpdate;
 import org.openml.apiconnector.xml.ApiError;
 import org.openml.apiconnector.xml.Flow;
-import org.openml.apiconnector.xml.Job;
 import org.openml.apiconnector.xml.Parameter;
 import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.RunList;
@@ -157,10 +156,6 @@ public class XstreamXmlMapping {
 		xstream.alias("oml:upload_data_set", UploadDataSet.class);
 		xstream.aliasField("oml:id", UploadDataSet.class, "id");
 		
-		// data delete
-		xstream.alias("oml:data_delete", DataDelete.class);
-		xstream.aliasField("oml:id", DataDelete.class, "id");
-		
 		// upload flow
 		xstream.alias("oml:upload_flow", UploadFlow.class);
 		xstream.aliasField("oml:id", UploadFlow.class, "id");
@@ -172,14 +167,6 @@ public class XstreamXmlMapping {
 		// flow exists
 		xstream.alias("oml:flow_exists", FlowExists.class);
 		xstream.aliasField("oml:exists", FlowExists.class, "exists");
-		xstream.aliasField("oml:id", FlowExists.class, "id");
-		
-		// generic error
-		xstream.alias("oml:error", ApiError.class);
-		xstream.aliasAttribute(ApiError.class, "oml", "xmlns:oml");
-		xstream.aliasField("oml:code", ApiError.class, "code");
-		xstream.aliasField("oml:message", ApiError.class, "message");
-		xstream.aliasField("oml:additional_information", ApiError.class, "additional_information");
 
 		// upload task
 		xstream.alias("oml:upload_task", UploadTask.class);
@@ -240,11 +227,6 @@ public class XstreamXmlMapping {
 		xstream.alias("oml:file_upload", FileUpload.class);
 		xstream.aliasField("oml:id", FileUpload.class, "id");
 		xstream.aliasField("oml:url", FileUpload.class, "url");
-		
-		// run getjob
-		xstream.alias("oml:job", Job.class);
-		xstream.aliasField("oml:task_id", Job.class, "task_id");
-		xstream.aliasField("oml:learner", Job.class, "learner");
 		
 		// run trace
 		xstream.alias("oml:trace", RunTrace.class);

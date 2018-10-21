@@ -1296,48 +1296,6 @@ public class OpenmlConnector implements Serializable {
 			throw new DataFormatException("Casting Api Object to UploadFile");
 		}
 	}
-
-	/**
-	 * Returns a scheduled job
-	 * 
-	 * @param workbench
-	 *            - The workbench that will execute the task.
-	 * @param task_type_id
-	 *            - The task type id that the workbench should execute. Weka
-	 *            generally performs Supervised Classification tasks, whereas
-	 *            MOA performs Data Stream tasks. For task id's, please see
-	 *            openml.org.
-	 * @return Job - An object describing the task to be executed
-	 * @throws Exception
-	 *             - Can be: API Error (see documentation at openml.org), server
-	 *             down, no tasks available for this workbench.
-	 */
-	public Job jobRequest(String workbench, String task_type_id) throws Exception {
-		return jobRequest(workbench, task_type_id, null, null, null);
-	}
-	
-	public Job jobRequest(String workbench, String task_type_id, String task_tag, String setup_tag, Integer setup_id) throws Exception {
-		MultipartEntity params = new MultipartEntity();
-		params.addPart("workbench", new StringBody(workbench));
-		params.addPart("task_type_id", new StringBody(task_type_id));
-		if (task_tag != null) {
-			params.addPart("task_tag", new StringBody(task_tag));
-		}
-		if (setup_tag != null) {
-			params.addPart("setup_tag", new StringBody(setup_tag));
-		}
-		if (setup_id != null) {
-			params.addPart("setup_id", new StringBody(setup_id+""));
-		}
-		
-		URL request = new URL(OPENML_URL + API_PART + "job/request");
-		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof Job) {
-			return (Job) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to Job");
-		}
-	}
 	
 	public Study studyGet(String studyAlias, String dataType) throws Exception {
 		String suffix = "";
