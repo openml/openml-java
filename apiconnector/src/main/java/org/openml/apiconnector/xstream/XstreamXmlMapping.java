@@ -37,6 +37,7 @@ import org.openml.apiconnector.xml.DataFeatureUpload;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataQualityUpload;
+import org.openml.apiconnector.xml.DataReset;
 import org.openml.apiconnector.xml.DataTag;
 import org.openml.apiconnector.xml.DataUnprocessed;
 import org.openml.apiconnector.xml.DataUntag;
@@ -108,6 +109,8 @@ public class XstreamXmlMapping {
 		
 		xstream.processAnnotations(DataFeature.class);
 		xstream.processAnnotations(Data.class);
+		xstream.processAnnotations(DataReset.class);
+		xstream.processAnnotations(DataDelete.class);
 		xstream.processAnnotations(DataSetDescription.class);
 		xstream.processAnnotations(DataTag.class);
 		xstream.processAnnotations(DataUntag.class);

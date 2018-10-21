@@ -35,8 +35,8 @@ import org.openml.apiconnector.settings.Constants;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
-@XStreamAlias("oml:data_delete")
-public class DataDelete {
+@XStreamAlias("oml:data_reset")
+public class DataReset {
 	@XStreamAsAttribute
 	@XStreamAlias("xmlns:oml")
 	private final String oml = Constants.OPENML_XMLNS;

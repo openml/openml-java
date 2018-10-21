@@ -282,6 +282,24 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	/**
+	 * Resets a dataset (removes features, qualities, etc)
+	 * 
+	 * @param did - The data id to reset
+	 * @return The id of the dataset that was reset
+	 * @throws Exception
+	 */
+	public DataReset dataReset(int did) throws Exception {
+		URL request = new URL(OPENML_URL + API_PART + "data/reset/" + did);
+		MultipartEntity params = new MultipartEntity();
+		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
+		if (apiResult instanceof DataReset) {
+			return (DataReset) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to DataReset");
+		}
+	}
+	
 	public DataStatusUpdate dataStatusUpdate(int did, String status) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("data_id", new StringBody("" + did));
