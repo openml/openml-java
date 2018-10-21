@@ -30,6 +30,7 @@
  ******************************************************************************/
 package org.openml.apiconnector.xstream;
 
+import org.openml.apiconnector.xml.ApiError;
 import org.openml.apiconnector.xml.Data;
 import org.openml.apiconnector.xml.DataDelete;
 import org.openml.apiconnector.xml.DataFeature;
@@ -100,6 +101,8 @@ public class XstreamXmlMapping {
 	public static XStream getInstance(ClassLoaderReference clr) {
 		XStream xstream = new XStream(null,new DomDriver("UTF-8", new NoNameCoder()),clr);
 		xstream.registerConverter(new EmptyDoubleConverter());
+		xstream.processAnnotations(ApiError.class);
+		
 		xstream.processAnnotations(SetupParameters.class);
 		xstream.processAnnotations(SetupExists.class);
 		xstream.processAnnotations(SetupTag.class);
