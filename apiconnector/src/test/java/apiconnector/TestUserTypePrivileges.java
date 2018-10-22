@@ -99,6 +99,14 @@ public class TestUserTypePrivileges {
 		DataSetDescription dsd = client_admin.dataGet(PRIVATE_DATASET_ID);
 		client_read.datasetGet(dsd);
 	}
+
+	@Test
+	public void testApiAdminAttemptDownloadPrivateDataset() throws Exception {
+		DataSetDescription dsd = client_admin.dataGet(PRIVATE_DATASET_ID);
+		client_admin.dataFeatures(PRIVATE_DATASET_ID);
+		client_admin.dataQualities(PRIVATE_DATASET_ID);
+		client_admin.datasetGet(dsd);
+	}
 	
 	public void testApiAdminDownloadPrivateDataset() throws Exception {
 		client_admin.dataGet(PRIVATE_DATASET_ID);
