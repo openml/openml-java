@@ -952,8 +952,8 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-	public EvaluationRequest evaluationRequest(int evaluationEngineId, String mode, Map<String, String> additionalFilters) throws Exception {
-		String suffix = "evaluation/request/" + evaluationEngineId + "/" + mode;
+	public EvaluationRequest evaluationRequest(int evaluationEngineId, String mode, int numRequests, Map<String, String> additionalFilters) throws Exception {
+		String suffix = "evaluation/request/" + evaluationEngineId + "/" + mode + "/" + numRequests;
 		if (additionalFilters != null) {
 			for (String filter : additionalFilters.keySet()) {
 				suffix += "/" + filter + "/" + additionalFilters.get(filter);

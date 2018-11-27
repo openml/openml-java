@@ -64,6 +64,7 @@ public class TestRunFunctionality {
 
 	private static final String url_test = "https://test.openml.org/";
 	private static final String url_live = "https://www.openml.org/";
+	private static final OpenmlConnector client_admin_test = new OpenmlConnector(url_test,"d488d8afd93b32331cf6ea9d7003d4c3"); 
 	private static final OpenmlConnector client_write_test = new OpenmlConnector(url_test, "8baa83ecddfe44b561fd3d92442e3319");
 	private static final OpenmlConnector client_read_live = new OpenmlConnector(url_live, "c1994bdb7ecb3c6f3c8f3b35f4b47f1f");
 	
@@ -141,17 +142,15 @@ public class TestRunFunctionality {
 		// this test assumes that there are runs on the test server. 
 		// might not be the case just after reset 
 		
-		client_write_test.setVerboseLevel(1);
-		
 		// gives evaluation id "42", which does not exist. 
 		// therefore we get an actual run that is not evaluated by this engine back. 
 		Map<String, String> filters = new TreeMap<String, String>();
 		Integer[] ttids = {3,4};
 		String ttidString = Arrays.toString(ttids).replaceAll(" ", "").replaceAll("\\[", "").replaceAll("\\]", "");
-		
+		int numRequests = 100;
 		filters.put("ttid", ttidString);
-		EvaluationRequest er = client_write_test.evaluationRequest(42, "random", filters);
-		assertTrue(er.getRuns().length == 1);
+		EvaluationRequest er = client_admin_test.evaluationRequest(42, "random", numRequests, filters);
+		assertTrue(er.getRuns().length == numRequests);
 		Run r = client_write_test.runGet(er.getRuns()[0].getRun_id());
 		Task t = client_write_test.taskGet(r.getTask_id());
 		assertTrue(Arrays.asList(ttids).contains(t.getTask_type_id()));

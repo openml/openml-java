@@ -133,8 +133,8 @@ public class TestDataFunctionality {
 	
 	@Test
 	public void testApiDataUnprocessed() throws Exception {
-		client_read.dataUnprocessed(2, "normal");
-		client_read.dataUnprocessed(2, "random");
+		client_admin.dataUnprocessed(2, "normal");
+		client_admin.dataUnprocessed(2, "random");
 	}
 
 	@Test
