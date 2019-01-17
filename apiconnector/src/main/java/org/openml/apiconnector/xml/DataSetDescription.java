@@ -284,6 +284,10 @@ public class DataSetDescription implements Serializable {
 		return visibility;
 	}
 	
+	public String getStatus() {
+		return status;
+	}
+	
 	public String getProcessingDate() {
 		return processing_date;
 	}
