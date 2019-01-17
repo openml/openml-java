@@ -52,4 +52,7 @@ public class Constants {
 	
 	public static final int VERBOSE_LEVEL_XML = 1;
 	public static final int VERBOSE_LEVEL_ARFF = 2;
+	
+	public static final String DATA_STATUS_PREP = "in_preparation";
+	public static final String DATA_STATUS_ACTIVE = "active";
 }
