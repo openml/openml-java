@@ -33,6 +33,7 @@ package apiconnector;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,8 +46,10 @@ import java.util.TreeMap;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
+import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.EvaluationRequest;
+import org.openml.apiconnector.xml.EvaluationScore;
 import org.openml.apiconnector.xml.Run;
 import org.openml.apiconnector.xml.RunList;
 import org.openml.apiconnector.xml.RunTag;
@@ -58,7 +61,9 @@ import org.openml.apiconnector.xstream.XstreamXmlMapping;
 import com.thoughtworks.xstream.XStream;
 
 public class TestRunFunctionality {
-	private static final int probe = 67;
+	private static final int task_id = 67;
+	private static final int num_repeats = 1;
+	private static final int num_folds = 10;
 	private static final String predictions_path = "data/predictions_task53.arff";
 	private static final int FLOW_ID = 10;
 
@@ -74,17 +79,15 @@ public class TestRunFunctionality {
 	@Test
 	public void testApiRunDownload() throws Exception {
 		
-		Run run = client_read_live.runGet(probe);
+		Run run = client_read_live.runGet(task_id);
 		
 		File tempXml = Conversion.stringToTempFile(xstream.toXML(run), "run", "xml");
 		File tempXsd = client_read_live.getXSD("openml.run.upload");
 		
-		System.out.println(xstream.toXML(run));
-		
 		assertTrue(Conversion.validateXML(tempXml, tempXsd));
 		
 		// very easy checks, should all pass
-		assertTrue(run.getRun_id() == probe);
+		assertTrue(run.getRun_id() == task_id);
 		
 	}
 	
@@ -110,7 +113,13 @@ public class TestRunFunctionality {
 	public void testApiRunUpload() throws Exception {
 		String[] tags = {"first_tag", "another_tag"};
 		
-		Run r = new Run(probe, null, FLOW_ID, null, null, tags);
+		Run r = new Run(task_id, null, FLOW_ID, null, null, tags);
+		
+		for (int i = 0; i < num_repeats; ++i) {
+			for (int j = 0; j < num_folds; ++j) {
+				r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", i, j, null, null));
+			}
+		}
 		String runXML = xstream.toXML(r);
 		
 		File runFile = Conversion.stringToTempFile(runXML, "runtest",  "xml");
@@ -135,6 +144,38 @@ public class TestRunFunctionality {
 		assertTrue(Arrays.asList(ru.getTags()).contains(tag) == false);
 		
 		client_write_test.runDelete(ur.getRun_id());
+	}
+	
+	@Test(expected = ApiException.class)
+	public void testApiRunUploadIllegalMeasure() throws Exception {
+		Run r = new Run(task_id, null, FLOW_ID, null, null, null);
+		r.addOutputEvaluation(new EvaluationScore("unexisting", 1.0, "[1.0, 1.0]", 0, 0, null, null));
+		String runXML = xstream.toXML(r);
+		client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
+	}
+	
+	@Test(expected = ApiException.class)
+	public void testApiRunUploadWronglyParameterziedMeasureRepeats() throws Exception {
+		Run r = new Run(task_id, null, FLOW_ID, null, null, null);
+		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", num_repeats, 0, null, null));
+		String runXML = xstream.toXML(r);
+		client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
+	}
+	
+	@Test(expected = ApiException.class)
+	public void testApiRunUploadWronglyParameterziedMeasureFolds() throws Exception {
+		Run r = new Run(task_id, null, FLOW_ID, null, null, null);
+		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, num_folds, null, null));
+		String runXML = xstream.toXML(r);
+		client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
+	}
+	
+	@Test(expected = ApiException.class)
+	public void testApiRunUploadWronglyParameterziedMeasureSample() throws Exception {
+		Run r = new Run(task_id, null, FLOW_ID, null, null, null);
+		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, 0, 0, 0));
+		String runXML = xstream.toXML(r);
+		client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
 	}
 	
 	@Test
