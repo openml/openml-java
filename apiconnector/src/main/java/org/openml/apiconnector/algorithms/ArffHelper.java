@@ -50,7 +50,7 @@ public class ArffHelper {
 	 * @throws IOException
 	 */
 	public static File downloadAdCache(String type, int identifier, String extension, URL url, String serverMd5) throws Exception {
-		if(Caching.in_cache(url, type, identifier, extension)) {
+		if(Caching.in_cache(url, type, identifier, extension) && Settings.CACHE_ALLOWED) {
 			File file = Caching.cached(url, type, identifier, extension);
 			String clientMd5 = Hashing.md5(file);
 			if(serverMd5 == null || serverMd5.equals("NotApplicable") || clientMd5.equals( serverMd5.trim())) {
@@ -61,7 +61,7 @@ public class ArffHelper {
 		}
 		
 		File dataset;
-		if( Settings.CACHE_ALLOWED ) {
+		if(Settings.CACHE_ALLOWED) {
 			dataset = Caching.cacheFile(url, type, identifier, extension);
 		} else {
 			dataset = HttpConnector.getFileFromUrl(url, false, extension);
