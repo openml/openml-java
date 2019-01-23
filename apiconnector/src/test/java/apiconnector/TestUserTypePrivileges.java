@@ -39,6 +39,7 @@ import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.OpenmlConnector;
+import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQuality.Quality;
@@ -96,6 +97,7 @@ public class TestUserTypePrivileges {
 	}
 	@Test(expected=IOException.class)
 	public void testApiAttemptDownloadPrivateDataFile() throws Exception {
+		Settings.CACHE_ALLOWED = false;
 		DataSetDescription dsd = client_admin.dataGet(PRIVATE_DATASET_ID);
 		client_read.datasetGet(dsd);
 	}
