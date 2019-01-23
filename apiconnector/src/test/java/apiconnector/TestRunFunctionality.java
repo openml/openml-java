@@ -33,7 +33,6 @@ package apiconnector;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -61,9 +60,11 @@ import org.openml.apiconnector.xstream.XstreamXmlMapping;
 import com.thoughtworks.xstream.XStream;
 
 public class TestRunFunctionality {
-	private static final int task_id = 67;
+	private static final int classif_task_id = 67;
+	private static final int curve_task_id = 763; // anneal
 	private static final int num_repeats = 1;
 	private static final int num_folds = 10;
+	private static final int num_samples = 9; // training set size approximately 900
 	private static final String predictions_path = "data/predictions_task53.arff";
 	private static final int FLOW_ID = 10;
 
@@ -79,7 +80,7 @@ public class TestRunFunctionality {
 	@Test
 	public void testApiRunDownload() throws Exception {
 		
-		Run run = client_read_live.runGet(task_id);
+		Run run = client_read_live.runGet(classif_task_id);
 		
 		File tempXml = Conversion.stringToTempFile(xstream.toXML(run), "run", "xml");
 		File tempXsd = client_read_live.getXSD("openml.run.upload");
@@ -87,7 +88,7 @@ public class TestRunFunctionality {
 		assertTrue(Conversion.validateXML(tempXml, tempXsd));
 		
 		// very easy checks, should all pass
-		assertTrue(run.getRun_id() == task_id);
+		assertTrue(run.getRun_id() == classif_task_id);
 		
 	}
 	
@@ -113,7 +114,7 @@ public class TestRunFunctionality {
 	public void testApiRunUpload() throws Exception {
 		String[] tags = {"first_tag", "another_tag"};
 		
-		Run r = new Run(task_id, null, FLOW_ID, null, null, tags);
+		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, tags);
 		
 		for (int i = 0; i < num_repeats; ++i) {
 			for (int j = 0; j < num_folds; ++j) {
@@ -148,7 +149,7 @@ public class TestRunFunctionality {
 	
 	@Test(expected = ApiException.class)
 	public void testApiRunUploadIllegalMeasure() throws Exception {
-		Run r = new Run(task_id, null, FLOW_ID, null, null, null);
+		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("unexisting", 1.0, "[1.0, 1.0]", 0, 0, null, null));
 		String runXML = xstream.toXML(r);
 		client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
@@ -156,7 +157,7 @@ public class TestRunFunctionality {
 	
 	@Test(expected = ApiException.class)
 	public void testApiRunUploadWronglyParameterziedMeasureRepeats() throws Exception {
-		Run r = new Run(task_id, null, FLOW_ID, null, null, null);
+		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", num_repeats, 0, null, null));
 		String runXML = xstream.toXML(r);
 		client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
@@ -164,7 +165,7 @@ public class TestRunFunctionality {
 	
 	@Test(expected = ApiException.class)
 	public void testApiRunUploadWronglyParameterziedMeasureFolds() throws Exception {
-		Run r = new Run(task_id, null, FLOW_ID, null, null, null);
+		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, num_folds, null, null));
 		String runXML = xstream.toXML(r);
 		client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
@@ -172,10 +173,30 @@ public class TestRunFunctionality {
 	
 	@Test(expected = ApiException.class)
 	public void testApiRunUploadWronglyParameterziedMeasureSample() throws Exception {
-		Run r = new Run(task_id, null, FLOW_ID, null, null, null);
+		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, 0, 0, 0));
 		String runXML = xstream.toXML(r);
 		client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
+	}
+	
+	@Test(expected = ApiException.class)
+	public void testApiRunUploadWronglyParameterziedMeasureSampleCurveTask() throws Exception {
+		client_write_test.setVerboseLevel(1);
+		Run r = new Run(curve_task_id, null, FLOW_ID, null, null, null);
+		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, 0, num_samples, null));
+		String runXML = xstream.toXML(r);
+		client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
+	}
+	
+
+	@Test
+	public void testApiRunUploadSamples() throws Exception {
+		Run r = new Run(curve_task_id, null, FLOW_ID, null, null, null);
+		for (int i = 0; i < num_samples; ++i) {
+			r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, 0, i, null));
+			String runXML = xstream.toXML(r);
+			client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
+		}
 	}
 	
 	@Test
