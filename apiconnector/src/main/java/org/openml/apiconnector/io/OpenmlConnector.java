@@ -211,7 +211,7 @@ public class OpenmlConnector implements Serializable {
 	 */
 	public DataSetDescription dataGet(int did) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "data/" + did);
-		if (Caching.in_cache(request, "datadescription", did, "xml")) {
+		if (Settings.CACHE_ALLOWED && Caching.in_cache(request, "datadescription", did, "xml")) {
 			String dsdString = Conversion.fileToString(Caching.cached(request, "datadescription", did, "xml"));
 			return (DataSetDescription) XstreamXmlMapping.getInstance().fromXML(dsdString);
 		}
@@ -545,7 +545,7 @@ public class OpenmlConnector implements Serializable {
 	 */
 	public Task taskGet(int task_id) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "task/" + task_id);
-		if (Caching.in_cache(request, "task", task_id, "xml")) {
+		if (Settings.CACHE_ALLOWED && Caching.in_cache(request, "task", task_id, "xml")) {
 			String taskXml = Conversion.fileToString(Caching.cached(request, "task", task_id, "xml"));
 			return (Task) XstreamXmlMapping.getInstance().fromXML(taskXml);
 		}
