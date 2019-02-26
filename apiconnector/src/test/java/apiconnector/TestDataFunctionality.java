@@ -54,7 +54,6 @@ import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.algorithms.Hashing;
 import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.HttpConnector;
-import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.Data;
 import org.openml.apiconnector.xml.DataDelete;
 import org.openml.apiconnector.xml.DataFeature;
@@ -71,26 +70,15 @@ import org.openml.apiconnector.xml.UploadDataSet;
 import org.openml.apiconnector.xml.UploadTask;
 import org.openml.apiconnector.xml.Data.DataSet;
 import org.openml.apiconnector.xml.TaskInputs.Input;
-import org.openml.apiconnector.xstream.XstreamXmlMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import com.thoughtworks.xstream.XStream;
-
-public class TestDataFunctionality {
+public class TestDataFunctionality extends TestBase {
 	public static final String data_file = "data/iris.arff";
 	private static final int probe = 61;
 	private static final String tag = "junittest";
-
-	private static final String url = "https://test.openml.org/";
-	private static final String key_read = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f"; // mlr ..  sorry i borrowed it
-	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");
-	private static final OpenmlConnector client_admin = new OpenmlConnector(url, "d488d8afd93b32331cf6ea9d7003d4c3");
-	private static final OpenmlConnector client_read = new OpenmlConnector(url, key_read); 
-	private static final OpenmlConnector live_client_read = new OpenmlConnector(key_read); 
-	private static final XStream xstream = XstreamXmlMapping.getInstance();
 	
 	public static File createTestDatasetDescription() throws IOException {
 		DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
@@ -99,15 +87,15 @@ public class TestDataFunctionality {
 	
 	@Test
 	public void testApiDataDownload() throws Exception {
-		DataSetDescription dsd = client_read.dataGet(probe);
-		DataFeature features = client_read.dataFeatures(probe);
-		DataQuality qualities = client_read.dataQualities(probe);
+		DataSetDescription dsd = client_read_test.dataGet(probe);
+		DataFeature features = client_read_test.dataFeatures(probe);
+		DataQuality qualities = client_read_test.dataQualities(probe);
 		
 		File tempDsd = Conversion.stringToTempFile(xstream.toXML(dsd), "data", "xml");
-		File tempXsd = client_read.getXSD("openml.data.upload");
+		File tempXsd = client_read_test.getXSD("openml.data.upload");
 		
-		String url = client_read.getApiUrl() + "data/" + probe;
-		File rawFile = HttpConnector.getFileFromUrl(new URL(url + "?api_key=" + client_read.getApiKey()), false, "xml");
+		String url = client_read_test.getApiUrl() + "data/" + probe;
+		File rawFile = HttpConnector.getFileFromUrl(new URL(url + "?api_key=" + client_read_test.getApiKey()), false, "xml");
 		String raw = Conversion.fileToString(rawFile);
 		
 		assertTrue(Conversion.validateXML(tempDsd, tempXsd));
@@ -133,25 +121,25 @@ public class TestDataFunctionality {
 	
 	@Test
 	public void testApiDataUnprocessed() throws Exception {
-		client_admin.dataUnprocessed(2, "normal");
-		client_admin.dataUnprocessed(2, "random");
+		client_admin_test.dataUnprocessed(2, "normal");
+		client_admin_test.dataUnprocessed(2, "random");
 	}
 
 	@Test
 	public void testApiUploadDownload() throws Exception {
 		File description = createTestDatasetDescription();
 		File toUpload = new File(data_file);
-		UploadDataSet ud = client_write.dataUpload(description, toUpload);
-		client_admin.dataStatusUpdate(ud.getId(), "active");
-		DataReset dr = client_write.dataReset(ud.getId());
+		UploadDataSet ud = client_write_test.dataUpload(description, toUpload);
+		client_admin_test.dataStatusUpdate(ud.getId(), "active");
+		DataReset dr = client_write_test.dataReset(ud.getId());
 		assertTrue(dr.get_id() == ud.getId());
-		client_write.setVerboseLevel(1);
-		DataTag dt = client_write.dataTag(ud.getId(), tag);
+		client_write_test.setVerboseLevel(1);
+		DataTag dt = client_write_test.dataTag(ud.getId(), tag);
 		assertTrue(Arrays.asList(dt.getTags()).contains(tag));
 		
 		// Download dataset and check md5 thingy
-		DataSetDescription dsd_downloaded = client_read.dataGet(ud.getId());
-		File dataset = client_read.datasetGet(dsd_downloaded);
+		DataSetDescription dsd_downloaded = client_read_test.dataGet(ud.getId());
+		File dataset = client_read_test.datasetGet(dsd_downloaded);
 		assertEquals(Hashing.md5(dataset), Hashing.md5(toUpload));
 		
 		// create task upon it (clustering task)
@@ -159,35 +147,35 @@ public class TestDataFunctionality {
 		Input data_set = new Input("source_data", "" + ud.getId());
 		Input measure = new Input("evaluation_measures", "predictive_accuracy");
 		Input[] inputs = {estimation_procedure, data_set, measure};
-		UploadTask ut = client_write.taskUpload(inputsToTaskFile(inputs, 5));
+		UploadTask ut = client_write_test.taskUpload(inputsToTaskFile(inputs, 5));
 		
-		TaskTag tt = client_write.taskTag(ut.getId(), tag);
+		TaskTag tt = client_write_test.taskTag(ut.getId(), tag);
 		assertTrue(Arrays.asList(tt.getTags()).contains(tag));
-		TaskUntag tu = client_write.taskUntag(ut.getId(), tag);
+		TaskUntag tu = client_write_test.taskUntag(ut.getId(), tag);
 		assertTrue(tu.getTags() == null);
 		
 		try {
-			client_write.dataDelete(ud.getId());
+			client_write_test.dataDelete(ud.getId());
 			// this SHOULD fail, we should not be allowed to delete data that contains tasks.
 			fail("Problem with API. Dataset ("+ud.getId()+") was deleted while it contains a task ("+ut.getId()+"). ");
 		} catch(ApiException ae) {}
 		
 		
 		// delete the task
-		TaskDelete td = client_write.taskDelete(ut.getId());
+		TaskDelete td = client_write_test.taskDelete(ut.getId());
 		assertTrue(td.get_id().equals(ut.getId()));
 		
 		// and delete the data
-		DataUntag du = client_write.dataUntag(ud.getId(), tag);
+		DataUntag du = client_write_test.dataUntag(ud.getId(), tag);
 		assertTrue(du.getTags() == null);
 		
-		DataDelete dd = client_write.dataDelete(ud.getId());
+		DataDelete dd = client_write_test.dataDelete(ud.getId());
 		assertTrue(ud.getId() == dd.get_id());
 	}
 	
 	@Test
 	public void testDataQualitiesWithNullValues() throws Exception {
-		DataQuality dq = live_client_read.dataQualities(3);
+		DataQuality dq = client_read_live.dataQualities(3);
 		
 		// check if test is actually up to date (otherwise we should use other dataset that contains null values)
 		Collection<Double> qualityValues = dq.getQualitiesMap().values();
@@ -201,18 +189,18 @@ public class TestDataFunctionality {
 	public void testApiUploadFromUrl() throws Exception {
 		String dataUrl = "http://storm.cis.fordham.edu/~gweiss/data-mining/weka-data/cpu.arff";
 		
-		client_write.setVerboseLevel(1);
+		client_write_test.setVerboseLevel(1);
 		DataSetDescription dsd = new DataSetDescription("anneal", "Unit test should be deleted", "arff", dataUrl, "class");
 		String dsdXML = xstream.toXML(dsd);
 		File description = Conversion.stringToTempFile(dsdXML, "test-data", "arff");
 		
-		UploadDataSet ud = client_write.dataUpload(description, null);
-		DataTag dt = client_write.dataTag(ud.getId(), tag);
+		UploadDataSet ud = client_write_test.dataUpload(description, null);
+		DataTag dt = client_write_test.dataTag(ud.getId(), tag);
 		assertTrue(Arrays.asList(dt.getTags()).contains(tag));
 		
 		// Download dataset and check md5 thingy
-		DataSetDescription dsd_downloaded = client_read.dataGet(ud.getId());
-		File dataset = client_read.datasetGet(dsd_downloaded);
+		DataSetDescription dsd_downloaded = client_read_test.dataGet(ud.getId());
+		File dataset = client_read_test.datasetGet(dsd_downloaded);
 
 		File obtainedFile = HttpConnector.getFileFromUrl(new URL(dataUrl), false, "xml");
 		assertEquals(Hashing.md5(dataset), Hashing.md5(obtainedFile));
@@ -225,7 +213,7 @@ public class TestDataFunctionality {
 		Map<String, String> filters = new TreeMap<String, String>();
 		filters.put("tag", "study_14");
 		
-		Data datasets = client_read.dataList(filters);
+		Data datasets = client_read_test.dataList(filters);
 		assertTrue(datasets.getData() != null);
 		
 		assertTrue(datasets.getData().length > 20);
@@ -237,7 +225,7 @@ public class TestDataFunctionality {
 
 	@Test
 	public void testApiAdditional() throws Exception {
-		client_read.dataQualitiesList();
+		client_read_test.dataQualitiesList();
 	}
 	
 	public void verifyCsvDataset(DataSet dataset) throws Exception {
@@ -248,7 +236,7 @@ public class TestDataFunctionality {
 			return;
 		}
 		
-		String fullUrl = url + "data/get_csv/" + dataset.getFileId() + "/" + dataset.getName() + ".csv";
+		String fullUrl = url_test + "data/get_csv/" + dataset.getFileId() + "/" + dataset.getName() + ".csv";
 		System.out.println(fullUrl);
 		final URL url = new URL(fullUrl);
 		final Reader reader = new InputStreamReader(url.openStream(), "UTF-8");
@@ -275,7 +263,7 @@ public class TestDataFunctionality {
 		filters.put("tag", "study_14");
 		filters.put("number_instances", "10..10000");
 		
-		DataSet[] all = client_read.dataList(filters).getData();
+		DataSet[] all = client_read_test.dataList(filters).getData();
 		
 		for (int i = 0; i < 5; ++i) {
 			DataSet current = all[random.nextInt(all.length)];
@@ -288,7 +276,7 @@ public class TestDataFunctionality {
 		Map<String,String> filters = new TreeMap<String, String>();
 		filters.put("data_id", "87");
 		
-		DataSet[] all = client_read.dataList(filters).getData();
+		DataSet[] all = client_read_test.dataList(filters).getData();
 		for (DataSet current : all) {
 			verifyCsvDataset(current);
 		}

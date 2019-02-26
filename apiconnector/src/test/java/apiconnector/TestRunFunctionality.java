@@ -46,7 +46,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.ApiException;
-import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.EvaluationRequest;
 import org.openml.apiconnector.xml.EvaluationScore;
 import org.openml.apiconnector.xml.Run;
@@ -55,11 +54,8 @@ import org.openml.apiconnector.xml.RunTag;
 import org.openml.apiconnector.xml.RunUntag;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.UploadRun;
-import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
-import com.thoughtworks.xstream.XStream;
-
-public class TestRunFunctionality {
+public class TestRunFunctionality extends TestBase {
 	private static final int classif_task_id = 67;
 	private static final int curve_task_id = 763; // anneal
 	private static final int num_repeats = 1;
@@ -67,14 +63,7 @@ public class TestRunFunctionality {
 	private static final int num_samples = 9; // training set size approximately 900
 	private static final String predictions_path = "data/predictions_task53.arff";
 	private static final int FLOW_ID = 10;
-
-	private static final String url_test = "https://test.openml.org/";
-	private static final String url_live = "https://www.openml.org/";
-	private static final OpenmlConnector client_admin_test = new OpenmlConnector(url_test,"d488d8afd93b32331cf6ea9d7003d4c3"); 
-	private static final OpenmlConnector client_write_test = new OpenmlConnector(url_test, "8baa83ecddfe44b561fd3d92442e3319");
-	private static final OpenmlConnector client_read_live = new OpenmlConnector(url_live, "c1994bdb7ecb3c6f3c8f3b35f4b47f1f");
 	
-	private static final XStream xstream = XstreamXmlMapping.getInstance();
 	private static final String tag = "junittest";
 	
 	@Test

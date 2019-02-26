@@ -42,31 +42,23 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.ApiException;
-import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.Flow;
 import org.openml.apiconnector.xml.FlowTag;
 import org.openml.apiconnector.xml.FlowUntag;
 import org.openml.apiconnector.xml.Parameter;
 import org.openml.apiconnector.xml.UploadFlow;
-import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
-import com.thoughtworks.xstream.XStream;
-
-public class TestFlowFunctionality {
+public class TestFlowFunctionality extends TestBase {
 	private static final int probe = 10;
-
-	private static final String url = "https://test.openml.org/";
-	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");
-	private static final OpenmlConnector client_read = new OpenmlConnector(url, "c1994bdb7ecb3c6f3c8f3b35f4b47f1f");
-	private static final XStream xstream = XstreamXmlMapping.getInstance();
+	
 	private static final String tag = "junittest";
 	
 	@Test
 	public void testApiFlowDownload() throws Exception {
-		Flow flow = client_read.flowGet(probe);
+		Flow flow = client_read_test.flowGet(probe);
 
 		File tempXml = Conversion.stringToTempFile(xstream.toXML(flow), "flow", "xml");
-		File tempXsd = client_read.getXSD("openml.implementation.upload");
+		File tempXsd = client_read_test.getXSD("openml.implementation.upload");
 		
 		System.out.println(Conversion.fileToString(tempXml));
 		
@@ -94,14 +86,14 @@ public class TestFlowFunctionality {
 			
 			File f = Conversion.stringToTempFile(flowXML, "test", "xml");
 			
-			UploadFlow uf = client_write.flowUpload(f, f, f);
+			UploadFlow uf = client_write_test.flowUpload(f, f, f);
 			uploaded_id = uf.getId();
-			FlowTag ft = client_write.flowTag(uf.getId(), tag);
+			FlowTag ft = client_write_test.flowTag(uf.getId(), tag);
 			assertTrue(Arrays.asList(ft.getTags()).contains(tag));
-			FlowUntag fu = client_write.flowUntag(uf.getId(), tag);
+			FlowUntag fu = client_write_test.flowUntag(uf.getId(), tag);
 			assertTrue(fu.getTags() == null);
 			
-			Flow downloaded = client_read.flowGet(uf.getId());
+			Flow downloaded = client_read_test.flowGet(uf.getId());
 			assertEquals(3, created.getParameter().length);
 			assertEquals(3, created.getComponent().length);
 			assertEquals(created.getParameter().length, downloaded.getParameter().length);
@@ -118,7 +110,7 @@ public class TestFlowFunctionality {
 			}
 			fail("Test failed: " + e.getMessage());
 		} finally {
-			client_write.flowDelete(uploaded_id);
+			client_write_test.flowDelete(uploaded_id);
 		}
 	}
 
@@ -134,10 +126,10 @@ public class TestFlowFunctionality {
 
 		File f = Conversion.stringToTempFile(flowXML, "test", "xml");
 
-		UploadFlow uf = client_write.flowUpload(f, f, f);
+		UploadFlow uf = client_write_test.flowUpload(f, f, f);
 
 		try {
-			UploadFlow uf2 = client_write.flowUpload(f, null, null);
+			UploadFlow uf2 = client_write_test.flowUpload(f, null, null);
 			System.out.println(uf2.getId());
 
 			fail("Test failed, flow upload should have been blocked.");
@@ -145,7 +137,7 @@ public class TestFlowFunctionality {
 			// we expect an exception
 			System.out.println(e.getMessage());
 		}
-		client_write.flowDelete(uf.getId());
+		client_write_test.flowDelete(uf.getId());
 
 	}
 
@@ -156,7 +148,7 @@ public class TestFlowFunctionality {
 				.replace("{SENTINEL}", "SEN" + Math.abs(random.nextInt()));
 		File f = Conversion.stringToTempFile(complicatedFlow, "test", "xml");
 		
-		UploadFlow uf = client_write.flowUpload(f, null, null);
-		client_write.flowDelete(uf.getId());
+		UploadFlow uf = client_write_test.flowUpload(f, null, null);
+		client_write_test.flowDelete(uf.getId());
 	}
 }

@@ -12,20 +12,17 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
 import org.junit.Test;
-import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.UploadDataSet;
 
-public class TestUploadArff {
+public class TestUploadArff extends TestBase {
 	
 	private static final boolean VERBOSE = false;
 	private static final String DATASETPATH = "data" + File.separator + "arff_test" + File.separator;
-	private static final String url = "https://test.openml.org/";
-	private static final OpenmlConnector client_write = new OpenmlConnector(url, "8baa83ecddfe44b561fd3d92442e3319");
-
+	
 	@Test
 	public void testUploadDataset() throws IOException {
 		if (VERBOSE) {
-			client_write.setVerboseLevel(1);
+			client_write_test.setVerboseLevel(1);
 		}
 		
 		// Test XML description
@@ -42,10 +39,10 @@ public class TestUploadArff {
 			boolean invalid = file.getFileName().toString().startsWith("invalid");
 			
 			try {
-				UploadDataSet ud = client_write.dataUpload(description, toUpload);
+				UploadDataSet ud = client_write_test.dataUpload(description, toUpload);
 				id = ud.getId();
 				// Only reached by a dataset (ARFF file) that gets uploaded.
-				client_write.dataDelete(id);
+				client_write_test.dataDelete(id);
 			} catch(Exception e) {
 				if (VERBOSE) {
 					e.printStackTrace();

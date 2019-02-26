@@ -38,7 +38,6 @@ import java.io.IOException;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.ApiException;
-import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
@@ -50,22 +49,11 @@ import org.openml.apiconnector.xml.RunEvaluation;
 import org.openml.apiconnector.xml.RunTrace;
 import org.openml.apiconnector.xml.TaskInputs;
 import org.openml.apiconnector.xml.UploadDataSet;
-import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
-import com.thoughtworks.xstream.XStream;
-
-public class TestUserTypePrivileges {
+public class TestUserTypePrivileges extends TestBase {
 
 	private static final String data_file = "data/iris.arff";
-	private static final String url = "https://test.openml.org/";
-	private static final XStream xstream = XstreamXmlMapping.getInstance();
 	
-	// User #1 on test server, make sure to NEVER put a live admin key here
-	private static final OpenmlConnector client_admin = new OpenmlConnector(url,"d488d8afd93b32331cf6ea9d7003d4c3"); 
-	// Plain writing key, make sure to not put a live write key here
-	private static final OpenmlConnector client_write = new OpenmlConnector(url,"8baa83ecddfe44b561fd3d92442e3319");
-	// read only key from R-TEAM
-	private static final OpenmlConnector client_read = new OpenmlConnector(url,"c1994bdb7ecb3c6f3c8f3b35f4b47f1f"); 
 	private static final Integer EVAL_ID = 2;
 	
 	private static final int PRIVATE_DATASET_ID = 130;
@@ -76,7 +64,7 @@ public class TestUserTypePrivileges {
 		String xml = xstream.toXML(dq);
 		File description = Conversion.stringToTempFile(xml, "data-qualities", "xml");
 		try {
-			client_write.dataQualitiesUpload(description);
+			client_write_test.dataQualitiesUpload(description);
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 106);
 			throw e;
@@ -85,43 +73,43 @@ public class TestUserTypePrivileges {
 	
 	@Test(expected=ApiException.class)
 	public void testApiAttemptDownloadPrivateDataset() throws Exception {
-		client_read.dataGet(PRIVATE_DATASET_ID);
+		client_read_test.dataGet(PRIVATE_DATASET_ID);
 	}
 	@Test(expected=ApiException.class)
 	public void testApiAttemptDownloadPrivateDataFeatures() throws Exception {
-		client_read.dataFeatures(PRIVATE_DATASET_ID);
+		client_read_test.dataFeatures(PRIVATE_DATASET_ID);
 	}
 	@Test(expected=ApiException.class)
 	public void testApiAttemptDownloadPrivateDataQualities() throws Exception {
-		client_read.dataQualities(PRIVATE_DATASET_ID);
+		client_read_test.dataQualities(PRIVATE_DATASET_ID);
 	}
 	@Test(expected=IOException.class)
 	public void testApiAttemptDownloadPrivateDataFile() throws Exception {
 		Settings.CACHE_ALLOWED = false;
-		DataSetDescription dsd = client_admin.dataGet(PRIVATE_DATASET_ID);
-		client_read.datasetGet(dsd);
+		DataSetDescription dsd = client_admin_test.dataGet(PRIVATE_DATASET_ID);
+		client_read_test.datasetGet(dsd);
 	}
 
 	@Test
 	public void testApiAdminAttemptDownloadPrivateDataset() throws Exception {
-		DataSetDescription dsd = client_admin.dataGet(PRIVATE_DATASET_ID);
-		client_admin.dataFeatures(PRIVATE_DATASET_ID);
-		client_admin.dataQualities(PRIVATE_DATASET_ID);
-		client_admin.datasetGet(dsd);
+		DataSetDescription dsd = client_admin_test.dataGet(PRIVATE_DATASET_ID);
+		client_admin_test.dataFeatures(PRIVATE_DATASET_ID);
+		client_admin_test.dataQualities(PRIVATE_DATASET_ID);
+		client_admin_test.datasetGet(dsd);
 	}
 	
 	public void testApiAdminDownloadPrivateDataset() throws Exception {
-		client_admin.dataGet(PRIVATE_DATASET_ID);
+		client_admin_test.dataGet(PRIVATE_DATASET_ID);
 	}
 	public void testApiAdminDownloadPrivateDataFeatures() throws Exception {
-		client_admin.dataFeatures(PRIVATE_DATASET_ID);
+		client_admin_test.dataFeatures(PRIVATE_DATASET_ID);
 	}
 	public void testApiAdminDownloadPrivateDataQualities() throws Exception {
-		client_admin.dataQualities(PRIVATE_DATASET_ID);
+		client_admin_test.dataQualities(PRIVATE_DATASET_ID);
 	}
 	public void testApiAdminDownloadPrivateDataFile() throws Exception {
-		DataSetDescription dsd = client_admin.dataGet(PRIVATE_DATASET_ID);
-		client_admin.datasetGet(dsd);
+		DataSetDescription dsd = client_admin_test.dataGet(PRIVATE_DATASET_ID);
+		client_admin_test.datasetGet(dsd);
 	}
 	
 	@Test(expected=ApiException.class)
@@ -130,7 +118,7 @@ public class TestUserTypePrivileges {
 		String xml = xstream.toXML(df);
 		File description = Conversion.stringToTempFile(xml, "data-features", "xml");
 		try {
-			client_write.dataFeaturesUpload(description);
+			client_write_test.dataFeaturesUpload(description);
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 106);
 			throw e;
@@ -143,7 +131,7 @@ public class TestUserTypePrivileges {
 		String xml = xstream.toXML(re);
 		File description = Conversion.stringToTempFile(xml, "run-evaluation", "xml");
 		try {
-			client_write.runEvaluate(description);
+			client_write_test.runEvaluate(description);
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 106);
 			throw e;
@@ -156,7 +144,7 @@ public class TestUserTypePrivileges {
 		String xml = xstream.toXML(rt);
 		File description = Conversion.stringToTempFile(xml, "run-trace", "xml");
 		try {
-			client_write.runTraceUpload(description);
+			client_write_test.runTraceUpload(description);
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 106);
 			throw e;
@@ -169,7 +157,7 @@ public class TestUserTypePrivileges {
 		String xml = xstream.toXML(dsd);
 		File description = Conversion.stringToTempFile(xml, "test-data", "arff");
 		try {
-			client_read.dataUpload(description, new File(data_file));
+			client_read_test.dataUpload(description, new File(data_file));
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 104);
 			throw e;
@@ -180,22 +168,22 @@ public class TestUserTypePrivileges {
 		DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
 		String xml = xstream.toXML(dsd);
 		File description = Conversion.stringToTempFile(xml, "test-data", "arff");
-		UploadDataSet ud = client_write.dataUpload(description, new File(data_file));
+		UploadDataSet ud = client_write_test.dataUpload(description, new File(data_file));
 		try {
-			client_write.dataStatusUpdate(ud.getId(), "active");
+			client_write_test.dataStatusUpdate(ud.getId(), "active");
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 696);
 			throw e;
 		}
-		client_admin.dataStatusUpdate(ud.getId(), "active");
-		client_write.dataStatusUpdate(ud.getId(), "deactivated");
-		client_admin.dataStatusUpdate(ud.getId(), "active");
+		client_admin_test.dataStatusUpdate(ud.getId(), "active");
+		client_write_test.dataStatusUpdate(ud.getId(), "deactivated");
+		client_admin_test.dataStatusUpdate(ud.getId(), "active");
 	}
 
 	@Test(expected=ApiException.class)
 	public void testApiDataTag() throws Exception {
 		try {
-			client_read.dataTag(1, "default_tag");
+			client_read_test.dataTag(1, "default_tag");
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 104);
 			throw e;
@@ -205,7 +193,7 @@ public class TestUserTypePrivileges {
 	@Test(expected=ApiException.class)
 	public void testApiDataUntag() throws Exception {
 		try {
-			client_read.dataUntag(1, "default_tag");
+			client_read_test.dataUntag(1, "default_tag");
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 104);
 			throw e;
@@ -215,7 +203,7 @@ public class TestUserTypePrivileges {
 	@Test(expected=ApiException.class)
 	public void testApiDataDelete() throws Exception {
 		try {
-			client_read.dataDelete(1);
+			client_read_test.dataDelete(1);
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 104);
 			throw e;
@@ -229,7 +217,7 @@ public class TestUserTypePrivileges {
 		String xml = xstream.toXML(f);
 		File description = Conversion.stringToTempFile(xml, "flow", "xml");
 		try {
-			client_read.flowUpload(description, null, null);
+			client_read_test.flowUpload(description, null, null);
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 104);
 			throw e;
@@ -242,7 +230,7 @@ public class TestUserTypePrivileges {
 		String xml = xstream.toXML(task);
 		File description = Conversion.stringToTempFile(xml, "flow", "xml");
 		try {
-			client_read.taskUpload(description);
+			client_read_test.taskUpload(description);
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 104);
 			throw e;
@@ -255,7 +243,7 @@ public class TestUserTypePrivileges {
 		String xml = xstream.toXML(run);
 		File description = Conversion.stringToTempFile(xml, "flow", "xml");
 		try {
-			client_read.runUpload(description, null);
+			client_read_test.runUpload(description, null);
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 104);
 			throw e;
@@ -265,7 +253,7 @@ public class TestUserTypePrivileges {
 	@Test(expected=ApiException.class)
 	public void testApiFlowDelete() throws Exception {
 		try {
-			client_read.flowDelete(1);
+			client_read_test.flowDelete(1);
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 104);
 			throw e;
@@ -275,7 +263,7 @@ public class TestUserTypePrivileges {
 	@Test(expected=ApiException.class)
 	public void testApiTaskDelete() throws Exception {
 		try {
-			client_read.taskDelete(1);
+			client_read_test.taskDelete(1);
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 104);
 			throw e;
@@ -285,7 +273,7 @@ public class TestUserTypePrivileges {
 	@Test(expected=ApiException.class)
 	public void testApiRunDelete() throws Exception {
 		try {
-			client_read.runDelete(1);
+			client_read_test.runDelete(1);
 		} catch(ApiException e) {
 			assertTrue(e.getCode() == 104);
 			throw e;
