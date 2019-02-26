@@ -52,6 +52,12 @@ public class Study implements Serializable {
 	@XStreamAlias("oml:name")
 	private String name;
 
+	@XStreamAlias("oml:main_entity_type")
+	private String main_entity_type;
+
+	@XStreamAlias("oml:benchmark_suite")
+	private Integer benchmark_suite;
+
 	@XStreamAlias("oml:description")
 	private String description;
 
@@ -63,7 +69,7 @@ public class Study implements Serializable {
 	
 	@XStreamImplicit(itemFieldName="oml:tag")
 	private Tag[] tag;
-	
+
 	@XStreamAlias("oml:data")
 	private Data data;
 	
@@ -75,6 +81,21 @@ public class Study implements Serializable {
 	
 	@XStreamAlias("oml:setups")
 	private Setups setups;
+	
+	@XStreamAlias("oml:runs")
+	private Runs runs;
+	
+	public Study(String name, String description, Integer benchmarkSuite, Integer[] taskIds, Integer[] runIds) throws Exception {
+		if (!((taskIds == null) ^ (runIds == null))) {
+			throw new Exception("Requires task ids xor run ids");
+		}
+		this.name = name;
+		this.description = description;
+		this.main_entity_type = taskIds == null ? "run" : "task";
+		this.benchmark_suite = benchmarkSuite;
+		this.tasks = new Tasks(taskIds);
+		this.runs = new Runs(runIds);
+	}
 
 	public Integer getId() {
 		return id;
@@ -96,6 +117,15 @@ public class Study implements Serializable {
 		return creator;
 	}
 
+	public String getMain_entity_type() {
+		return main_entity_type;
+	}
+
+	public Integer getBenchmark_suite() {
+		return benchmark_suite;
+	}
+	
+	// legacy
 	public Tag[] getTag() {
 		return tag;
 	}
@@ -126,6 +156,13 @@ public class Study implements Serializable {
 			return null;
 		}
 		return setups.getSetups();
+	}
+	
+	public Integer[] getRuns() {
+		if (runs == null) {
+			return null;
+		}
+		return runs.getRuns();
 	}
 	
 	public class Tag implements Serializable {
@@ -168,6 +205,10 @@ public class Study implements Serializable {
 		@XStreamAlias("oml:task_id")
 		Integer[] task_id;
 		
+		public Tasks(Integer[] task_id) {
+			this.task_id = task_id;
+		}
+		
 		public Integer[] getTasks() {
 			return task_id;
 		}
@@ -190,6 +231,20 @@ public class Study implements Serializable {
 		
 		public Integer[] getSetups() {
 			return setup_id;
+		}
+	}
+	
+	class Runs {
+		@XStreamImplicit
+		@XStreamAlias("oml:run_id")
+		Integer[] run_id;
+		
+		public Runs(Integer[] run_id) {
+			this.run_id = run_id;
+		}
+		
+		public Integer[] getRuns() {
+			return run_id;
 		}
 	}
 }

@@ -1310,6 +1310,21 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	public StudyUpload studyUpload(File description) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		if (verboseLevel >= Constants.VERBOSE_LEVEL_ARFF) {
+			System.out.println(Conversion.fileToString(description) + "\n==========\n");
+		}
+		params.addPart("description", new FileBody(description));
+		URL request = new URL(OPENML_URL + API_PART + "study/");
+		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
+		if (apiResult instanceof StudyUpload) {
+			return (StudyUpload) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to StudyUpload");
+		}
+	}
+	
 	public Study studyGet(int studyId) throws Exception {
 		return studyGet("" + studyId, null);
 	}
