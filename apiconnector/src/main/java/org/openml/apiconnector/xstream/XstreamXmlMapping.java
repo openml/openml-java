@@ -132,6 +132,7 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(Flow.class);
 		xstream.processAnnotations(FlowTag.class);
 		xstream.processAnnotations(FlowUntag.class);
+		xstream.processAnnotations(FlowExists.class);
 		
 		xstream.processAnnotations(Study.class);
 		
@@ -165,10 +166,6 @@ public class XstreamXmlMapping {
 		// delete flow
 		xstream.alias("oml:flow_delete", FlowDelete.class);
 		xstream.aliasField("oml:id", FlowDelete.class, "id");
-		
-		// flow exists
-		xstream.alias("oml:flow_exists", FlowExists.class);
-		xstream.aliasField("oml:exists", FlowExists.class, "exists");
 
 		// upload task
 		xstream.alias("oml:upload_task", UploadTask.class);
