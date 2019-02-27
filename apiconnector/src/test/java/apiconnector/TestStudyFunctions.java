@@ -27,8 +27,9 @@ public class TestStudyFunctions extends TestBase {
 	public void uploadStudy() throws Exception {
 		// TODO!
 		Integer[] taskIds = {1, 2, 3};
-		Study study = new Study("test", "test", null, taskIds, null);
-		File studyDescription = Conversion.stringToTempFile(xstream.toXML(study), "study", "xml");
+		Study study = new Study(null, "test", "test", null, taskIds, null);
+		String studyXML = xstream.toXML(study);
+		File studyDescription = Conversion.stringToTempFile(studyXML, "study", "xml");
 		StudyUpload su = client_write_test.studyUpload(studyDescription);
 		
 		Study studyDownload = client_read_test.studyGet(su.getId());

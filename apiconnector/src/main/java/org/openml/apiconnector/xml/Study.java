@@ -49,14 +49,17 @@ public class Study implements Serializable {
 	@XStreamAlias("oml:id")
 	private Integer id;
 
-	@XStreamAlias("oml:name")
-	private String name;
+	@XStreamAlias("oml:alias")
+	private String alias;
 
 	@XStreamAlias("oml:main_entity_type")
 	private String main_entity_type;
 
 	@XStreamAlias("oml:benchmark_suite")
 	private Integer benchmark_suite;
+
+	@XStreamAlias("oml:name")
+	private String name;
 
 	@XStreamAlias("oml:description")
 	private String description;
@@ -85,16 +88,17 @@ public class Study implements Serializable {
 	@XStreamAlias("oml:runs")
 	private Runs runs;
 	
-	public Study(String name, String description, Integer benchmarkSuite, Integer[] taskIds, Integer[] runIds) throws Exception {
+	public Study(String alias, String name, String description, Integer benchmarkSuite, Integer[] taskIds, Integer[] runIds) throws Exception {
 		if (!((taskIds == null) ^ (runIds == null))) {
 			throw new Exception("Requires task ids xor run ids");
 		}
+		this.alias = alias;
 		this.name = name;
 		this.description = description;
 		this.main_entity_type = taskIds == null ? "run" : "task";
 		this.benchmark_suite = benchmarkSuite;
-		this.tasks = new Tasks(taskIds);
-		this.runs = new Runs(runIds);
+		if (taskIds != null) { this.tasks = new Tasks(taskIds); }
+		if (runIds != null) { this.runs = new Runs(runIds); }
 	}
 
 	public Integer getId() {
@@ -190,7 +194,7 @@ public class Study implements Serializable {
 		}
 	}
 	
-	class Data {
+	public static class Data {
 		@XStreamImplicit
 		@XStreamAlias("oml:data_id")
 		Integer[] data_id;
@@ -200,9 +204,8 @@ public class Study implements Serializable {
 		}
 	}
 	
-	class Tasks {
-		@XStreamImplicit
-		@XStreamAlias("oml:task_id")
+	public static class Tasks {
+		@XStreamImplicit(itemFieldName="oml:task_id")
 		Integer[] task_id;
 		
 		public Tasks(Integer[] task_id) {
@@ -214,9 +217,8 @@ public class Study implements Serializable {
 		}
 	}
 	
-	class Flows {
-		@XStreamImplicit
-		@XStreamAlias("oml:flow_id")
+	public static class Flows {
+		@XStreamImplicit(itemFieldName="oml:flow_id")
 		Integer[] flow_id;
 		
 		public Integer[] getFlows() {
@@ -224,9 +226,8 @@ public class Study implements Serializable {
 		}
 	}
 	
-	class Setups {
-		@XStreamImplicit
-		@XStreamAlias("oml:setup_id")
+	public static class Setups {
+		@XStreamImplicit(itemFieldName="oml:setup_id")
 		Integer[] setup_id;
 		
 		public Integer[] getSetups() {
@@ -234,9 +235,8 @@ public class Study implements Serializable {
 		}
 	}
 	
-	class Runs {
-		@XStreamImplicit
-		@XStreamAlias("oml:run_id")
+	public static class Runs {
+		@XStreamImplicit(itemFieldName="oml:run_id")
 		Integer[] run_id;
 		
 		public Runs(Integer[] run_id) {
