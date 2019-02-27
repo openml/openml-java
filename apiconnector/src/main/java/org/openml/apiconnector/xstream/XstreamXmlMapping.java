@@ -100,7 +100,7 @@ public class XstreamXmlMapping {
 	 * OpenmlApiConnector Objects to each other. 
 	 */
 	public static XStream getInstance(ClassLoaderReference clr) {
-		XStream xstream = new XStream(null,new DomDriver("UTF-8", new NoNameCoder()),clr);
+		XStream xstream = new XStream(null,new DomDriver("UTF-8", new NoNameCoder()), clr);
 		xstream.registerConverter(new EmptyDoubleConverter());
 		xstream.processAnnotations(ApiError.class);
 		
@@ -110,6 +110,7 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(SetupUntag.class);
 		
 		xstream.processAnnotations(DataFeature.class);
+		xstream.processAnnotations(DataFeatureUpload.class);
 		xstream.processAnnotations(Data.class);
 		xstream.processAnnotations(DataReset.class);
 		xstream.processAnnotations(DataDelete.class);
@@ -118,7 +119,10 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(DataUntag.class);
 		xstream.processAnnotations(DataUnprocessed.class);
 		xstream.processAnnotations(DataQuality.class);
+		xstream.processAnnotations(DataQualityList.class);
+		xstream.processAnnotations(DataQualityUpload.class);
 		xstream.processAnnotations(DataStatusUpdate.class);
+		xstream.processAnnotations(UploadDataSet.class);
 		
 		xstream.processAnnotations(TaskTag.class);
 		xstream.processAnnotations(TaskUntag.class);
@@ -144,22 +148,6 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(Parameter.class);
 		
 		xstream.ignoreUnknownElements();
-		
-		// data qualities upload
-		xstream.alias("oml:data_qualities_upload", DataQualityUpload.class);
-		xstream.aliasField("oml:did", DataQualityUpload.class, "did");
-		
-		// data qualities list
-		xstream.alias("oml:data_qualities_list", DataQualityList.class);
-		xstream.addImplicitCollection(DataQualityList.class, "quality", "oml:quality", String.class);
-
-		// data features upload
-		xstream.alias("oml:data_features_upload", DataFeatureUpload.class);
-		xstream.aliasField("oml:did", DataFeatureUpload.class, "did");
-		
-		// upload data set
-		xstream.alias("oml:upload_data_set", UploadDataSet.class);
-		xstream.aliasField("oml:id", UploadDataSet.class, "id");
 		
 		// upload flow
 		xstream.alias("oml:upload_flow", UploadFlow.class);

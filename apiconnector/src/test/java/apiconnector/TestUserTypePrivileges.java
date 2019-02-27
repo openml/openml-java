@@ -35,6 +35,7 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.ApiException;
@@ -57,6 +58,11 @@ public class TestUserTypePrivileges extends TestBase {
 	private static final Integer EVAL_ID = 2;
 	
 	private static final int PRIVATE_DATASET_ID = 130;
+	
+	@Before
+    public void setup() {
+		Settings.CACHE_ALLOWED = false;
+    }
 	
 	@Test(expected=ApiException.class)
 	public void testApiDataQualityUpload() throws Exception {
@@ -85,7 +91,6 @@ public class TestUserTypePrivileges extends TestBase {
 	}
 	@Test(expected=IOException.class)
 	public void testApiAttemptDownloadPrivateDataFile() throws Exception {
-		Settings.CACHE_ALLOWED = false;
 		DataSetDescription dsd = client_admin_test.dataGet(PRIVATE_DATASET_ID);
 		client_read_test.datasetGet(dsd);
 	}

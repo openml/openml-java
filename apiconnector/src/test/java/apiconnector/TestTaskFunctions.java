@@ -295,9 +295,10 @@ public class TestTaskFunctions extends TestBase {
 	public void testApiTaskList() throws Exception {
 		client_read_test.setVerboseLevel(1);
 		Map<String, String> filters = new HashMap<String, String>();
-		filters.put("tag", "study_14");
+		filters.put("type", "1");
+		filters.put("limit", "100");
 		Tasks tasks = client_read_test.taskList(filters);
-		assertTrue(tasks.getTask().length > 20);
+		assertTrue(tasks.getTask().length == 100);
 		for (org.openml.apiconnector.xml.Tasks.Task t : tasks.getTask()) {
 			// assertTrue(t.getQualities().length > 5);
 			assertTrue(t.getInputs().length > 2);

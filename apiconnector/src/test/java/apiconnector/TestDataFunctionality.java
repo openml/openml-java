@@ -208,15 +208,14 @@ public class TestDataFunctionality extends TestBase {
 	}
 
 	@Test
-	@Ignore
 	public void testApiDataList() throws Exception {
 		Map<String, String> filters = new TreeMap<String, String>();
-		filters.put("tag", "study_14");
+		filters.put("limit", "10");
 		
 		Data datasets = client_read_test.dataList(filters);
 		assertTrue(datasets.getData() != null);
 		
-		assertTrue(datasets.getData().length > 20);
+		assertTrue(datasets.getData().length == 10);
 		for (DataSet dataset : datasets.getData()) {
 			assertTrue("No qualities for dataset " + dataset.getDid(), dataset.getQualities() != null);
 			assertTrue("Not enough qualities for dataset " + dataset.getDid(), dataset.getQualities().length > 5);
@@ -255,18 +254,14 @@ public class TestDataFunctionality extends TestBase {
 	
 	@Test
 	public void testGetDataAsCsvRandom() throws Exception {
-		//client_read.setVerboseLevel(1);
-		Random random = new Random();
-
 		Map<String,String> filters = new TreeMap<String, String>();
 		filters.put("limit", "100");
-		filters.put("tag", "study_14");
 		filters.put("number_instances", "10..10000");
 		
 		DataSet[] all = client_read_test.dataList(filters).getData();
 		
-		for (int i = 0; i < 5; ++i) {
-			DataSet current = all[random.nextInt(all.length)];
+		for (int i = 0; i < 10; ++i) {
+			DataSet current = all[i];
 			verifyCsvDataset(current);
 		}
 	}

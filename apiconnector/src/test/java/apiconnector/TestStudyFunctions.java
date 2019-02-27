@@ -12,6 +12,64 @@ import org.openml.apiconnector.xml.StudyUpload;
 public class TestStudyFunctions extends TestBase {
 	
 	@Test
+	public void testApiGetStudy() throws Exception {
+		Study s = client_read_live.studyGet(34);
+		assertTrue(s.getDataset().length == 105);
+		assertTrue(s.getFlows().length == 27);
+		assertTrue(s.getTasks().length == 105);
+		assertTrue(s.getSetups().length == 30);
+	}
+	
+
+	@Test
+	public void testApiGetStudyData() throws Exception {
+		Study s = client_read_live.studyGet(34, "data");
+		assertTrue(s.getDataset().length > 5);
+		assertTrue(s.getFlows() == null);
+		assertTrue(s.getTasks() == null);
+		assertTrue(s.getSetups() == null);
+	}
+	
+
+	@Test
+	public void testApiGetStudyTasks() throws Exception {
+		Study s = client_read_live.studyGet(34, "tasks");
+		assertTrue(s.getDataset() == null);
+		assertTrue(s.getFlows() == null);
+		assertTrue(s.getTasks().length > 5);
+		assertTrue(s.getSetups() == null);
+	}
+	
+	@Test
+	public void testApiGetStudyFlows() throws Exception {
+		Study s = client_read_live.studyGet(34, "flows");
+		assertTrue(s.getTag().length > 0);
+		assertTrue(s.getDataset() == null);
+		assertTrue(s.getFlows().length > 5);
+		assertTrue(s.getTasks() == null);
+		assertTrue(s.getSetups() == null);
+	}
+	
+	@Test
+	public void testApiGetStudySetups() throws Exception {
+		Study s = client_read_live.studyGet(34, "setups");
+		assertTrue(s.getDataset() == null);
+		assertTrue(s.getFlows() == null);
+		assertTrue(s.getTasks() == null);
+		assertTrue(s.getSetups().length > 5);
+	}
+	
+
+	@Test
+	public void testApiGetStudyByAlias() throws Exception {
+		Study s = client_read_test.studyGet("OpenML100", "tasks");
+		assertTrue(s.getDataset().length > 10);
+		assertTrue(s.getFlows() == null);
+		assertTrue(s.getTasks().length > 10);
+		assertTrue(s.getSetups() == null);
+	}
+	
+	@Test
 	public void getStudy() throws Exception {
 		Study study = client_read_test.studyGet(1);
 		assertTrue(study.getTasks().length > 0);

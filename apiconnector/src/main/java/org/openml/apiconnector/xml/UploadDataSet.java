@@ -30,7 +30,18 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
+import org.openml.apiconnector.settings.Constants;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+
+@XStreamAlias("oml:upload_data_set")
 public class UploadDataSet {
+
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:oml")
+	private final String oml = Constants.OPENML_XMLNS;
+	@XStreamAlias("oml:id")
 	private int id;
 	
 	public int getId() {

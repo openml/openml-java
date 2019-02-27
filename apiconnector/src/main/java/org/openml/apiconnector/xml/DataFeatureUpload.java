@@ -32,9 +32,15 @@ package org.openml.apiconnector.xml;
 
 import org.openml.apiconnector.settings.Constants;
 
-public class DataFeatureUpload {
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
+@XStreamAlias("oml:data_feature_upload")
+public class DataFeatureUpload {
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:oml")
 	private final String oml = Constants.OPENML_XMLNS;
+	@XStreamAlias("oml:did")
 	private Integer did;
 	
 	public String getOml() {
