@@ -70,6 +70,9 @@ import org.openml.apiconnector.xml.SetupParameters;
 import org.openml.apiconnector.xml.SetupTag;
 import org.openml.apiconnector.xml.SetupUntag;
 import org.openml.apiconnector.xml.Study;
+import org.openml.apiconnector.xml.StudyAttach;
+import org.openml.apiconnector.xml.StudyDetach;
+import org.openml.apiconnector.xml.StudyList;
 import org.openml.apiconnector.xml.StudyUpload;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskDelete;
@@ -141,6 +144,9 @@ public class XstreamXmlMapping {
 		
 		xstream.processAnnotations(Study.class);
 		xstream.processAnnotations(StudyUpload.class);
+		xstream.processAnnotations(StudyAttach.class);
+		xstream.processAnnotations(StudyDetach.class);
+		xstream.processAnnotations(StudyList.class);
 		
 		xstream.processAnnotations(EvaluationRequest.class);
 		xstream.processAnnotations(RunEvaluation.class);

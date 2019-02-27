@@ -1325,6 +1325,48 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
+	public StudyList studyList(Map<String, String> filters) throws Exception {
+		String suffix = "";
+		
+		for (String name : filters.keySet()) {
+			suffix += "/" + name + "/" + filters.get(name);
+		}
+		
+		URL request = new URL(OPENML_URL + API_PART + "study/list" + suffix);
+		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
+		if (apiResult instanceof StudyList) {
+			return (StudyList) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to StudyList");
+		}
+	}
+	
+	public StudyAttach studyAttach(int id, List<Integer> entity_ids) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("ids", new StringBody(StringUtils.join(entity_ids, ',')));
+		
+		URL request = new URL(OPENML_URL + API_PART + "study/" + id + "/attach");
+		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
+		if (apiResult instanceof StudyAttach) {
+			return (StudyAttach) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to StudyAttach");
+		}
+	}
+	
+	public StudyDetach studyDetach(int id, List<Integer> entity_ids) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("ids", new StringBody(StringUtils.join(entity_ids, ',')));
+		
+		URL request = new URL(OPENML_URL + API_PART + "study/" + id + "/detach");
+		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
+		if (apiResult instanceof StudyDetach) {
+			return (StudyDetach) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to StudyDetach");
+		}
+	}
+	
 	public Study studyGet(int studyId) throws Exception {
 		return studyGet("" + studyId, null);
 	}
