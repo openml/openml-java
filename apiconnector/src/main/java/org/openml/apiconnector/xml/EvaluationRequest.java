@@ -44,9 +44,9 @@ public class EvaluationRequest {
 	private final String oml = Constants.OPENML_XMLNS;
 	
 	@XStreamImplicit(itemFieldName="oml:run")
-	private org.openml.apiconnector.xml.RunList.Run[] run;
+	private Run[] run;
 	
-	public org.openml.apiconnector.xml.RunList.Run[] getRuns() {
+	public Run[] getRuns() {
 		return run;
 	}
 }

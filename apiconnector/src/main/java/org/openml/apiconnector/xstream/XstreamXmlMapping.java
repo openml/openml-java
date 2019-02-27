@@ -141,12 +141,12 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(FlowTag.class);
 		xstream.processAnnotations(FlowUntag.class);
 		xstream.processAnnotations(FlowExists.class);
-		
+
+		xstream.processAnnotations(StudyList.class);
 		xstream.processAnnotations(Study.class);
 		xstream.processAnnotations(StudyUpload.class);
 		xstream.processAnnotations(StudyAttach.class);
 		xstream.processAnnotations(StudyDetach.class);
-		xstream.processAnnotations(StudyList.class);
 		
 		xstream.processAnnotations(EvaluationRequest.class);
 		xstream.processAnnotations(RunEvaluation.class);

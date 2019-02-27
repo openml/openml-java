@@ -30,8 +30,6 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import java.io.Serializable;
-
 import org.openml.apiconnector.settings.Constants;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -55,51 +53,5 @@ public class RunList {
 
 	public String getOml() {
 		return oml;
-	}
-
-	@XStreamAlias("oml:run")
-	public class Run implements Serializable {
-		private static final long serialVersionUID = 87L;
-
-		@XStreamAlias("oml:run_id")
-		private int run_id;
-
-		@XStreamAlias("oml:task_id")
-		private int task_id;
-		
-		// should become int later
-		@XStreamAlias("oml:task_type_id")
-		private Integer task_type_id;
-
-		@XStreamAlias("oml:setup_id")
-		private int setup_id;
-
-		@XStreamAlias("oml:uploader")
-		private int uploader;
-		
-		@XStreamAlias("oml:upload_time")
-		private String upload_time;
-		
-		@XStreamAlias("oml:error_message")
-		private String error_message;
-		
-		public int getRun_id() {
-			return run_id;
-		}
-		public int getTask_id() {
-			return task_id;
-		}
-		public Integer getTask_type_id() {
-			return task_type_id;
-		}
-		public int getSetup_id() {
-			return setup_id;
-		}
-		public int getUploader() {
-			return uploader;
-		}
-		public String getError_message() {
-			return error_message;
-		}
 	}
 }

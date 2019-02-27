@@ -42,7 +42,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.ApiException;
@@ -82,7 +81,6 @@ public class TestRunFunctionality extends TestBase {
 	}
 	
 	@Test
-	@Ignore
 	public void testApiRunList() throws Exception {
 		List<Integer> uploaderFilter = new ArrayList<Integer>();
 		uploaderFilter.add(16);
@@ -93,7 +91,7 @@ public class TestRunFunctionality extends TestBase {
 		RunList rl = client_read_live.runList(filters, 100, 0);
 		assertTrue(rl.getRuns().length == 100);
 		
-		for (org.openml.apiconnector.xml.RunList.Run r : rl.getRuns()) {
+		for (Run r : rl.getRuns()) {
 			assertTrue(uploaderFilter.contains(r.getUploader()));
 		}
 		

@@ -113,8 +113,8 @@ public class TestStudyFunctions extends TestBase {
 		filters.put("limit", "20");
 		StudyList sl = client_read_test.studyList(filters);
 		assertTrue(sl.getStudies().length > 5);
-		
-		for (org.openml.apiconnector.xml.StudyList.Study s : sl.getStudies()) {
+
+		for (Study s : sl.getStudies()) {
 			assertTrue(s.getId() > 0);
 		}
 	}
