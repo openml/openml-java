@@ -58,6 +58,7 @@ import org.openml.apiconnector.xml.Data;
 import org.openml.apiconnector.xml.DataDelete;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
+import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataReset;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.DataTag;
@@ -224,7 +225,8 @@ public class TestDataFunctionality extends TestBase {
 
 	@Test
 	public void testApiAdditional() throws Exception {
-		client_read_test.dataQualitiesList();
+		DataQualityList dql = client_read_test.dataQualitiesList();
+		assertTrue(dql.getQualities().length > 50);
 	}
 	
 	public void verifyCsvDataset(DataSet dataset) throws Exception {
