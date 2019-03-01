@@ -161,7 +161,6 @@ public class TestRunFunctionality extends TestBase {
 	
 	@Test(expected = ApiException.class)
 	public void testApiRunUploadWronglyParameterziedMeasureSampleCurveTask() throws Exception {
-		client_write_test.setVerboseLevel(1);
 		Run r = new Run(curve_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, 0, num_samples, null));
 		client_write_test.runUpload(r, null);

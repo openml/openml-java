@@ -140,7 +140,7 @@ public class TestTaskFunctions extends TestBase {
 		inputs[1] = new Input("source_data", "2");
 		inputs[2] = new Input("target_feature", "class");
 		inputs[3] = new Input("evaluation_measures", "predictive_accuracy");
-		client_write_test.setVerboseLevel(2);
+		
 		for (int i = 0; i < 4; ++i) {
 			Input[] derived = Arrays.copyOf(inputs, inputs.length);
 			derived[i] = new Input(derived[i].getName(), derived[i].getValue() + "_" + random.nextInt());
@@ -273,7 +273,6 @@ public class TestTaskFunctions extends TestBase {
 
 	@Test
 	public void testApiTaskList() throws Exception {
-		client_read_test.setVerboseLevel(1);
 		Map<String, String> filters = new HashMap<String, String>();
 		filters.put("type", "1");
 		filters.put("limit", "100");

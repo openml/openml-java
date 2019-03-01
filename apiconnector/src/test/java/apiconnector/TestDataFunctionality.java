@@ -124,7 +124,6 @@ public class TestDataFunctionality extends TestBase {
 		client_admin_test.dataStatusUpdate(dataId, "active");
 		DataReset dr = client_write_test.dataReset(dataId);
 		assertTrue(dr.get_id() == dataId);
-		client_write_test.setVerboseLevel(1);
 		DataTag dt = client_write_test.dataTag(dataId, tag);
 		assertTrue(Arrays.asList(dt.getTags()).contains(tag));
 		
@@ -180,7 +179,6 @@ public class TestDataFunctionality extends TestBase {
 	public void testApiUploadFromUrl() throws Exception {
 		String dataUrl = "http://storm.cis.fordham.edu/~gweiss/data-mining/weka-data/cpu.arff";
 		
-		client_write_test.setVerboseLevel(1);
 		DataSetDescription dsd = new DataSetDescription("anneal", "Unit test should be deleted", "arff", dataUrl, "class");
 		
 		int dataId = client_write_test.dataUpload(dsd, null);

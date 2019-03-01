@@ -16,22 +16,19 @@ import org.openml.apiconnector.xml.DataSetDescription;
 
 public class TestUploadArff extends TestBase {
 	
-	private static final boolean VERBOSE = false;
 	private static final String DATASETPATH = "data" + File.separator + "arff_test" + File.separator;
 	
 	@Test
 	public void testUploadDataset() throws IOException {
-		if (VERBOSE) {
-			client_write_test.setVerboseLevel(1);
-		}
-		
 		// Test XML description
 		Path path = Paths.get(DATASETPATH);
 		// Pass through each dataset on the directory
 		Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
 		@Override
 		public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
-			System.out.println("ARFF-check processing " + file.getFileName());
+			if (VERBOSE) {
+				System.out.println("ARFF-check processing " + file.getFileName());
+			}
 			File toUpload = new File(file.toString());
 			int id = -1;
 			// boolean to signal the validity of a dataset
@@ -39,9 +36,9 @@ public class TestUploadArff extends TestBase {
 			
 			try {
 				DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
-				int dataId = client_write_test.dataUpload(dsd, toUpload);
+				id = client_write_test.dataUpload(dsd, toUpload);
 				// Only reached by a dataset (ARFF file) that gets uploaded.
-				client_write_test.dataDelete(dataId);
+				client_write_test.dataDelete(id);
 			} catch(Exception e) {
 				if (VERBOSE) {
 					e.printStackTrace();
