@@ -80,7 +80,7 @@ public class TestDataFunctionality extends TestBase {
 	public void testApiDataDownload() throws Exception {
 		DataSetDescription dsd = client_read_test.dataGet(probe);
 		DataFeature features = client_read_test.dataFeatures(probe);
-		DataQuality qualities = client_read_test.dataQualities(probe);
+		DataQuality qualities = client_read_test.dataQualities(probe, null);
 		
 		File tempDsd = Conversion.stringToTempFile(xstream.toXML(dsd), "data", "xml");
 		File tempXsd = client_read_test.getXSD("openml.data.upload");
@@ -165,7 +165,7 @@ public class TestDataFunctionality extends TestBase {
 	
 	@Test
 	public void testDataQualitiesWithNullValues() throws Exception {
-		DataQuality dq = client_read_live.dataQualities(3);
+		DataQuality dq = client_read_live.dataQualities(3, null);
 		
 		// check if test is actually up to date (otherwise we should use other dataset that contains null values)
 		Collection<Double> qualityValues = dq.getQualitiesMap().values();

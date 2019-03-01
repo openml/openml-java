@@ -78,7 +78,7 @@ public class TestUserTypePrivileges extends TestBase {
 	
 	@Test(expected=ApiException.class)
 	public void testApiAttemptDownloadPrivateDataQualities() throws Exception {
-		client_read_test.dataQualities(PRIVATE_DATASET_ID);
+		client_read_test.dataQualities(PRIVATE_DATASET_ID, null);
 	}
 	
 	@Test(expected=IOException.class)
@@ -91,7 +91,7 @@ public class TestUserTypePrivileges extends TestBase {
 	public void testApiAdminAttemptDownloadPrivateDataset() throws Exception {
 		DataSetDescription dsd = client_admin_test.dataGet(PRIVATE_DATASET_ID);
 		client_admin_test.dataFeatures(PRIVATE_DATASET_ID);
-		client_admin_test.dataQualities(PRIVATE_DATASET_ID);
+		client_admin_test.dataQualities(PRIVATE_DATASET_ID, null);
 		client_admin_test.datasetGet(dsd);
 	}
 	
@@ -104,7 +104,7 @@ public class TestUserTypePrivileges extends TestBase {
 	}
 	
 	public void testApiAdminDownloadPrivateDataQualities() throws Exception {
-		client_admin_test.dataQualities(PRIVATE_DATASET_ID);
+		client_admin_test.dataQualities(PRIVATE_DATASET_ID, null);
 	}
 	
 	public void testApiAdminDownloadPrivateDataFile() throws Exception {

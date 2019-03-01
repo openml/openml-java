@@ -72,7 +72,7 @@ public class TestTaskFunctions extends TestBase {
 		Integer dataId = TaskInformation.getSourceData(t).getData_set_id();
 		File splitsFile = HttpConnector.getFileFromUrl(splitsUrl, "arff", false);
 		String[] splits = Conversion.fileToString(splitsFile).split("\n");
-		DataQuality dq = client_read_test.dataQualities(dataId);
+		DataQuality dq = client_read_test.dataQualities(dataId, null);
 		int numInstances = dq.getQualitiesMap().get("NumberOfInstances").intValue();
 
 		assertTrue(splits.length > numInstances); // basic check
