@@ -2,18 +2,15 @@ package apiconnector;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.junit.Test;
-import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.xml.Study;
 import org.openml.apiconnector.xml.StudyAttach;
 import org.openml.apiconnector.xml.StudyDetach;
 import org.openml.apiconnector.xml.StudyList;
-import org.openml.apiconnector.xml.StudyUpload;
 
 public class TestStudyFunctions extends TestBase {
 	
@@ -89,20 +86,18 @@ public class TestStudyFunctions extends TestBase {
 		Integer[] taskIdsInitial = {1, 2, 3};
 		Integer[] taskIdsAdditional = {4, 5, 6};
 		Study study = new Study(null, "test", "test", null, taskIdsInitial, null);
-		String studyXML = xstream.toXML(study);
-		File studyDescription = Conversion.stringToTempFile(studyXML, "study", "xml");
-		StudyUpload su = client_write_test.studyUpload(studyDescription);
+		int studyId = client_write_test.studyUpload(study);
 		
-		Study studyDownload = client_read_test.studyGet(su.getId());
+		Study studyDownload = client_read_test.studyGet(studyId);
 		assertArrayEquals(taskIdsInitial, studyDownload.getTasks());
 		
-		StudyAttach sa = client_write_test.studyAttach(su.getId(), Arrays.asList(taskIdsAdditional));
+		StudyAttach sa = client_write_test.studyAttach(studyId, Arrays.asList(taskIdsAdditional));
 		assertTrue(taskIdsInitial.length + taskIdsAdditional.length == sa.getLinkedEntities());
 
-		StudyDetach sd = client_write_test.studyDetach(su.getId(), Arrays.asList(taskIdsInitial));
+		StudyDetach sd = client_write_test.studyDetach(studyId, Arrays.asList(taskIdsInitial));
 		assertTrue(taskIdsAdditional.length == sd.getLinkedEntities());
 
-		Study studyDownload2 = client_read_test.studyGet(su.getId());
+		Study studyDownload2 = client_read_test.studyGet(studyId);
 		assertArrayEquals(taskIdsAdditional, studyDownload2.getTasks());
 	}
 

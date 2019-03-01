@@ -52,7 +52,6 @@ import org.openml.apiconnector.xml.RunList;
 import org.openml.apiconnector.xml.RunTag;
 import org.openml.apiconnector.xml.RunUntag;
 import org.openml.apiconnector.xml.Task;
-import org.openml.apiconnector.xml.UploadRun;
 
 public class TestRunFunctionality extends TestBase {
 	private static final int classif_task_id = 67;
@@ -108,62 +107,56 @@ public class TestRunFunctionality extends TestBase {
 				r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", i, j, null, null));
 			}
 		}
-		String runXML = xstream.toXML(r);
 		
-		File runFile = Conversion.stringToTempFile(runXML, "runtest",  "xml");
 		File predictions = new File(predictions_path); 
 		
 		Map<String,File> output_files = new HashMap<String, File>();
 		
 		output_files.put("predictions", predictions);
 		
-		UploadRun ur = client_write_test.runUpload(runFile, output_files);
+		int runId = client_write_test.runUpload(r, output_files);
 		
-		Run newrun = client_write_test.runGet(ur.getRun_id());
+		Run newrun = client_write_test.runGet(runId);
 		
 		Set<String> uploadedTags = new HashSet<String>(Arrays.asList(newrun.getTag()));
 		Set<String> providedTags = new HashSet<String>(Arrays.asList(tags));
 		
 		assertTrue(uploadedTags.equals(providedTags));
 		
-		RunTag rt = client_write_test.runTag(ur.getRun_id(), tag);
+		RunTag rt = client_write_test.runTag(runId, tag);
 		assertTrue(Arrays.asList(rt.getTags()).contains(tag));
-		RunUntag ru = client_write_test.runUntag(ur.getRun_id(), tag);
+		RunUntag ru = client_write_test.runUntag(runId, tag);
 		assertTrue(Arrays.asList(ru.getTags()).contains(tag) == false);
 		
-		client_write_test.runDelete(ur.getRun_id());
+		client_write_test.runDelete(runId);
 	}
 	
 	@Test(expected = ApiException.class)
 	public void testApiRunUploadIllegalMeasure() throws Exception {
 		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("unexisting", 1.0, "[1.0, 1.0]", 0, 0, null, null));
-		String runXML = xstream.toXML(r);
-		client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
+		client_write_test.runUpload(r, null);
 	}
 	
 	@Test(expected = ApiException.class)
 	public void testApiRunUploadWronglyParameterziedMeasureRepeats() throws Exception {
 		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", num_repeats, 0, null, null));
-		String runXML = xstream.toXML(r);
-		client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
+		client_write_test.runUpload(r, null);
 	}
 	
 	@Test(expected = ApiException.class)
 	public void testApiRunUploadWronglyParameterziedMeasureFolds() throws Exception {
 		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, num_folds, null, null));
-		String runXML = xstream.toXML(r);
-		client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
+		client_write_test.runUpload(r, null);
 	}
 	
 	@Test(expected = ApiException.class)
 	public void testApiRunUploadWronglyParameterziedMeasureSample() throws Exception {
 		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, 0, 0, 0));
-		String runXML = xstream.toXML(r);
-		client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
+		client_write_test.runUpload(r, null);
 	}
 	
 	@Test(expected = ApiException.class)
@@ -171,8 +164,7 @@ public class TestRunFunctionality extends TestBase {
 		client_write_test.setVerboseLevel(1);
 		Run r = new Run(curve_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, 0, num_samples, null));
-		String runXML = xstream.toXML(r);
-		client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
+		client_write_test.runUpload(r, null);
 	}
 	
 
@@ -181,8 +173,7 @@ public class TestRunFunctionality extends TestBase {
 		Run r = new Run(curve_task_id, null, FLOW_ID, null, null, null);
 		for (int i = 0; i < num_samples; ++i) {
 			r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, 0, i, null));
-			String runXML = xstream.toXML(r);
-			client_write_test.runUpload(Conversion.stringToTempFile(runXML, "runtest",  "xml"), null);
+			client_write_test.runUpload(r, null);
 		}
 	}
 	

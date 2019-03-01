@@ -62,90 +62,17 @@ public class OpenmlBasicConnector implements Serializable {
 	 */
 	protected int verboseLevel = 0;
 	
-	protected String api_key;
+	protected String api_key = null;
 	
-	protected final String OPENML_URL;
+	protected String OPENML_URL = Settings.BASE_URL;
 	
 	protected String API_PART = "api_new/v1/";
 	
-	protected boolean apiKeySet = false;
-
-	/**
-	 * Creates a OpenML Connector with url and authentication
-	 * 
-	 * @param url - the openml server
-	 * @param api_key - the api key to authenticate with
-	 */
-	public OpenmlBasicConnector(String url, String api_key, boolean useJson) {
-		if (url != null) {
-			this.OPENML_URL = url;
-		} else {
-			this.OPENML_URL = Settings.BASE_URL;
-		}
-		
-		this.api_key = api_key;
-		
-		if (api_key != null) {
-			this.apiKeySet = true;
-		}
-		
-		if (useJson) {
-			API_PART += "json/";
-		}
-	}
-	/**
-	 * Creates a OpenML Connector with url and authentication
-	 * 
-	 * @param url - the openml server
-	 * @param api_key - the api key to authenticate with
-	 */
-	public OpenmlBasicConnector(String url, String api_key) {
-		if (url != null) {
-			this.OPENML_URL = url;
-		} else {
-			this.OPENML_URL = Settings.BASE_URL;
-		}
-		
-		this.api_key = api_key;
-		
-		if (api_key != null) {
-			this.apiKeySet = true;
-		}
-	}
-
-	/**
-	 * Creates a default OpenML Connector with authentication
-	 * 
-	 * api_key - the api key to authenticate with
-	 */
-	public OpenmlBasicConnector(String api_key) {
-		this.OPENML_URL = Settings.BASE_URL;
-		this.api_key = api_key;
-		
-		if (api_key != null) {
-			this.apiKeySet = true;
-		}
-	}
-	
-	
-	/**
-	 * Creates a default OpenML Connector
-	 */
-	public OpenmlBasicConnector() {
-		this.OPENML_URL = Settings.BASE_URL;
-		
-	}
-	
-
 	/**
 	 * Return the api key that is used to authenticate with
 	 */
 	public String getApiKey() {
-		if (this.apiKeySet) {
-			return api_key;
-		} else {
-			return null;
-		}
+		return api_key;
 	}
 
 	/**
@@ -155,10 +82,6 @@ public class OpenmlBasicConnector implements Serializable {
 	 */
 	public void setApiKey(String api_key) { 
 		this.api_key = api_key;
-		
-		if (api_key != null) {
-			this.apiKeySet = true;
-		}
 	}
 
 
@@ -242,14 +165,6 @@ public class OpenmlBasicConnector implements Serializable {
 		return ArffHelper.downloadAdCache("dataset_csv", dsd.getId(), dsd.getFormat(), fileUrl, null);
 	}
 	
-	/**
-	 * Uploads a new dataset
-	 * 
-	 * @param description - xml file describing the dataset, according to XSD
-	 * @param dataset - arff file representing the dataset. optional. 
-	 * @return The id under which the dataset was uploaded
-	 * @throws Exception
-	 */
 	protected UploadDataSet dataUpload(File description, File dataset) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
@@ -437,13 +352,6 @@ public class OpenmlBasicConnector implements Serializable {
 		}
 	}
 	
-	/**
-	 * Uploads data features (requires admin account)
-	 * 
-	 * @param description - the features
-	 * @return
-	 * @throws Exception
-	 */
 	protected DataFeatureUpload dataFeaturesUpload(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
@@ -461,14 +369,7 @@ public class OpenmlBasicConnector implements Serializable {
 			throw new DataFormatException("Casting Api Object to DataFeatureUpload");
 		}
 	}
-
-	/**
-	 * Uploads data qualities (requires admin account)
-	 * 
-	 * @param description - the qualitues (or meta-features)
-	 * @return
-	 * @throws Exception
-	 */
+	
 	protected DataQualityUpload dataQualitiesUpload(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
@@ -624,13 +525,6 @@ public class OpenmlBasicConnector implements Serializable {
 		}
 	}
 	
-	/**
-	 * Uploads a task
-	 * 
-	 * @param description - task description. 
-	 * @return
-	 * @throws Exception
-	 */
 	protected UploadTask taskUpload(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
@@ -811,22 +705,6 @@ public class OpenmlBasicConnector implements Serializable {
 		}
 	}
 	
-	/**
-	 * Uploads a flow
-	 * 
-	 * @param description
-	 *            - An XML file describing the implementation. See documentation
-	 *            at openml.org.
-	 * @param binary
-	 *            - A file containing the implementation binary.
-	 * @param source
-	 *            - A file containing the implementation source.
-	 * @return UploadImplementation - An object containing information on the
-	 *         implementation upload.
-	 * @throws Exception
-	 *             - Can be: API Error (see documentation at openml.org), server
-	 *             down, etc.
-	 */
 	protected UploadFlow flowUpload(File description, File binary, File source) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
@@ -1012,14 +890,7 @@ public class OpenmlBasicConnector implements Serializable {
 			throw new DataFormatException("Casting Api Object to RunUntag");
 		}
 	}
-
-	/**
-	 * Stores evaluation measures of a run (admin rights required, typically executed by evaluation engine)
-	 * 
-	 * @param description - description file (complying to xsd)
-	 * @return
-	 * @throws Exception
-	 */
+	
 	protected RunEvaluate runEvaluate(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));

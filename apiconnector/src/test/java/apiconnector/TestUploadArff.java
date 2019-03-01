@@ -12,7 +12,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
 import org.junit.Test;
-import org.openml.apiconnector.xml.UploadDataSet;
+import org.openml.apiconnector.xml.DataSetDescription;
 
 public class TestUploadArff extends TestBase {
 	
@@ -26,7 +26,6 @@ public class TestUploadArff extends TestBase {
 		}
 		
 		// Test XML description
-		final File description = TestDataFunctionality.createTestDatasetDescription();
 		Path path = Paths.get(DATASETPATH);
 		// Pass through each dataset on the directory
 		Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
@@ -39,10 +38,10 @@ public class TestUploadArff extends TestBase {
 			boolean invalid = file.getFileName().toString().startsWith("invalid");
 			
 			try {
-				UploadDataSet ud = client_write_test.dataUpload(description, toUpload);
-				id = ud.getId();
+				DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
+				int dataId = client_write_test.dataUpload(dsd, toUpload);
 				// Only reached by a dataset (ARFF file) that gets uploaded.
-				client_write_test.dataDelete(id);
+				client_write_test.dataDelete(dataId);
 			} catch(Exception e) {
 				if (VERBOSE) {
 					e.printStackTrace();

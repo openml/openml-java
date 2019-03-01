@@ -48,11 +48,10 @@ import org.openml.apiconnector.algorithms.TaskInformation;
 import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.HttpConnector;
 import org.openml.apiconnector.xml.DataQuality;
+import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.TaskInputs;
 import org.openml.apiconnector.xml.Tasks;
-import org.openml.apiconnector.xml.UploadDataSet;
-import org.openml.apiconnector.xml.UploadTask;
 import org.openml.apiconnector.xml.TaskInputs.Input;
 
 public class TestTaskFunctions extends TestBase {
@@ -86,9 +85,8 @@ public class TestTaskFunctions extends TestBase {
 		Input data_set = new Input("source_data", "1");
 		Input target_feature = new Input("target_feature", "class");
 		Input[] inputs = { estimation_procedure, data_set, target_feature };
-		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 1);
 
-		client_write_test.taskUpload(taskFile);
+		client_write_test.taskUpload(new TaskInputs(null, 1, inputs, null));
 	}
 
 	@Test(expected = ApiException.class)
@@ -97,9 +95,8 @@ public class TestTaskFunctions extends TestBase {
 		Input data_set = new Input("illegal_source_data", "-1");
 		Input target_feature = new Input("target_feature", "class");
 		Input[] inputs = { estimation_procedure, data_set, target_feature };
-		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 4);
 
-		client_write_test.taskUpload(taskFile);
+		client_write_test.taskUpload(new TaskInputs(null, 4, inputs, null));
 	}
 
 	@Test(expected = ApiException.class)
@@ -109,9 +106,8 @@ public class TestTaskFunctions extends TestBase {
 		Input data_set2 = new Input("source_data", "1");
 		Input target_feature = new Input("target_feature", "class");
 		Input[] inputs = { estimation_procedure, data_set, target_feature, data_set2 };
-		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 4);
 
-		client_write_test.taskUpload(taskFile);
+		client_write_test.taskUpload(new TaskInputs(null, 4, inputs, null));
 	}
 
 	@Test(expected = ApiException.class)
@@ -119,9 +115,8 @@ public class TestTaskFunctions extends TestBase {
 		Input estimation_procedure = new Input("estimation_procedure", "15");
 		Input target_feature = new Input("target_feature", "class");
 		Input[] inputs = { estimation_procedure, target_feature };
-		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 4);
 
-		client_write_test.taskUpload(taskFile);
+		client_write_test.taskUpload(new TaskInputs(null, 4, inputs, null));
 	}
 
 	@Test(expected = ApiException.class)
@@ -132,8 +127,7 @@ public class TestTaskFunctions extends TestBase {
 			Input data_set = new Input("source_data", "1");
 			Input target_feature = new Input("target_feature", "class");
 			Input[] inputs = { estimation_procedure, data_set, target_feature };
-			File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 1);
-			client_write_test.taskUpload(taskFile);
+			client_write_test.taskUpload(new TaskInputs(null, 1, inputs, null));
 		}
 	}
 	
@@ -150,9 +144,8 @@ public class TestTaskFunctions extends TestBase {
 		for (int i = 0; i < 4; ++i) {
 			Input[] derived = Arrays.copyOf(inputs, inputs.length);
 			derived[i] = new Input(derived[i].getName(), derived[i].getValue() + "_" + random.nextInt());
-			File taskFile = TestDataFunctionality.inputsToTaskFile(derived, 1);
 			try {
-				client_write_test.taskUpload(taskFile);
+				client_write_test.taskUpload(new TaskInputs(null, 1, derived, null));
 				// previous statement should not terminate without ApiException.
 				throw new Exception("Tasks did not get blocked by Api");
 			} catch(ApiException e) {
@@ -163,19 +156,17 @@ public class TestTaskFunctions extends TestBase {
 	
 	@Test
 	public void testAvoidInactiveDataset() throws Exception {
-		File description = TestDataFunctionality.createTestDatasetDescription();
 		File toUpload = new File(TestDataFunctionality.data_file);
-		UploadDataSet ud = client_write_test.dataUpload(description, toUpload);
+		DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
+		int dataId = client_write_test.dataUpload(dsd, toUpload);
 		
 		Input[] inputs = new Input[3];
 		inputs[0] = new Input("estimation_procedure", "1");
-		inputs[1] = new Input("source_data", "" + ud.getId());
+		inputs[1] = new Input("source_data", "" + dataId);
 		inputs[2] = new Input("target_feature", "class");
 		
-		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 6);
-		
 		try {
-			client_write_test.taskUpload(taskFile);
+			client_write_test.taskUpload(new TaskInputs(null, 6, inputs, null));
 			fail("Should not be able to upload task.");
 		} catch(Exception e) { }
 	}
@@ -188,17 +179,14 @@ public class TestTaskFunctions extends TestBase {
 		inputs[2] = new Input("source_data_labeled", "129");
 		inputs[3] = new Input("target_feature", "class");
 		
-		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 6);
-		
-		int uploadId = 0;
+		int taskId = 0;
 		try {
-			UploadTask ut = client_write_test.taskUpload(taskFile);
-			uploadId = ut.getId();
+			taskId = client_write_test.taskUpload(new TaskInputs(null, 6, inputs, null));
 		} catch (ApiException e) {
-			uploadId = TaskInformation.getTaskIdsFromErrorMessage(e)[0];
+			taskId = TaskInformation.getTaskIdsFromErrorMessage(e)[0];
 			throw e;
 		} finally {
-			client_write_test.taskDelete(uploadId);
+			client_write_test.taskDelete(taskId);
 		}
 	}
 	
@@ -212,14 +200,11 @@ public class TestTaskFunctions extends TestBase {
 		inputs[2] = new Input("target_feature", "class");
 		inputs[3] = new Input("cost_matrix", costMatrixOrig.toString());
 		
-		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 1);
-		
 		int uploadId = 0;
 		try {
-			UploadTask ut = client_write_test.taskUpload(taskFile);
-			uploadId = ut.getId();
+			int taskId = client_write_test.taskUpload(new TaskInputs(null, 1, inputs, null));
 			
-			Task downloaded = client_read_test.taskGet(ut.getId());
+			Task downloaded = client_read_test.taskGet(taskId);
 			JSONArray costMatrixDownloaded = TaskInformation.getCostMatrix(downloaded);
 			assertEquals(costMatrixOrig.toString(), costMatrixDownloaded.toString());
 		} catch (ApiException e) {
@@ -237,8 +222,7 @@ public class TestTaskFunctions extends TestBase {
 		inputs[1] = new Input("source_data", "1");
 		inputs[2] = new Input("target_feature", "carbon");
 		
-		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 1);
-		client_write_test.taskUpload(taskFile);
+		client_write_test.taskUpload(new TaskInputs(null, 1, inputs, null));
 	}
 	
 	@Test(expected = ApiException.class)
@@ -248,8 +232,7 @@ public class TestTaskFunctions extends TestBase {
 		inputs[1] = new Input("source_data", "1");
 		inputs[2] = new Input("target_feature", "class");
 		
-		File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 2);
-		client_write_test.taskUpload(taskFile);
+		client_write_test.taskUpload(new TaskInputs(null, 2, inputs, null));
 	}
 	
 	@Test
@@ -265,10 +248,9 @@ public class TestTaskFunctions extends TestBase {
 		try {
 			// create task object
 			Input[] inputs = { estimation_procedure, data_set, target_feature, evaluation_measure};
-			File taskFile = TestDataFunctionality.inputsToTaskFile(inputs, 1);
 			try {
 				// try catch for deleting tasks that were already on the server
-				uploadId1 = client_write_test.taskUpload(taskFile).getId();
+				uploadId1 = client_write_test.taskUpload(new TaskInputs(null, 1, inputs, null));
 			} catch(ApiException e) {
 				uploadId1 = TaskInformation.getTaskIdsFromErrorMessage(e)[0];
 				throw e;
@@ -276,10 +258,9 @@ public class TestTaskFunctions extends TestBase {
 			
 			// create task similar task object (with one value less)
 			Input[] inputs2 = { estimation_procedure, data_set, target_feature };
-			File taskFile2 = TestDataFunctionality.inputsToTaskFile(inputs2, 1);
 			try {
 				// try catch for deleting tasks that were already on the server
-				uploadId2 = client_write_test.taskUpload(taskFile2).getId();
+				uploadId2 = client_write_test.taskUpload(new TaskInputs(null, 1, inputs2, null));
 			} catch(ApiException e) {
 				uploadId2 = TaskInformation.getTaskIdsFromErrorMessage(e)[0];
 				throw e;
@@ -304,5 +285,4 @@ public class TestTaskFunctions extends TestBase {
 			assertTrue(t.getInputs().length > 2);
 		}
 	}
-
 }
