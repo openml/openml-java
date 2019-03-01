@@ -202,9 +202,8 @@ public class TestTaskFunctions extends TestBase {
 		
 		int uploadId = 0;
 		try {
-			int taskId = client_write_test.taskUpload(new TaskInputs(null, 1, inputs, null));
-			
-			Task downloaded = client_read_test.taskGet(taskId);
+			uploadId = client_write_test.taskUpload(new TaskInputs(null, 1, inputs, null));
+			Task downloaded = client_read_test.taskGet(uploadId);
 			JSONArray costMatrixDownloaded = TaskInformation.getCostMatrix(downloaded);
 			assertEquals(costMatrixOrig.toString(), costMatrixDownloaded.toString());
 		} catch (ApiException e) {

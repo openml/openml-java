@@ -35,10 +35,8 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.openml.apiconnector.io.ApiException;
-import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQuality.Quality;
@@ -56,11 +54,6 @@ public class TestUserTypePrivileges extends TestBase {
 	private static final Integer EVAL_ID = 2;
 	
 	private static final int PRIVATE_DATASET_ID = 130;
-	
-	@Before
-    public void setup() {
-		Settings.CACHE_ALLOWED = false;
-    }
 	
 	@Test(expected=ApiException.class)
 	public void testApiDataQualityUpload() throws Exception {

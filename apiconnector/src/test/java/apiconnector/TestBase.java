@@ -1,6 +1,8 @@
 package apiconnector;
 
+import org.junit.Before;
 import org.openml.apiconnector.io.OpenmlConnector;
+import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 import com.thoughtworks.xstream.XStream;
@@ -16,4 +18,8 @@ public class TestBase {
 	
 	protected static final XStream xstream = XstreamXmlMapping.getInstance();
 	
+	@Before
+    public void setup() {
+		Settings.CACHE_ALLOWED = false;
+    }
 }
