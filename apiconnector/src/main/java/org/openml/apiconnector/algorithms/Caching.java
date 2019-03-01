@@ -30,7 +30,6 @@
  ******************************************************************************/
 package org.openml.apiconnector.algorithms;
 
-import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.HttpConnector;
 import org.openml.apiconnector.settings.Config;
 import org.openml.apiconnector.settings.Settings;
@@ -41,12 +40,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 public class Caching {
 
-	public static File cacheFile(URL url, String type, int identifier, String extension) throws IOException, URISyntaxException, ApiException {
+	public static File cacheFile(URL url, String type, int identifier, String extension) throws Exception {
 		String directoryPath = Settings.CACHE_DIRECTORY + "/" + Config.getChachePrefixFromUrl(url) + type;
 		File directory = new File(directoryPath);
 		directory.mkdirs();

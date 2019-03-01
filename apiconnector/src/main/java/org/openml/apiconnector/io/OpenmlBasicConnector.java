@@ -83,26 +83,44 @@ public class OpenmlBasicConnector implements Serializable {
 	public void setApiKey(String api_key) { 
 		this.api_key = api_key;
 	}
-
-
+	
 	/**
 	 * Sets the verbose level.
 	 * 
-	 * level - higher means more output. 
+	 * @param level - higher means more output. 
 	 * 			0 = none, 1 = communication with server, 2 = also files
 	 */
 	public void setVerboseLevel(int level) {
 		verboseLevel = level;
 	}
+
 	
+	/**
+	 * Returns the verbose level.
+	 * 
+	 * @return the verbose level
+	 */
 	public int getVerboselevel() {
 		return verboseLevel;
 	}
 
+	/**
+	 * Returns the total API URL. 
+	 * 
+	 * @return api url (server plus api part)
+	 */
 	public String getApiUrl(){
 		return OPENML_URL + API_PART;
 	}
-	
+
+
+	/**
+	 * Returns an XSD file
+	 * 
+	 * @param name - the file name of the xsd (e.g., openml.data.upload)
+	 * @return file - textual file with XSD content
+	 * @throws IOException - problem downloading or storing the file
+	 */
 	public File getXSD(String name) throws IOException {
 		File file = File.createTempFile("name", "xsd");
 		file.deleteOnExit();
@@ -110,27 +128,15 @@ public class OpenmlBasicConnector implements Serializable {
 		FileUtils.copyURLToFile(url, file);
 		return file;
 	}
-	
-	/*
-	public Data data_list() throws Exception {
-		Object apiResult = HttpConnector.doApiRequest(API_URL + "data/list", session_hash, verboseLevel);
-		if (apiResult instanceof Data) {
-			return (Data) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to Data");
-		}
-	}*/
 
 	/**
 	 * Retrieves the description of a specified data set.
 	 * 
-	 * @param did
-	 *            - The data_id of the data description to download.
-	 * @return DataSetDescription - An object containing the description of the
-	 *         data
-	 * @throws Exception
-	 *             - Can be: API Error (see documentation at openml.org), server
-	 *             down, etc.
+	 * @param did - The data_id of the data description to download.
+	 * @return DataSetDescription - An object containing the description of the data
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public DataSetDescription dataGet(int did) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "data/" + did);
@@ -140,25 +146,40 @@ public class OpenmlBasicConnector implements Serializable {
 		}
 		
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof DataSetDescription) {
-			if (Settings.CACHE_ALLOWED) {
-				try {
-					Caching.cacheXML(request, apiResult, "datadescription", did, "xml");
-				} catch(IOException e) {
-					Conversion.log("Warning", "DataGet", "Cache Store Exception: " + e.getMessage());
-				}
+		
+		if (Settings.CACHE_ALLOWED) {
+			try {
+				Caching.cacheXML(request, apiResult, "datadescription", did, "xml");
+			} catch(IOException e) {
+				Conversion.log("Warning", "DataGet", "Cache Store Exception: " + e.getMessage());
 			}
-			return (DataSetDescription) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to DataSetDescription");
 		}
+		return (DataSetDescription) apiResult;
 	}
-	
+
+	/**
+	 * Retrieves a dataset in ARFF format
+	 * 
+	 * @param dsd - Description of the Dataset
+	 * @return File - dataset in arff format
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
+	 */
 	public File datasetGet(DataSetDescription dsd) throws Exception {
 		URL fileUrl = getOpenmlFileUrl(dsd.getFile_id(), dsd.getName());
 		return ArffHelper.downloadAdCache("dataset", dsd.getId(), dsd.getFormat(), fileUrl, dsd.getMd5_checksum());
 	}
 	
+	/**
+	 * Retrieves a dataset in CSV format
+	 * 
+	 * @param dsd - Description of the Dataset
+	 * @return File - dataset in CSV format
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
+	 */
 	public File datasetGetCsv(DataSetDescription dsd) throws Exception {
 		URL fileUrl = getOpenmlFileUrl(dsd.getFile_id(), dsd.getName(), "get_csv");
 		// Not passing the server md5 because it does not match with the csv md5
@@ -173,48 +194,50 @@ public class OpenmlBasicConnector implements Serializable {
 		}
 		URL request = new URL(OPENML_URL + API_PART + "data/");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof UploadDataSet) {
-			return (UploadDataSet) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to UploadDataSet");
-		}
+		return (UploadDataSet) apiResult;
 	}
 	
 	/**
 	 * Deletes a dataset from the server
 	 * 
 	 * @param did - The data id to be deleted
-	 * @return The id of the dataset that was deleted
-	 * @throws Exception
+	 * @return An object with the integer id of the deleted dataset
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public DataDelete dataDelete(int did) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "data/" + did);
 		Object apiResult = HttpConnector.doApiDelete(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof DataDelete) {
-			return (DataDelete) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to DataDelete");
-		}
+		return (DataDelete) apiResult;
 	}
 	
 	/**
 	 * Resets a dataset (removes features, qualities, etc)
 	 * 
 	 * @param did - The data id to reset
-	 * @return The id of the dataset that was reset
-	 * @throws Exception
+	 * @return An object with the integer id of the resetted dataset
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public DataReset dataReset(int did) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "data/reset/" + did);
 		MultipartEntity params = new MultipartEntity();
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof DataReset) {
-			return (DataReset) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to DataReset");
-		}
+		return (DataReset) apiResult;
 	}
 	
+	/**
+	 * Updates the status of a dataset (requires admin rights)
+	 * 
+	 * @param did - The data id to reset
+	 * @param status - The new status (active, deactivated)
+	 * @return An object with the integer id of the updated dataset
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
+	 */
 	public DataStatusUpdate dataStatusUpdate(int did, String status) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("data_id", new StringBody("" + did));
@@ -222,20 +245,18 @@ public class OpenmlBasicConnector implements Serializable {
 		
 		URL request = new URL(OPENML_URL + API_PART + "data/status/update");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof DataStatusUpdate) {
-			return (DataStatusUpdate) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to DataStatusUpdate");
-		}
+		return (DataStatusUpdate) apiResult;
 	}
 	
 	/**
 	 * Tags a dataset
 	 * 
 	 * @param id - the dataset to be tagged
-	 * @param tag - the tag to be used
-	 * @return
-	 * @throws Exception
+	 * @param tag - textual string to be added as tag
+	 * @return An object with the integer id of the updated dataset
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public DataTag dataTag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
@@ -244,20 +265,18 @@ public class OpenmlBasicConnector implements Serializable {
 		
 		URL request = new URL(OPENML_URL + API_PART + "data/tag");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof DataTag) {
-			return (DataTag) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to DataTag");
-		}
+		return (DataTag) apiResult;
 	}
 	
 	/**
 	 * Untags a dataset
 	 * 
-	 * @param id - the id of the dataset
-	 * @param tag - the tag to be remoeved
-	 * @return
-	 * @throws Exception
+	 * @param id - the dataset to be tagged
+	 * @param tag - textual string to be removed as tag
+	 * @return An object with the integer id of the updated dataset
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public DataUntag dataUntag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
@@ -266,33 +285,36 @@ public class OpenmlBasicConnector implements Serializable {
 		
 		URL request = new URL(OPENML_URL + API_PART + "data/untag");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof DataUntag) {
-			return (DataUntag) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to DataUntag");
-		}
+		
+		return (DataUntag) apiResult;
 	}
 
 	/**
 	 * Retrieves the features of a specified data set.
 	 * 
 	 * @param did
-	 *            - The data_id of the data features to download.
+	 *            - The id of the data features to download.
 	 * @return DataFeatures - An object containing the features of the data
-	 * @throws Exception
-	 *             - Can be: API Error (see documentation at openml.org), server
-	 *             down, etc.
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public DataFeature dataFeatures(int did) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "data/features/" + did);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof DataFeature) {
-			return (DataFeature) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to DataFeature");
-		}
+		
+		return (DataFeature) apiResult;
 	}
 	
+	/**
+	 * Returns a list of dataset that corresponds to a set of filters
+	 * 
+	 * @param filters - map of filters, see OpenML docs for an exhaustive list
+	 * @return a list of dataset objects
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
+	 */
 	public Data dataList(Map<String, String> filters) throws Exception {
 		String suffix = "";
 		if (filters != null) {
@@ -302,54 +324,29 @@ public class OpenmlBasicConnector implements Serializable {
 		}
 		URL request = new URL(OPENML_URL + API_PART + "data/list/" + suffix);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof Data) {
-			return (Data) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to Data");
-		}
-	}
-
-	/**
-	 * Retrieves the qualities (meta-features) of a specified data set.
-	 * 
-	 * @param did
-	 *            - The data_id of the data features to download.
-	 * @return DataFeatures - An object containing the qualities of the data
-	 * @throws Exception
-	 *             - Can be: API Error (see documentation at openml.org), server
-	 *             down, etc.
-	 */
-	public DataQuality dataQualities(int did) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "data/qualities/" + did);
-		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		
-		if (apiResult instanceof DataQuality) {
-			return (DataQuality) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to DataQuality");
-		}
+		return (Data) apiResult;
 	}
 	
 	/**
 	 * Retrieves the qualities (meta-features) of a specified data set.
 	 * 
-	 * @param did
-	 *            - The data_id of the data features to download.
- 	 *            - The id of the evaluation engine whose qualities to download
-	 * @return DataFeatures - An object containing the qualities of the data
-	 * @throws Exception
-	 *             - Can be: API Error (see documentation at openml.org), server
-	 *             down, etc.
+	 * @param did - The id of the data qualities to download.
+	 * @param evalEngine - id of the evaluation engine responsible for qualities
+	 * @return DataQuality - An object containing the qualities of the data
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
-	public DataQuality dataQualities(int did, int evalEngine) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "data/qualities/" + did + "/" + evalEngine);
+	public DataQuality dataQualities(int did, Integer evalEngine) throws Exception {
+		String suffix = "data/qualities/" + did;
+		if (evalEngine != null) {
+			suffix += "/" + evalEngine;
+		}
+		
+		URL request = new URL(OPENML_URL + API_PART + suffix);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
 
-		if (apiResult instanceof DataQuality) {
-			return (DataQuality) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to DataQuality");
-		}
+		return (DataQuality) apiResult;
 	}
 	
 	protected DataFeatureUpload dataFeaturesUpload(File description) throws Exception {
@@ -363,11 +360,7 @@ public class OpenmlBasicConnector implements Serializable {
 		URL request = new URL(OPENML_URL + API_PART + "data/features");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
 		
-		if (apiResult instanceof DataFeatureUpload) {
-			return (DataFeatureUpload) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to DataFeatureUpload");
-		}
+		return (DataFeatureUpload) apiResult;
 	}
 	
 	protected DataQualityUpload dataQualitiesUpload(File description) throws Exception {
@@ -376,40 +369,54 @@ public class OpenmlBasicConnector implements Serializable {
 
 		URL request = new URL(OPENML_URL + API_PART + "data/qualities");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof DataQualityUpload) {
-			return (DataQualityUpload) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to DataQualityUpload");
-		}
+		return (DataQualityUpload) apiResult;
 	}
 
 	/**
 	 * Returns a list with all available data qualities. 
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @return list with qualities
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public DataQualityList dataQualitiesList() throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "data/qualities/list");
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof DataQualityList) {
-			return (DataQualityList) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to DataQualityList");
-		}
+		return (DataQualityList) apiResult;
 	}
-	
+	/**
+	 * Returns a list of unprocessed datasets, given an evaluation engine (no 
+	 * features calculated, no errors registered)
+	 * 
+	 * @param evaluationEngineId - the evaluation engine id
+	 * @param mode - either normal, reversed or random
+	 * @return list of unprocessed datasets
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
+	 */
 	public DataUnprocessed dataUnprocessed(int evaluationEngineId, String mode) throws Exception {
 		String suffix = "data/unprocessed/" + evaluationEngineId + "/" + mode;
 		URL request = new URL(OPENML_URL + API_PART + suffix);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof DataUnprocessed) {
-			return (DataUnprocessed) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to DataUnprocessed");
-		}
+		return (DataUnprocessed) apiResult;
 	}
-	
+
+	/**
+	 * Returns a list of datasets that don't have all qualities calculated yet, given an 
+	 * evaluation engine and set of qualities
+	 * 
+	 * @param evaluationEngineId - the evaluation engine id
+	 * @param mode - either normal, reversed or random
+	 * @param featureQualities - false for dataset qualities, true for feature qualities
+	 * @param qualitiesToCalculate - list of qualities under consideration
+	 * @param priorityTag - datasets with this tag get prioritized 
+	 * @return list of unprocessed datasets
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
+	 */
 	public DataUnprocessed dataqualitiesUnprocessed(int evaluationEngineId, String mode, boolean featureQualities, List<String> qualitiesToCalculate, String priorityTag) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (String s : qualitiesToCalculate) {
@@ -429,20 +436,17 @@ public class OpenmlBasicConnector implements Serializable {
 		
 		URL request = new URL(OPENML_URL + API_PART + suffix);
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof DataUnprocessed) {
-			return (DataUnprocessed) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to DataUnprocessed");
-		}
+		return (DataUnprocessed) apiResult;
 	}
 	
 	/**
-	 * @param task_id
-	 *            - The numeric id of the task to be obtained.
+	 * Downloads the task description
+	 * 
+	 * @param task_id - The numeric id of the task to be obtained.
 	 * @return Task - An object describing the task
-	 * @throws Exception
-	 *             - Can be: API Error (see documentation at openml.org), server
-	 *             down, etc.
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public Task taskGet(int task_id) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "task/" + task_id);
@@ -452,41 +456,53 @@ public class OpenmlBasicConnector implements Serializable {
 		}
 
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof Task) {
-			if (Settings.CACHE_ALLOWED) {
-				try {
-					Caching.cacheXML(request, apiResult, "task", task_id, "xml");
-				} catch(IOException e) {
-					Conversion.log("Warning", "TaskGet", "Cache Store Exception: " + e.getMessage());
-				}
+		
+		if (Settings.CACHE_ALLOWED) {
+			try {
+				Caching.cacheXML(request, apiResult, "task", task_id, "xml");
+			} catch(IOException e) {
+				Conversion.log("Warning", "TaskGet", "Cache Store Exception: " + e.getMessage());
 			}
-			return (Task) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to Task");
 		}
+		return (Task) apiResult;
 	}
 
-	
+	/**
+	 * Downloads the data splits
+	 * 
+	 * @param task - the task object
+	 * @return a file in arff format containing data splits
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
+	 */
 	public File taskSplitsGet(Task task) throws Exception {
 		Estimation_procedure ep = TaskInformation.getEstimationProcedure(task);
 		return ArffHelper.downloadAdCache("splits", task.getTask_id(), "arff", ep.getData_splits_url(), null);
 	}
 	
+	/**
+	 * Downloads a task according to new task format
+	 * 
+	 * @param task_id - the task id
+	 * @return task object according to new format
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
+	 */
 	public TaskInputs taskInputs(int task_id) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "task/inputs/" + task_id);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof TaskInputs) {
-			return (TaskInputs) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to TaskInputs");
-		}
+		return (TaskInputs) apiResult;
 	}
 	
 	/**
-	 * Returns a list of all of the tasks with a certain tag and type
-	 * @param filters - a map of filters
-	 * @return
-	 * @throws DataFormatException
+	 * Returns a list of all of the tasks given a set of filters
+	 * @param filters - optional, a map of filters
+	 * @return a list of tasks
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public Tasks taskList(Map<String, String> filters) throws Exception {
 		String suffix = "task/list/";
@@ -497,23 +513,17 @@ public class OpenmlBasicConnector implements Serializable {
 		}
 		URL request = new URL(OPENML_URL + API_PART + suffix);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof Tasks) {
-			return (Tasks) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to Tasks");
-		}
-	}
-	
-	public Tasks taskList() throws Exception {
-		return taskList(null);
+		return (Tasks) apiResult;
 	}
 	
 	/**
 	 * Deletes a task
 	 * 
 	 * @param task_id - the task to be deleted
-	 * @return
-	 * @throws Exception
+	 * @return an object with the information about deleted task
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public TaskDelete taskDelete(int task_id) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "task/" + task_id);
