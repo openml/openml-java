@@ -43,34 +43,23 @@ public class ArffHelper {
 	 * Looks whether a specified file exists in the cache directory. Downloads it if it does not exists. 
 	 * 
 	 * @param type - Either splits or dataset
-	 * @param identifier - The name of the arff file to look up (or store)
+	 * @param identifier - The name of the file to look up (or store)
+	 * @param extension - The extension to store the file (arff, xml, csv)
 	 * @param url - Url to obtain it from
 	 * @param serverMd5 - Md5 hash of the file to be downloaded. Used for checking the local version, if it exists.
 	 * @return A file pointer to the specified arff file.
-	 * @throws IOException
+	 * @throws IOException - IO Problem
 	 */
 	public static File downloadAdCache(String type, int identifier, String extension, URL url, String serverMd5) throws Exception {
 		if(Caching.in_cache(url, type, identifier, extension) && Settings.CACHE_ALLOWED) {
 			File file = Caching.cached(url, type, identifier, extension);
-			String clientMd5 = Hashing.md5(file);
-			if(serverMd5 == null || serverMd5.equals("NotApplicable") || clientMd5.equals( serverMd5.trim())) {
-				return file;
-			} else {
-				Conversion.log("WARNING", "ARFF Cache", type + " " + identifier + " hash and cache not identical: \n- Client: " + clientMd5 + "\n- Server: " + serverMd5);
-			}
+			return file;
 		}
 		
-		File dataset;
 		if(Settings.CACHE_ALLOWED) {
-			dataset = Caching.cacheFile(url, type, identifier, extension);
+			return Caching.cacheFile(url, type, identifier, extension);
 		} else {
-			dataset = HttpConnector.getFileFromUrl(url, extension, false);
+			return HttpConnector.getFileFromUrl(url, extension, false);
 		}
-		String hash = Hashing.md5(dataset);
-        if (serverMd5 == null || serverMd5.equals("NotApplicable") || hash.equals(serverMd5.trim())) {
-            return dataset;
-        } else {
-            throw new IOException("Md5 hashes do not correspond. File: " + dataset.getAbsolutePath() + ", hash: " + hash);
-        }
 	}
 }

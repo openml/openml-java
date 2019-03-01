@@ -37,10 +37,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-
 public class Input {
 
-	public static InputStreamReader getURL( URL url ) throws IOException {
+	public static InputStreamReader getURL(URL url) throws IOException {
 		HttpURLConnection urlConnection = (HttpURLConnection) (url.openConnection());
 		urlConnection.setInstanceFollowRedirects(true);
 		urlConnection.setConnectTimeout(1000);
@@ -50,15 +49,15 @@ public class Input {
 		Conversion.log("OK", "URL", "HTTP request status code [" + responseCode + "] URL [" + url + "]");
 		return new InputStreamReader(urlConnection.getInputStream());
 	}
-	
-	public static InputStreamReader getFile( String filename ) throws IOException {
-		return new InputStreamReader( new FileInputStream( new File( filename ) ) );
+
+	public static InputStreamReader getFile(String filename) throws IOException {
+		return new InputStreamReader(new FileInputStream(new File(filename)));
 	}
-	
-	public static String filename( String sUrl ) {
-		if(sUrl.substring(sUrl.lastIndexOf('/') + 1).contains(".") == false ) {
-			return sUrl.substring( sUrl.lastIndexOf('/') + 1 );
+
+	public static String filename(String sUrl) {
+		if (sUrl.substring(sUrl.lastIndexOf('/') + 1).contains(".") == false) {
+			return sUrl.substring(sUrl.lastIndexOf('/') + 1);
 		}
-		return sUrl.substring( sUrl.lastIndexOf('/') + 1, sUrl.lastIndexOf('.') );
+		return sUrl.substring(sUrl.lastIndexOf('/') + 1, sUrl.lastIndexOf('.'));
 	}
 }

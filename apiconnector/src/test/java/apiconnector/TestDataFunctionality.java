@@ -48,7 +48,6 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
-import org.openml.apiconnector.algorithms.Hashing;
 import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.HttpConnector;
 import org.openml.apiconnector.xml.Data;
@@ -127,10 +126,8 @@ public class TestDataFunctionality extends TestBase {
 		DataTag dt = client_write_test.dataTag(dataId, tag);
 		assertTrue(Arrays.asList(dt.getTags()).contains(tag));
 		
-		// Download dataset and check md5 thingy
 		DataSetDescription dsd_downloaded = client_read_test.dataGet(dataId);
-		File dataset = client_read_test.datasetGet(dsd_downloaded);
-		assertEquals(Hashing.md5(dataset), Hashing.md5(toUpload));
+		client_read_test.datasetGet(dsd_downloaded);
 		
 		// create task upon it (clustering task)
 		Input estimation_procedure = new Input("estimation_procedure", "17");
@@ -187,10 +184,9 @@ public class TestDataFunctionality extends TestBase {
 		
 		// Download dataset and check md5 thingy
 		DataSetDescription dsd_downloaded = client_read_test.dataGet(dataId);
-		File dataset = client_read_test.datasetGet(dsd_downloaded);
+		client_read_test.datasetGet(dsd_downloaded);
 
-		File obtainedFile = HttpConnector.getFileFromUrl(new URL(dataUrl), "xml", false);
-		assertEquals(Hashing.md5(dataset), Hashing.md5(obtainedFile));
+		HttpConnector.getFileFromUrl(new URL(dataUrl), "xml", false);
 	}
 
 	@Test

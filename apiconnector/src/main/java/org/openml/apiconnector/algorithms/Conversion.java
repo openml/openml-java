@@ -57,7 +57,7 @@ public class Conversion {
 	 * @param format - The extension of the file. 
 	 * @param directory - the tmp directory
 	 * @return A pointer to the temp file that was created. 
-	 * @throws IOException
+	 * @throws IOException - IO Problem
 	 */
 	public static File stringToTempFile( String string, String filename, String format, File directory) throws IOException {
 		File file = File.createTempFile(filename, '.' + format, directory);
@@ -75,7 +75,7 @@ public class Conversion {
 	 * @param filename - The name of the file.
 	 * @param format - The extension of the file. 
 	 * @return A pointer to the temp file that was created. 
-	 * @throws IOException
+	 * @throws IOException - IO Problem
 	 */
 	public static File stringToTempFile( String string, String filename, String format) throws IOException {
 		return stringToTempFile(string, filename, format, null);
@@ -86,7 +86,7 @@ public class Conversion {
 	 * 
 	 * @param commaSeparated - the comma separated string to parse
 	 * @return the resulting integer array
-	 * @throws NumberFormatException
+	 * @throws NumberFormatException - Problem parsing an integer
 	 */
 	public static int[] commaSeparatedStringToIntArray( String commaSeparated ) throws NumberFormatException {
 		String[] splitted = commaSeparated.replaceAll("\\s","").split(","); // remove spaces, split on comma
@@ -102,7 +102,7 @@ public class Conversion {
 	 * 
 	 * @param f - File pointer to the file that needs to be read. Should be non-binary. 
 	 * @return A string containing the content of the file. 
-	 * @throws IOException
+	 * @throws IOException - IO Problem
 	 */
 	public static String fileToString( File f ) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(f));
@@ -124,10 +124,14 @@ public class Conversion {
 		writer.println( "["+DateParser.humanReadable.format( System.currentTimeMillis() )+"] ["+status+"] ["+action+"] " + message );
 	}
 	
-	public static double percentage(int observation, int total) {
-		return ((double) observation / (double) total) * 100;
-	}
-	
+	/**
+	 * Validates an XML by an XSD
+	 * @param xml - file with xml contents
+	 * @param xsd - file with xsd contents
+	 * @return whether the xml complies to the xsd schema
+	 * @throws SAXException - Something wrong with XML/XSD
+	 * @throws IOException - IO Problem
+	 */
 	public static boolean validateXML(File xml, File xsd) throws SAXException, IOException {
 		Source xmlFile = new StreamSource(xml);
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
