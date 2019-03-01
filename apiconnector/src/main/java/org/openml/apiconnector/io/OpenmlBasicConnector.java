@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.DataFormatException;
 
-public class OpenmlConnector implements Serializable {
+public class OpenmlBasicConnector implements Serializable {
 	private static final long serialVersionUID = 7362620508675762264L;
 
 	/**
@@ -76,7 +76,7 @@ public class OpenmlConnector implements Serializable {
 	 * @param url - the openml server
 	 * @param api_key - the api key to authenticate with
 	 */
-	public OpenmlConnector(String url, String api_key, boolean useJson) {
+	public OpenmlBasicConnector(String url, String api_key, boolean useJson) {
 		if (url != null) {
 			this.OPENML_URL = url;
 		} else {
@@ -99,7 +99,7 @@ public class OpenmlConnector implements Serializable {
 	 * @param url - the openml server
 	 * @param api_key - the api key to authenticate with
 	 */
-	public OpenmlConnector(String url, String api_key) {
+	public OpenmlBasicConnector(String url, String api_key) {
 		if (url != null) {
 			this.OPENML_URL = url;
 		} else {
@@ -118,7 +118,7 @@ public class OpenmlConnector implements Serializable {
 	 * 
 	 * api_key - the api key to authenticate with
 	 */
-	public OpenmlConnector(String api_key) {
+	public OpenmlBasicConnector(String api_key) {
 		this.OPENML_URL = Settings.BASE_URL;
 		this.api_key = api_key;
 		
@@ -131,7 +131,7 @@ public class OpenmlConnector implements Serializable {
 	/**
 	 * Creates a default OpenML Connector
 	 */
-	public OpenmlConnector() {
+	public OpenmlBasicConnector() {
 		this.OPENML_URL = Settings.BASE_URL;
 		
 	}
@@ -250,7 +250,7 @@ public class OpenmlConnector implements Serializable {
 	 * @return The id under which the dataset was uploaded
 	 * @throws Exception
 	 */
-	public UploadDataSet dataUpload(File description, File dataset) throws Exception {
+	protected UploadDataSet dataUpload(File description, File dataset) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
 		if (dataset != null) {
@@ -444,7 +444,7 @@ public class OpenmlConnector implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	public DataFeatureUpload dataFeaturesUpload(File description) throws Exception {
+	protected DataFeatureUpload dataFeaturesUpload(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
 
@@ -469,7 +469,7 @@ public class OpenmlConnector implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	public DataQualityUpload dataQualitiesUpload(File description) throws Exception {
+	protected DataQualityUpload dataQualitiesUpload(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
 
@@ -631,7 +631,7 @@ public class OpenmlConnector implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	public UploadTask taskUpload(File description) throws Exception {
+	protected UploadTask taskUpload(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
 		
@@ -827,7 +827,7 @@ public class OpenmlConnector implements Serializable {
 	 *             - Can be: API Error (see documentation at openml.org), server
 	 *             down, etc.
 	 */
-	public UploadFlow flowUpload(File description, File binary, File source) throws Exception {
+	protected UploadFlow flowUpload(File description, File binary, File source) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
 		if (source != null)
@@ -861,7 +861,7 @@ public class OpenmlConnector implements Serializable {
 	 *             - Can be: API Error (see documentation at openml.org), server
 	 *             down, etc.
 	 */
-	public UploadRun runUpload(File description, Map<String, File> output_files) throws Exception {
+	protected UploadRun runUpload(File description, Map<String, File> output_files) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		if (verboseLevel >= Constants.VERBOSE_LEVEL_ARFF) {
 			System.out.println(Conversion.fileToString(output_files.get("predictions")) + "\n==========\n");
@@ -1020,7 +1020,7 @@ public class OpenmlConnector implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	public RunEvaluate runEvaluate(File description) throws Exception {
+	protected RunEvaluate runEvaluate(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
 
@@ -1040,7 +1040,7 @@ public class OpenmlConnector implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	public RunTraceUpload runTraceUpload(File trace) throws Exception {
+	protected RunTraceUpload runTraceUpload(File trace) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("trace", new FileBody(trace));
 
@@ -1310,7 +1310,7 @@ public class OpenmlConnector implements Serializable {
 		}
 	}
 	
-	public StudyUpload studyUpload(File description) throws Exception {
+	protected StudyUpload studyUpload(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		if (verboseLevel >= Constants.VERBOSE_LEVEL_ARFF) {
 			System.out.println(Conversion.fileToString(description) + "\n==========\n");
