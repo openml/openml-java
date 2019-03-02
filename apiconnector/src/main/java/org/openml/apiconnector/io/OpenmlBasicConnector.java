@@ -69,7 +69,7 @@ public class OpenmlBasicConnector implements Serializable {
 	protected String API_PART = "api_new/v1/";
 	
 	/**
-	 * Return the api key that is used to authenticate with
+	 * @return Return the api key that is used to authenticate with
 	 */
 	public String getApiKey() {
 		return api_key;
@@ -772,6 +772,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @param task_id - a list with task ids to include (null to not restrict on tasks)
 	 * @param setup_id - a list with setup ids to include (null to not restrict on setups)
 	 * @param function - the evaluation measure interested in
+	 * @param limit - the maximal result size
 	 * @return a list with evaluations
 	 * @throws Exception - Can be: IOException (problem with connection, server),
 	 *                   ApiException (contains error code, see OpenML
@@ -1039,7 +1040,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @param setupA - a setup id
 	 * @param setupB - a setup id
 	 * @param task_id - the task id
-	 * @return
+	 * @return a list with predictions that differ between the setups
 	 * @throws Exception - Can be: IOException (problem with connection, server),
 	 *                   ApiException (contains error code, see OpenML
 	 *                   documentation)
