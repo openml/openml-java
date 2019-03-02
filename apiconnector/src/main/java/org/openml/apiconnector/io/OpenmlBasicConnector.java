@@ -545,7 +545,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 * 
 	 * @param id - the task id
 	 * @param tag - the tag
-	 * @return
+	 * @return An object with the integer id of the updated task
 	 * @throws Exception - Can be: IOException (problem with connection, server),
 	 *                   ApiException (contains error code, see OpenML
 	 *                   documentation)
@@ -566,7 +566,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 * 
 	 * @param id - the task id
 	 * @param tag - the tag to be removed
-	 * @return
+	 * @return n object with the integer id of the updated task
 	 * @throws Exception - Can be: IOException (problem with connection, server),
 	 *                   ApiException (contains error code, see OpenML
 	 *                   documentation)
@@ -586,7 +586,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 * Flow description
 	 * 
 	 * @param flow_id - the id of the flow. 
-	 * @return
+	 * @return the flow object
 	 * @throws Exception - Can be: IOException (problem with connection, server),
 	 *                   ApiException (contains error code, see OpenML
 	 *                   documentation)
@@ -603,7 +603,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 * 
 	 * @param id - the flow id
 	 * @param tag - the tag to be added to the flow
-	 * @return
+	 * @return An object with the integer id of the updated flow
 	 * @throws Exception - Can be: IOException (problem with connection, server),
 	 *                   ApiException (contains error code, see OpenML
 	 *                   documentation)
@@ -624,7 +624,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 * 
 	 * @param id - the flow id
 	 * @param tag - the tag to be removed
-	 * @return
+	 * @return An object with the integer id of the updated flow
 	 * @throws Exception - Can be: IOException (problem with connection, server),
 	 *                   ApiException (contains error code, see OpenML
 	 *                   documentation)
@@ -741,7 +741,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @param filters - filters to limit the number of results
 	 * @param limit - maximal number of results allowed
 	 * @param offset - number of results to ignore (from the beginning)
-	 * @return
+	 * @return the list with runs
 	 * @throws Exception - Can be: IOException (problem with connection, server),
 	 *                   ApiException (contains error code, see OpenML
 	 *                   documentation)
@@ -767,12 +767,12 @@ public class OpenmlBasicConnector implements Serializable {
 	}
 	
 	/**
-	 * Returns a list with run results. Must be restricted with tasks, setups or both. 
+	 * Returns a list with evaluation results. Must be restricted with tasks, setups or both. 
 	 * 
 	 * @param task_id - a list with task ids to include (null to not restrict on tasks)
 	 * @param setup_id - a list with setup ids to include (null to not restrict on setups)
 	 * @param function - the evaluation measure interested in
-	 * @return
+	 * @return a list with evaluations
 	 * @throws Exception - Can be: IOException (problem with connection, server),
 	 *                   ApiException (contains error code, see OpenML
 	 *                   documentation)
@@ -816,7 +816,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 * 
 	 * @param id - The run id
 	 * @param tag - The tag
-	 * @return
+	 * @return An object with the integer id of the updated run
 	 * @throws Exception - Can be: IOException (problem with connection, server),
 	 *                   ApiException (contains error code, see OpenML
 	 *                   documentation)
@@ -836,7 +836,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 * 
 	 * @param id - the run id
 	 * @param tag - the tag to be removed
-	 * @return
+	 * @return An object with the integer id of the updated run
 	 * @throws Exception - Can be: IOException (problem with connection, server),
 	 *                   ApiException (contains error code, see OpenML
 	 *                   documentation)
@@ -864,7 +864,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 * Uploads trace results in the database, typically used when an internal parameter optimization loop was executed. (admin rights required, typically executed by evaluation engine)
 	 * 
 	 * @param trace - the trace description xml
-	 * @return
+	 * @return an object with the id of the uploaded trace
 	 * @throws Exception - Can be: IOException (problem with connection, server),
 	 *                   ApiException (contains error code, see OpenML
 	 *                   documentation)
@@ -879,10 +879,10 @@ public class OpenmlBasicConnector implements Serializable {
 	}
 
 	/**
-	 * Stores trace results in the database, typically used when an internal parameter optimization loop was executed. (admin rights required, typically executed by evaluation engine)
+	 * Retrieves a run trace (Hyperparameter settings for HPO procedure)
 	 * 
 	 * @param trace_id - the trace description xml
-	 * @return
+	 * @return the trace
 	 * @throws Exception - Can be: IOException (problem with connection, server),
 	 *                   ApiException (contains error code, see OpenML
 	 *                   documentation)
@@ -898,7 +898,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 * Downloads run information
 	 * 
 	 * @param runId - the run id
-	 * @return
+	 * @return the run
 	 * @throws Exception - Can be: IOException (problem with connection, server),
 	 *                   ApiException (contains error code, see OpenML
 	 *                   documentation)
