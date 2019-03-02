@@ -31,21 +31,25 @@
 package org.openml.apiconnector.io;
 
 public class ApiException extends Exception {
-	
+
 	private static final long serialVersionUID = 1155887744L;
 	private int code;
-	
+
 	/**
-	 * @param code - OpenML error code, see OpenML API documentation
+	 * Default constructor
+	 * 
+	 * @param code    - OpenML error code, see OpenML API documentation
 	 * @param message - OpenML API message, see OpenML API documentation
 	 */
-	public ApiException( int code, String message ) {
-		super( message );
+	public ApiException(int code, String message) {
+		super(message);
 		this.code = code;
 	}
-	
+
 	/**
-	 * @return The OpenML API error code. 
+	 * Returns the OpenML Api code
+	 * 
+	 * @return The OpenML API error code.
 	 */
 	public int getCode() {
 		return code;

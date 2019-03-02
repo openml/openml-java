@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.json.JSONArray;
-import org.openml.apiconnector.io.OpenmlConnector;
+import org.openml.apiconnector.io.OpenmlBasicConnector;
 import org.openml.apiconnector.settings.Constants;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -279,7 +279,7 @@ public class Task implements Serializable {
 				return target_value;
 			}
 			
-			public DataSetDescription getDataSetDescription( OpenmlConnector apiconnector ) throws Exception {
+			public DataSetDescription getDataSetDescription( OpenmlBasicConnector apiconnector ) throws Exception {
 				if(dsdCache == null) {
 					dsdCache = apiconnector.dataGet(data_set_id);
 				}

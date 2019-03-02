@@ -46,7 +46,6 @@ import org.openml.apiconnector.xml.Flow;
 import org.openml.apiconnector.xml.FlowTag;
 import org.openml.apiconnector.xml.FlowUntag;
 import org.openml.apiconnector.xml.Parameter;
-import org.openml.apiconnector.xml.UploadFlow;
 
 public class TestFlowFunctionality extends TestBase {
 	private static final int probe = 10;
@@ -82,18 +81,14 @@ public class TestFlowFunctionality extends TestBase {
 			created.addParameter(new Parameter("test_a", "option", "bla1", "more bla1"));
 			created.addParameter(new Parameter("test_p", "option", "bla2", "more bla2"));
 			created.addParameter(new Parameter("test_q", "option", "blaq", "more blaqq"));
-			String flowXML = xstream.toXML(created);
 			
-			File f = Conversion.stringToTempFile(flowXML, "test", "xml");
-			
-			UploadFlow uf = client_write_test.flowUpload(f, f, f);
-			uploaded_id = uf.getId();
-			FlowTag ft = client_write_test.flowTag(uf.getId(), tag);
+			uploaded_id = client_write_test.flowUpload(created);
+			FlowTag ft = client_write_test.flowTag(uploaded_id, tag);
 			assertTrue(Arrays.asList(ft.getTags()).contains(tag));
-			FlowUntag fu = client_write_test.flowUntag(uf.getId(), tag);
+			FlowUntag fu = client_write_test.flowUntag(uploaded_id, tag);
 			assertTrue(fu.getTags() == null);
 			
-			Flow downloaded = client_read_test.flowGet(uf.getId());
+			Flow downloaded = client_read_test.flowGet(uploaded_id);
 			assertEquals(3, created.getParameter().length);
 			assertEquals(3, created.getComponent().length);
 			assertEquals(created.getParameter().length, downloaded.getParameter().length);
@@ -122,22 +117,16 @@ public class TestFlowFunctionality extends TestBase {
 				"test should be deleted", "english", "UnitTest"));
 		created.addParameter(new Parameter("test_p", "option", "bla", "more bla"));
 		created.setCustom_name("Jans flow");
-		String flowXML = xstream.toXML(created);
 
-		File f = Conversion.stringToTempFile(flowXML, "test", "xml");
-
-		UploadFlow uf = client_write_test.flowUpload(f, f, f);
+		int flowId = client_write_test.flowUpload(created);
 
 		try {
-			UploadFlow uf2 = client_write_test.flowUpload(f, null, null);
-			System.out.println(uf2.getId());
-
+			client_write_test.flowUpload(created);
 			fail("Test failed, flow upload should have been blocked.");
 		} catch (Exception e) {
 			// we expect an exception
-			System.out.println(e.getMessage());
 		}
-		client_write_test.flowDelete(uf.getId());
+		client_write_test.flowDelete(flowId);
 
 	}
 
@@ -146,9 +135,8 @@ public class TestFlowFunctionality extends TestBase {
 		Random random = new Random(System.currentTimeMillis());
 		String complicatedFlow = FileUtils.readFileToString(new File("data/FilteredClassifier_RandomForest.xml"))
 				.replace("{SENTINEL}", "SEN" + Math.abs(random.nextInt()));
-		File f = Conversion.stringToTempFile(complicatedFlow, "test", "xml");
-		
-		UploadFlow uf = client_write_test.flowUpload(f, null, null);
-		client_write_test.flowDelete(uf.getId());
+		Flow flow = (Flow) xstream.fromXML(complicatedFlow);
+		int flowId = client_write_test.flowUpload(flow);
+		client_write_test.flowDelete(flowId);
 	}
 }

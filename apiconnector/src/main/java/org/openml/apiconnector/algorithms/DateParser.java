@@ -45,8 +45,9 @@ public class DateParser {
 	 * Parses MySQL date format to Unix Time Stamp.
 	 * 
 	 * @param mysqlTime - A string representing the date field.
+	 * @param timezone - String representation of timezone 
 	 * @return Unix Time Stamp of mysqlTime
-	 * @throws ParseException
+	 * @throws ParseException - Parse problem
 	 */
 	public static long mysqlDateToTimeStamp(String mysqlTime, String timezone) throws ParseException {
 		DateFormat current = (DateFormat) defaultOrder.clone();

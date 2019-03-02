@@ -95,13 +95,6 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class XstreamXmlMapping {
 	
-	/**
-	 * Generates a bidirectional mapping between the XML Objects (server) and 
-	 * the Java Objects (OpenmlApiConnector package opg.openml.apiconnector.xml).
-	 * 
-	 * @return XStream - An XStream instance capable of mapping XML objects and
-	 * OpenmlApiConnector Objects to each other. 
-	 */
 	public static XStream getInstance(ClassLoaderReference clr) {
 		XStream xstream = new XStream(null,new DomDriver("UTF-8", new NoNameCoder()), clr);
 		xstream.registerConverter(new EmptyDoubleConverter());
@@ -254,7 +247,14 @@ public class XstreamXmlMapping {
 		
 		return xstream;
 	}
-	
+
+	/**
+	 * Generates a bidirectional mapping between the XML Objects (server) and 
+	 * the Java Objects (OpenmlApiConnector package opg.openml.apiconnector.xml).
+	 * 
+	 * @return XStream - An XStream instance capable of mapping XML objects and
+	 * OpenmlApiConnector Objects to each other. 
+	 */
 	public static XStream getInstance() {
 		return getInstance(new ClassLoaderReference(new CompositeClassLoader()));
 	}

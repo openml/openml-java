@@ -30,6 +30,10 @@
  ******************************************************************************/
 package org.openml.apiconnector.settings;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
 public class Constants {
 	
 	/**
@@ -55,4 +59,9 @@ public class Constants {
 	
 	public static final String DATA_STATUS_PREP = "in_preparation";
 	public static final String DATA_STATUS_ACTIVE = "active";
+	
+	public final static Double EPSILON = 0.00001;
+	
+	public final static DecimalFormat defaultDecimalFormat = new DecimalFormat("#.######",
+			DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 }

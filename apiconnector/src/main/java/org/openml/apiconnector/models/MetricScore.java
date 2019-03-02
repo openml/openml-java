@@ -32,131 +32,91 @@ package org.openml.apiconnector.models;
 
 import java.text.DecimalFormat;
 
-import org.openml.apiconnector.algorithms.MathHelper;
+import org.openml.apiconnector.settings.Constants;
 
 public class MetricScore {
-	
+
 	private Double score = null;
 	private long nr_of_instances = 0;
 	private Double[] array = null;
 	private double[][] confusion_matrix = null;
-	
-	/**
-	 * Constructor creating a MetricScore that only contains the score field.
-	 * Used for measures that have no class specific values, like predictive_accurancy.
-	 * 
-	 * @param score
-	 */
-	public MetricScore( Double score, long nr_of_instances ) {
+
+	public MetricScore(Double score, long nr_of_instances) {
 		this.score = score;
 		this.nr_of_instances = nr_of_instances;
 	}
 
-	/**
-	 * Constructor creating a MetricScore that only contains the array field. Used for
-	 * measures that contain class specific values, but no global flat value.
-	 * 
-	 * @param array - 
-	 */
-	public MetricScore( Double[] array, long nr_of_instances ) {
+	public MetricScore(Double[] array, long nr_of_instances) {
 		this.array = array;
 		this.nr_of_instances = nr_of_instances;
 	}
 
-	/**
-	 * Constructor creating a MetricScore with both a score and array data. Used for
-	 * measures that contain both a global value and class specific value, like auroc
-	 * precision, recall. 
-	 * 
-	 * @param score 
-	 * @param array
-	 */
-	public MetricScore( Double score, Double[] array, long nr_of_instances ) {
+	public MetricScore(Double score, Double[] array, long nr_of_instances) {
 		this.score = score;
 		this.array = array;
 		this.nr_of_instances = nr_of_instances;
 	}
 
-	/**
-	 * Fills the metric score with a confussion matrix. 
-	 * 
-	 * @param confusion_matrix
-	 */
-	public MetricScore( double[][] confusion_matrix ) {
+	public MetricScore(double[][] confusion_matrix) {
 		this.confusion_matrix = confusion_matrix;
 	}
 
-	/**
-	 * @return the score field
-	 */
 	public Double getScore() {
 		return score;
 	}
 
-	/**
-	 * @return true if this score contains array data (confusion matrix or class specific values);
-	 * false otherwise.
-	 */
 	public boolean hasArray() {
 		return array != null || confusion_matrix != null;
 	}
-	
 
-	/**
-	 * @return Returns the number of instances this score was calculated over. 
-	 */
 	public long getNrOfInstances() {
 		return nr_of_instances;
 	}
-	
-	/**
-	 * @param decimalFormat - An object specifying how to convert doubles to strings.
-	 * @return The array in string format. 
-	 */
-	public String getArrayAsString( DecimalFormat decimalFormat ) {
+
+	public String getArrayAsString(DecimalFormat decimalFormat) {
 		StringBuilder sb = new StringBuilder();
-		if( array != null ) {
-			for( Double d : array ) {
+		if (array != null) {
+			for (Double d : array) {
 				if (Double.isNaN(d)) {
-					sb.append( "," + 0.0D );
+					sb.append("," + 0.0D);
 				} else {
-					sb.append( "," + decimalFormat.format( d ) );
+					sb.append("," + decimalFormat.format(d));
 				}
 			}
-			return "[" + sb.toString().substring( 1 ) + "]";
-		} else if( confusion_matrix != null ) {
-			
-			for( double[] perClass : confusion_matrix ) {
+			return "[" + sb.toString().substring(1) + "]";
+		} else if (confusion_matrix != null) {
+
+			for (double[] perClass : confusion_matrix) {
 				StringBuilder sbperClass = new StringBuilder();
-				
-				for( double i : perClass ) {
-					sbperClass.append("," + ((int) i) );
+
+				for (double i : perClass) {
+					sbperClass.append("," + ((int) i));
 				}
-				
-				sb.append( ",[" + sbperClass.toString().substring( 1 ) + "]" );
+
+				sb.append(",[" + sbperClass.toString().substring(1) + "]");
 			}
-			return "[" + sb.toString().substring( 1 ) + "]";
+			return "[" + sb.toString().substring(1) + "]";
 		} else {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		
-		if( score != null ) {
-			sb.append( score );
+
+		if (score != null) {
+			sb.append(score);
 		}
-		
-		if( score != null && hasArray() ) {
-			sb.append( ", " );
+
+		if (score != null && hasArray()) {
+			sb.append(", ");
 		}
-		
-		if( hasArray() != false ) {
-			sb.append( getArrayAsString( MathHelper.defaultDecimalFormat ) );
+
+		if (hasArray() != false) {
+			sb.append(getArrayAsString(Constants.defaultDecimalFormat));
 		}
-		
+
 		return "[" + sb.toString() + "]";
 	}
 }
