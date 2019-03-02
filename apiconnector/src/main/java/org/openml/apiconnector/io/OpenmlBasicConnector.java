@@ -78,7 +78,7 @@ public class OpenmlBasicConnector implements Serializable {
 	/**
 	 * Updates the api key
 	 * 
-	 * api_key - the api key
+	 * @param api_key - the api key
 	 */
 	public void setApiKey(String api_key) { 
 		this.api_key = api_key;
@@ -528,11 +528,7 @@ public class OpenmlBasicConnector implements Serializable {
 	public TaskDelete taskDelete(int task_id) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "task/" + task_id);
 		Object apiResult = HttpConnector.doApiDelete(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof TaskDelete) {
-			return (TaskDelete) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to TaskDelete");
-		}
+		return (TaskDelete) apiResult;
 	}
 	
 	protected UploadTask taskUpload(File description) throws Exception {
@@ -541,11 +537,7 @@ public class OpenmlBasicConnector implements Serializable {
 		
 		URL request = new URL(OPENML_URL + API_PART + "task/");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof UploadTask) {
-			return (UploadTask) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to UploadTask");
-		}
+		return (UploadTask) apiResult;
 	}
 	
 	/**
@@ -554,7 +546,9 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @param id - the task id
 	 * @param tag - the tag
 	 * @return
-	 * @throws Exception
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public TaskTag taskTag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
@@ -564,11 +558,7 @@ public class OpenmlBasicConnector implements Serializable {
 		URL request = new URL(OPENML_URL + API_PART + "task/tag");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
 		
-		if (apiResult instanceof TaskTag) {
-			return (TaskTag) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to TaskTag");
-		}
+		return (TaskTag) apiResult;
 	}
 	
 	/**
@@ -577,7 +567,9 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @param id - the task id
 	 * @param tag - the tag to be removed
 	 * @return
-	 * @throws Exception
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public TaskUntag taskUntag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
@@ -587,11 +579,7 @@ public class OpenmlBasicConnector implements Serializable {
 		URL request = new URL(OPENML_URL + API_PART + "task/untag");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
 		
-		if (apiResult instanceof TaskUntag) {
-			return (TaskUntag) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to TaskUntag");
-		}
+		return (TaskUntag) apiResult;
 	}
 	
 	/**
@@ -599,16 +587,14 @@ public class OpenmlBasicConnector implements Serializable {
 	 * 
 	 * @param flow_id - the id of the flow. 
 	 * @return
-	 * @throws Exception
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public Flow flowGet(int flow_id) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "flow/" + flow_id);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof Flow) {
-			return (Flow) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to Implementation");
-		}
+		return (Flow) apiResult;
 	}
 
 	
@@ -618,7 +604,9 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @param id - the flow id
 	 * @param tag - the tag to be added to the flow
 	 * @return
-	 * @throws Exception
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public FlowTag flowTag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
@@ -628,11 +616,7 @@ public class OpenmlBasicConnector implements Serializable {
 		URL request = new URL(OPENML_URL + API_PART + "flow/tag");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
 		
-		if (apiResult instanceof FlowTag) {
-			return (FlowTag) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to FlowTag");
-		}
+		return (FlowTag) apiResult;
 	}
 
 	/**
@@ -641,7 +625,9 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @param id - the flow id
 	 * @param tag - the tag to be removed
 	 * @return
-	 * @throws Exception
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public FlowUntag flowUntag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
@@ -651,11 +637,7 @@ public class OpenmlBasicConnector implements Serializable {
 		URL request = new URL(OPENML_URL + API_PART + "flow/untag");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
 		
-		if (apiResult instanceof FlowUntag) {
-			return (FlowUntag) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to FlowUntag");
-		}
+		return (FlowUntag) apiResult;
 	}
 	
 	/**
@@ -665,28 +647,20 @@ public class OpenmlBasicConnector implements Serializable {
 	 *            - The numeric id of the implementation to be deleted.
 	 * @return ImplementationDelete - An object containing the id of the deleted
 	 *         implementation
-	 * @throws Exception
-	 *             - Can be: API Error (see documentation at openml.org), server
-	 *             down, etc.
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public FlowDelete flowDelete(int id) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "flow/" + id);
 		Object apiResult = HttpConnector.doApiDelete(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof FlowDelete) {
-			return (FlowDelete) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to ImplementationDelete");
-		}
+		return (FlowDelete) apiResult;
 	}
 	
 	public FlowDelete flowForceDelete(int id) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "flow/" + id + "/force");
 		Object apiResult = HttpConnector.doApiDelete(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof FlowDelete) {
-			return (FlowDelete) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to ImplementationDelete");
-		}
+		return (FlowDelete) apiResult;
 	}
 	
 
@@ -701,18 +675,14 @@ public class OpenmlBasicConnector implements Serializable {
 	 *            hash of the source code.
 	 * @return ImplementationExists - An object describing whether this
 	 *         implementation is already known on the server.
-	 * @throws Exception
-	 *             - Can be: API Error (see documentation at openml.org), server
-	 *             down, etc.
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public FlowExists flowExists(String name, String external_version) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "flow/exists/" + name + "/" + external_version);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof FlowExists) {
-			return (FlowExists) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to ImplementationExists");
-		}
+		return (FlowExists) apiResult;
 	}
 	
 	protected UploadFlow flowUpload(File description, File binary, File source) throws Exception {
@@ -725,11 +695,7 @@ public class OpenmlBasicConnector implements Serializable {
 
 		URL request = new URL(OPENML_URL + API_PART + "flow");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof UploadFlow) {
-			return (UploadFlow) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to UploadImplementation");
-		}
+		return (UploadFlow) apiResult;
 	}
 	
 
@@ -745,9 +711,9 @@ public class OpenmlBasicConnector implements Serializable {
 	 *            generated by this run.
 	 * @return UploadRun - An object containing information on the
 	 *         implementation upload.
-	 * @throws Exception
-	 *             - Can be: API Error (see documentation at openml.org), server
-	 *             down, etc.
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	protected UploadRun runUpload(File description, Map<String, File> output_files) throws Exception {
 		MultipartEntity params = new MultipartEntity();
@@ -766,11 +732,7 @@ public class OpenmlBasicConnector implements Serializable {
 		
 		URL request = new URL(OPENML_URL + API_PART + "run/");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof UploadRun) {
-			return (UploadRun) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to UploadRun");
-		}
+		return (UploadRun) apiResult;
 	}
 	
 	/**
@@ -780,7 +742,9 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @param limit - maximal number of results allowed
 	 * @param offset - number of results to ignore (from the beginning)
 	 * @return
-	 * @throws Exception
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public RunList runList(Map<String, List<Integer>> filters, Integer limit, Integer offset) throws Exception {
 		String suffix = "";
@@ -799,11 +763,7 @@ public class OpenmlBasicConnector implements Serializable {
 		
 		URL request = new URL(OPENML_URL + API_PART + "run/list" + suffix);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof RunList) {
-			return (RunList) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to RunList");
-		}
+		return (RunList) apiResult;
 	}
 	
 	/**
@@ -813,7 +773,9 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @param setup_id - a list with setup ids to include (null to not restrict on setups)
 	 * @param function - the evaluation measure interested in
 	 * @return
-	 * @throws Exception
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public EvaluationList evaluationList(List<Integer> task_id, List<Integer> setup_id, String function, Integer limit) throws Exception {
 		String suffix = "";
@@ -833,11 +795,7 @@ public class OpenmlBasicConnector implements Serializable {
 		
 		URL request = new URL(OPENML_URL + API_PART + "evaluation/list" + suffix);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof EvaluationList) {
-			return (EvaluationList) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to EvaluationList");
-		}
+		return (EvaluationList) apiResult;
 	}
 	
 	public EvaluationRequest evaluationRequest(int evaluationEngineId, String mode, int numRequests, Map<String, String> additionalFilters) throws Exception {
@@ -850,11 +808,7 @@ public class OpenmlBasicConnector implements Serializable {
 		
 		URL request = new URL(OPENML_URL + API_PART + suffix);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof EvaluationRequest) {
-			return (EvaluationRequest) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to EvaluationRequest");
-		}
+		return (EvaluationRequest) apiResult;
 	}
 
 	/**
@@ -863,7 +817,9 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @param id - The run id
 	 * @param tag - The tag
 	 * @return
-	 * @throws Exception
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public RunTag runTag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
@@ -871,11 +827,7 @@ public class OpenmlBasicConnector implements Serializable {
 		params.addPart("tag", new StringBody(tag));
 		URL request = new URL(OPENML_URL + API_PART + "run/tag");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof RunTag) {
-			return (RunTag) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to RunTag");
-		}
+		return (RunTag) apiResult;
 	}
 
 
@@ -885,7 +837,9 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @param id - the run id
 	 * @param tag - the tag to be removed
 	 * @return
-	 * @throws Exception
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public RunUntag runUntag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
@@ -894,11 +848,7 @@ public class OpenmlBasicConnector implements Serializable {
 		
 		URL request = new URL(OPENML_URL + API_PART + "run/untag");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof RunUntag) {
-			return (RunUntag) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to RunUntag");
-		}
+		return (RunUntag) apiResult;
 	}
 	
 	protected RunEvaluate runEvaluate(File description) throws Exception {
@@ -907,11 +857,7 @@ public class OpenmlBasicConnector implements Serializable {
 
 		URL request = new URL(OPENML_URL + API_PART + "run/evaluate");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof RunEvaluate) {
-			return (RunEvaluate) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to RunEvaluate");
-		}
+		return (RunEvaluate) apiResult;
 	}
 
 	/**
@@ -919,7 +865,9 @@ public class OpenmlBasicConnector implements Serializable {
 	 * 
 	 * @param trace - the trace description xml
 	 * @return
-	 * @throws Exception
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	protected RunTraceUpload runTraceUpload(File trace) throws Exception {
 		MultipartEntity params = new MultipartEntity();
@@ -927,11 +875,7 @@ public class OpenmlBasicConnector implements Serializable {
 
 		URL request = new URL(OPENML_URL + API_PART + "run/trace");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof RunTraceUpload) {
-			return (RunTraceUpload) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to RunTraceUpload");
-		}
+		return (RunTraceUpload) apiResult;
 	}
 
 	/**
@@ -939,17 +883,15 @@ public class OpenmlBasicConnector implements Serializable {
 	 * 
 	 * @param trace_id - the trace description xml
 	 * @return
-	 * @throws Exception
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public RunTrace runTrace(int trace_id) throws Exception {
 
 		URL request = new URL(OPENML_URL + API_PART + "run/trace/" + trace_id);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof RunTrace) {
-			return (RunTrace) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to RunTrace");
-		}
+		return (RunTrace) apiResult;
 	}
 
 	/**
@@ -957,16 +899,14 @@ public class OpenmlBasicConnector implements Serializable {
 	 * 
 	 * @param runId - the run id
 	 * @return
-	 * @throws Exception
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public Run runGet(int runId) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "run/" + runId);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof Run) {
-			return (Run) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to Run");
-		}
+		return (Run) apiResult;
 	}
 
 	/**
@@ -975,44 +915,40 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @param id
 	 *            - The numeric id of the run to be deleted.
 	 * @return RunDelete - An object containing the id of the deleted run
-	 * @throws Exception
-	 *             - Can be: API Error (see documentation at openml.org), server
-	 *             down, etc.
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public RunDelete runDelete(int id) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "run/" + id);
 		Object apiResult = HttpConnector.doApiDelete(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof RunDelete) {
-			return (RunDelete) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to RunDelete");
-		}
+		return (RunDelete) apiResult;
 	}
 
 	
 	/**
 	 * Resets the evaluation of a run (admin right required)
 	 * 
-	 * @param run_id
-	 * @return
-	 * @throws Exception
+	 * @param run_id - the id of the run to reset
+	 * @return an object with the id of the resetted run
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public RunReset runReset(int run_id) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "run/reset/" + run_id);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof RunReset) {
-			return (RunReset) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to RunReset");
-		}
+		return (RunReset) apiResult;
 	}
 
 	/**
 	 * A list with the parameter settings of a setup
 	 * 
 	 * @param description - a file equivalent to run description, but only featuring the parts important to parameters
-	 * @return
-	 * @throws Exception
+	 * @return an object with a boolean and the setup id, iff exists
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public SetupExists setupExists(File description) throws Exception {
 		MultipartEntity params = new MultipartEntity();
@@ -1022,28 +958,22 @@ public class OpenmlBasicConnector implements Serializable {
 		params.addPart("description", new FileBody(description));
 		URL request = new URL(OPENML_URL + API_PART + "setup/exists");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof SetupExists) {
-			return (SetupExists) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to SetupExists");
-		}
+		return (SetupExists) apiResult;
 	}
 	
 	/**
 	 * A list with the parameter settings of a setup
 	 * 
-	 * @param setup_id
-	 * @return
-	 * @throws Exception
+	 * @param setup_id - the id of the setup
+	 * @return an object with the list of parameters
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public SetupParameters setupParameters(int setup_id) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "setup/" + setup_id);
 		Object apiResult = HttpConnector.doApiRequest(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof SetupParameters) {
-			return (SetupParameters) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to SetupParameters");
-		}
+		return (SetupParameters) apiResult;
 	}
 
 	/**
@@ -1051,8 +981,10 @@ public class OpenmlBasicConnector implements Serializable {
 	 * 
 	 * @param id - the setup id
 	 * @param tag - the tag
-	 * @return
-	 * @throws Exception
+	 * @return an object with the id of the tagged object
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public SetupTag setupTag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
@@ -1061,11 +993,7 @@ public class OpenmlBasicConnector implements Serializable {
 		
 		URL request = new URL(OPENML_URL + API_PART + "setup/tag");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof SetupTag) {
-			return (SetupTag) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to SetupTag");
-		}
+		return (SetupTag) apiResult;
 	}
 
 	/**
@@ -1073,8 +1001,10 @@ public class OpenmlBasicConnector implements Serializable {
 	 * 
 	 * @param id - the setup id
 	 * @param tag - the tag to be removed
-	 * @return
-	 * @throws Exception
+	 * @return an object with the id of the untagged setup
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public SetupUntag setupUntag(int id, String tag) throws Exception {
 		MultipartEntity params = new MultipartEntity();
@@ -1083,32 +1013,24 @@ public class OpenmlBasicConnector implements Serializable {
 		
 		URL request = new URL(OPENML_URL + API_PART + "setup/untag");
 		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof SetupUntag) {
-			return (SetupUntag) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to SetupUntag");
-		}
+		return (SetupUntag) apiResult;
 	}
 
 	/**
 	 * Deletes a setup. Only applicable when no runs are attached. 
 	 * 
-	 * @param id
+	 * @param id - the id of the setup to be deleted
 	 *            - The numeric id of the setup to be deleted.
 	 * @return SetupDelete - An object containing the id of the deleted
 	 *         setup
-	 * @throws Exception
-	 *             - Can be: API Error (see documentation at openml.org), server
-	 *             down, etc.
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public SetupDelete setupDelete(int id) throws Exception {
 		URL request = new URL(OPENML_URL + API_PART + "setup/" + id);
 		Object apiResult = HttpConnector.doApiDelete(request, getApiKey(), verboseLevel);
-		if (apiResult instanceof SetupDelete) {
-			return (SetupDelete) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to SetupDelete");
-		}
+		return (SetupDelete) apiResult;
 	}
 	
 	/**
@@ -1117,35 +1039,10 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @param setupA - a setup id
 	 * @param setupB - a setup id
 	 * @param task_id - the task id
-	 * @param task_size - // TODO
-	 * @param differences // TODO
 	 * @return
-	 * @throws Exception
-	 */
-	public SetupDifferences setupDifferences(int setupA, int setupB, int task_id, int task_size, int differences) throws Exception {
-		MultipartEntity params = new MultipartEntity();
-		params.addPart("task_id", new StringBody("" + task_id));
-		params.addPart("task_size", new StringBody("" + task_size));
-		params.addPart("differences", new StringBody("" + differences));
-		
-		URL request = new URL(OPENML_URL + API_PART + "setup/differences/" + setupA + "/" + setupB);
-		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
-		if (apiResult instanceof SetupDifferences) {
-			return (SetupDifferences) apiResult;
-		} else {
-			throw new DataFormatException("Casting Api Object to SetupDifferences");
-		}
-	}
-
-	
-	/**
-	 * Returns a list of predictions on which two setups disagree
-	 * 
-	 * @param setupA - a setup id
-	 * @param setupB - a setup id
-	 * @param task_id - the task id
-	 * @return
-	 * @throws Exception
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
 	 */
 	public SetupDifferences setupDifferences(Integer setupA, Integer setupB, Integer task_id)  throws Exception {
 		String suffix = setupA + "/" + setupB;
