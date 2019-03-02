@@ -44,7 +44,6 @@ public class TaskInformation {
 	/**
 	 * @param t - Input Task. 
 	 * @return The number of repeats
-	 * @throws Exception
 	 */
 	public static int getNumberOfRepeats( Task t ) throws Exception {
 		Estimation_procedure ep = getEstimationProcedure(t);
@@ -59,7 +58,6 @@ public class TaskInformation {
 	/**
 	 * @param t - Input Task. 
 	 * @return The number of samples
-	 * @throws Exception
 	 */
 	public static int getNumberOfSamples( Task t ) throws Exception {
 		Estimation_procedure ep = getEstimationProcedure(t);
@@ -74,7 +72,6 @@ public class TaskInformation {
 	/**
 	 * @param t - Input Task. 
 	 * @return The number of folds
-	 * @throws Exception
 	 */
 	public static int getNumberOfFolds( Task t ) throws Exception {
 		Estimation_procedure ep = getEstimationProcedure(t);
@@ -89,7 +86,6 @@ public class TaskInformation {
 	/**
 	 * @param t - Input Task. 
 	 * @return The percentage (holdout set)
-	 * @throws Exception
 	 */
 	public static Integer getPercentage( Task t ) throws Exception {
 		Estimation_procedure ep = getEstimationProcedure(t);
@@ -104,7 +100,6 @@ public class TaskInformation {
 	/**
 	 * @param t - Input Task. 
 	 * @return The estimation procedure
-	 * @throws Exception
 	 */
 	public static Estimation_procedure getEstimationProcedure( Task t ) throws Exception {
 		for( int i = 0; i < t.getInputs().length; ++i ) {
@@ -119,7 +114,6 @@ public class TaskInformation {
 	/**
 	 * @param t - Input Task. 
 	 * @return The stream schedule
-	 * @throws Exception
 	 */
 	public static Stream_schedule getStreamSchedule(Task t) throws Exception {
 		for( int i = 0; i < t.getInputs().length; ++i ) {
@@ -133,7 +127,6 @@ public class TaskInformation {
 	/**
 	 * @param t - Input Task. 
 	 * @return The cost matrix
-	 * @throws Exception
 	 */
 	public static JSONArray getCostMatrix( Task t ) throws Exception {
 		for( int i = 0; i < t.getInputs().length; ++i ) {
@@ -147,7 +140,6 @@ public class TaskInformation {
 	/**
 	 * @param t - Input Task. 
 	 * @return The source data
-	 * @throws Exception
 	 */
 	public static Data_set getSourceData( Task t ) throws Exception {
 		for( int i = 0; i < t.getInputs().length; ++i ) {
@@ -161,7 +153,6 @@ public class TaskInformation {
 	/**
 	 * @param t - Input Task. 
 	 * @return The prediction format
-	 * @throws Exception
 	 */
 	public static Predictions getPredictions( Task t ) throws Exception {
 		for( int i = 0; i < t.getOutputs().length; ++i ) {
