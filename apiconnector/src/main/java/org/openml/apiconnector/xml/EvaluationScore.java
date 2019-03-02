@@ -30,7 +30,6 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import org.openml.apiconnector.algorithms.MathHelper;
 import org.openml.apiconnector.settings.Constants;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -155,7 +154,7 @@ public class EvaluationScore {
 	}
 	
 	public boolean sameValue( EvaluationScore other ) {
-		return Math.abs(value - other.getValue()) < MathHelper.EPSILON;
+		return Math.abs(value - other.getValue()) < Constants.EPSILON;
 	}
 	
 	@Override

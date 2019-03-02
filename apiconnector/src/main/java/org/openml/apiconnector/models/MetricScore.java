@@ -32,7 +32,7 @@ package org.openml.apiconnector.models;
 
 import java.text.DecimalFormat;
 
-import org.openml.apiconnector.algorithms.MathHelper;
+import org.openml.apiconnector.settings.Constants;
 
 public class MetricScore {
 
@@ -114,7 +114,7 @@ public class MetricScore {
 		}
 
 		if (hasArray() != false) {
-			sb.append(getArrayAsString(MathHelper.defaultDecimalFormat));
+			sb.append(getArrayAsString(Constants.defaultDecimalFormat));
 		}
 
 		return "[" + sb.toString() + "]";
