@@ -116,7 +116,7 @@ public class OpenmlConnector extends OpenmlBasicConnector {
 	/**
 	 * Uploads a run
 	 * 
-	 * @param description
+	 * @param run
 	 *            - An XML file describing the run. See documentation at
 	 *            openml.org.
 	 * @param outputFiles
