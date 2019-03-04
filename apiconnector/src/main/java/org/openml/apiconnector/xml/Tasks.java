@@ -56,6 +56,14 @@ public class Tasks {
 	public Task[] getTask() {
 		return task;
 	}
+	
+	public Integer[] getTaskIds() {
+		Integer[] taskIds = new Integer[task.length];
+		for (int i = 0; i < task.length; ++i) {
+			taskIds[i] = task[i].task_id;
+		}
+		return taskIds;
+	}
 
 	@XStreamAlias("oml:task")
 	public static class Task {
