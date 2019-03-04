@@ -15,9 +15,9 @@ import org.openml.apiconnector.xml.Study;
 import org.openml.apiconnector.xml.StudyList;
 import org.openml.apiconnector.xml.Tasks;
 
-import testbase.TestBase;
+import testbase.BaseTestFramework;
 
-public class PaperOpenMLBenchmarkSuites extends TestBase {
+public class TestPaperOpenMLBenchmarkSuites extends BaseTestFramework {
 
 	// alias
 	protected static final OpenmlConnector openml = client_write_test;

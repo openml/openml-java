@@ -56,9 +56,9 @@ import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 import com.thoughtworks.xstream.XStream;
 
-import testbase.TestBase;
+import testbase.BaseTestFramework;
 
-public class TestSetupFunctions extends TestBase {
+public class TestSetupFunctions extends BaseTestFramework {
 	// TODO: Note that this test case runs on live. we should add 
 	// runs to test server to alliviate this. 
 	private static final String url = "https://www.openml.org/"; // Lookup test, can be done live

@@ -54,9 +54,9 @@ import org.openml.apiconnector.xml.Parameter;
 import org.openml.apiconnector.xml.SetupParameters;
 import org.openml.apiconnector.xml.Study;
 
-import testbase.TestBase;
+import testbase.BaseTestFramework;
 
-public class PlotCsvGenerator extends TestBase {
+public class TestThesisMassivelyCollaborativeMachineLearning extends BaseTestFramework {
 	
 	// alias
 	protected static final OpenmlConnector openml = client_read_live;
