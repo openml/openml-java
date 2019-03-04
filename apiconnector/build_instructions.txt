@@ -12,3 +12,16 @@ Guide:
 https://central.sonatype.org/pages/ossrh-guide.html
 
 (~/.m2/settings.xml will include maven password and gpg password)
+
+Known errors:
+
+* command get_passphrase failed: Inappropriate ioctl for device
+You should set yout GPG_TTY variable for it to work, as in [this document](https://www.gnupg.org/documentation/manuals/gnupg/Invoking-GPG_002dAGENT.html):
+
+```
+GPG_TTY=$(tty)
+export GPG_TTY
+```
+
+[Source: Stackoverflow]
+https://unix.stackexchange.com/questions/257061/gentoo-linux-gpg-encrypts-properly-a-file-passed-through-parameter-but-throws-i/257065#257065
