@@ -41,7 +41,7 @@ public class TestPaperOpenMLBenchmarkSuites extends BaseTestFramework {
 	    filtersOrig.put("number_instances", "100..10000");
 	    filtersOrig.put("number_features", "4..20");
 	    filtersOrig.put("limit", "250");
-	    Tasks tasksOrig = client_write_test.taskList(filtersOrig);
+	    Tasks tasksOrig = openml.taskList(filtersOrig);
 	    
 	    // create the study
 	    Study study = new Study(null, "test", "test", null, tasksOrig.getTaskIds(), null);
@@ -49,9 +49,9 @@ public class TestPaperOpenMLBenchmarkSuites extends BaseTestFramework {
 	    
 	    // until the benchmark suite is activated, we can also add some more tasks. Search for the letter dataset:
 	    Map<String, String> filtersAdd = new TreeMap<String, String>();
-	    filtersAdd.put("name", "letter");
+	    filtersAdd.put("data_name", "letter");
 	    filtersAdd.put("limit", "1");
-	    Tasks tasksAdd = openml.taskList(filtersOrig);
+	    Tasks tasksAdd = openml.taskList(filtersAdd);
 	    openml.studyAttach(studyId, Arrays.asList(tasksAdd.getTaskIds()));
 	    
 	    // or even remove these again
