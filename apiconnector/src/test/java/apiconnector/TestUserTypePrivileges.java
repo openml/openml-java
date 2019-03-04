@@ -40,6 +40,9 @@ import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQuality.Quality;
+
+import testbase.TestBase;
+
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.Flow;
 import org.openml.apiconnector.xml.Run;

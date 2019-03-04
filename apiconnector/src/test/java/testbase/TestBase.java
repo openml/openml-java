@@ -1,4 +1,4 @@
-package apiconnector;
+package testbase;
 
 import org.junit.Before;
 import org.openml.apiconnector.io.OpenmlConnector;

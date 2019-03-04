@@ -54,6 +54,8 @@ import org.openml.apiconnector.xml.TaskInputs;
 import org.openml.apiconnector.xml.Tasks;
 import org.openml.apiconnector.xml.TaskInputs.Input;
 
+import testbase.TestBase;
+
 public class TestTaskFunctions extends TestBase {
 
 	public static final Integer[] TASK_ILLEGAL_INPUT_CODES = {621, 622};

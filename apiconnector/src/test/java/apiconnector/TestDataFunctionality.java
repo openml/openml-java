@@ -70,6 +70,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import testbase.TestBase;
+
 public class TestDataFunctionality extends TestBase {
 	public static final String data_file = "data/iris.arff";
 	private static final int probe = 61;

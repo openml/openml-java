@@ -47,6 +47,8 @@ import org.openml.apiconnector.xml.FlowTag;
 import org.openml.apiconnector.xml.FlowUntag;
 import org.openml.apiconnector.xml.Parameter;
 
+import testbase.TestBase;
+
 public class TestFlowFunctionality extends TestBase {
 	private static final int probe = 10;
 	

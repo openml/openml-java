@@ -12,6 +12,8 @@ import org.openml.apiconnector.xml.StudyAttach;
 import org.openml.apiconnector.xml.StudyDetach;
 import org.openml.apiconnector.xml.StudyList;
 
+import testbase.TestBase;
+
 public class TestStudyFunctions extends TestBase {
 	
 	@Test

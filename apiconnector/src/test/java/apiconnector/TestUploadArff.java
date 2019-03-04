@@ -14,6 +14,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import org.junit.Test;
 import org.openml.apiconnector.xml.DataSetDescription;
 
+import testbase.TestBase;
+
 public class TestUploadArff extends TestBase {
 	
 	private static final String DATASETPATH = "data" + File.separator + "arff_test" + File.separator;
