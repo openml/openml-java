@@ -54,11 +54,12 @@ import org.openml.apiconnector.xml.Parameter;
 import org.openml.apiconnector.xml.SetupParameters;
 import org.openml.apiconnector.xml.Study;
 
-public class PlotCsvGenerator {
+import testbase.TestBase;
 
-	private static final String key_read = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f";
-	private static final String url = "https://www.openml.org/";
-	private static final OpenmlConnector openml = new OpenmlConnector(url, key_read);
+public class PlotCsvGenerator extends TestBase {
+	
+	// alias
+	protected static final OpenmlConnector openml = client_read_live;
 	
 	private static final int evaluationLimit = 100;
 	
