@@ -1060,6 +1060,34 @@ public class OpenmlBasicConnector implements Serializable {
 		}
 	}
 	
+	/**
+	 * Returns a list of predictions on which two setups disagree
+	 * 
+	 * @param setupA - a setup id
+	 * @param setupB - a setup id
+	 * @param task_id - the task id
+	 * @param task_size - // TODO
+	 * @param differences // TODO
+	 * @return a list with predictions that differ between the setups
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
+	 */
+	public SetupDifferences setupDifferences(int setupA, int setupB, int task_id, int task_size, int differences) throws Exception {
+		MultipartEntity params = new MultipartEntity();
+		params.addPart("task_id", new StringBody("" + task_id));
+		params.addPart("task_size", new StringBody("" + task_size));
+		params.addPart("differences", new StringBody("" + differences));
+
+		URL request = new URL(OPENML_URL + API_PART + "setup/differences/" + setupA + "/" + setupB);
+		Object apiResult = HttpConnector.doApiRequest(request, params, getApiKey(), verboseLevel);
+		if (apiResult instanceof SetupDifferences) {
+			return (SetupDifferences) apiResult;
+		} else {
+			throw new DataFormatException("Casting Api Object to SetupDifferences");
+		}
+	}
+	
 	public FileUpload fileUpload(File file) throws Exception {
 		MultipartEntity params = new MultipartEntity();
 		if (verboseLevel >= Constants.VERBOSE_LEVEL_ARFF) {

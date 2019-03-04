@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Map;
 
 import org.openml.apiconnector.algorithms.Conversion;
+import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataSetDescription;
@@ -22,7 +23,12 @@ public class OpenmlConnector extends OpenmlBasicConnector {
 	private static final long serialVersionUID = -2063937610741462487L;
 
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
-
+	
+	public OpenmlConnector() {
+		this.OPENML_URL = Settings.BASE_URL;
+		this.api_key = null;
+	}
+	
 	public OpenmlConnector(String url, String api_key) {
 		this.OPENML_URL = url;
 		this.api_key = api_key;
