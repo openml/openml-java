@@ -10,6 +10,8 @@ https://oss.sonatype.org/
 
 Guide:
 https://central.sonatype.org/pages/ossrh-guide.html
+Apache Maven Section:
+https://central.sonatype.org/pages/apache-maven.html
 
 (~/.m2/settings.xml will include maven password and gpg password)
 
