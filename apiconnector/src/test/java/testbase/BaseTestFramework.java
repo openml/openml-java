@@ -7,7 +7,8 @@ import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 import com.thoughtworks.xstream.XStream;
 
-public class TestBase {
+// important that name does not start with test
+public class BaseTestFramework {
 	
 	protected static final String url_test = "https://test.openml.org/";
 	protected static final String url_live = "https://www.openml.org/";

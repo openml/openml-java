@@ -12,9 +12,9 @@ import org.openml.apiconnector.xml.StudyAttach;
 import org.openml.apiconnector.xml.StudyDetach;
 import org.openml.apiconnector.xml.StudyList;
 
-import testbase.TestBase;
+import testbase.BaseTestFramework;
 
-public class TestStudyFunctions extends TestBase {
+public class TestStudyFunctions extends BaseTestFramework {
 	
 	@Test
 	public void testApiGetStudy() throws Exception {

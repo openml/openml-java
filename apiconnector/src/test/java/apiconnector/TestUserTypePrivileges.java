@@ -41,7 +41,7 @@ import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQuality.Quality;
 
-import testbase.TestBase;
+import testbase.BaseTestFramework;
 
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.Flow;
@@ -50,7 +50,7 @@ import org.openml.apiconnector.xml.RunEvaluation;
 import org.openml.apiconnector.xml.RunTrace;
 import org.openml.apiconnector.xml.TaskInputs;
 
-public class TestUserTypePrivileges extends TestBase {
+public class TestUserTypePrivileges extends BaseTestFramework {
 
 	private static final String data_file = "data/iris.arff";
 	

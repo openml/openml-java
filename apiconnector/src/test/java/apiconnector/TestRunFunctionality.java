@@ -53,9 +53,9 @@ import org.openml.apiconnector.xml.RunTag;
 import org.openml.apiconnector.xml.RunUntag;
 import org.openml.apiconnector.xml.Task;
 
-import testbase.TestBase;
+import testbase.BaseTestFramework;
 
-public class TestRunFunctionality extends TestBase {
+public class TestRunFunctionality extends BaseTestFramework {
 	private static final int classif_task_id = 67;
 	private static final int curve_task_id = 763; // anneal
 	private static final int num_repeats = 1;

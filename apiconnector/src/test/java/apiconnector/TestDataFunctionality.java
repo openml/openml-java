@@ -70,9 +70,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import testbase.TestBase;
+import testbase.BaseTestFramework;
 
-public class TestDataFunctionality extends TestBase {
+public class TestDataFunctionality extends BaseTestFramework {
 	public static final String data_file = "data/iris.arff";
 	private static final int probe = 61;
 	private static final String tag = "junittest";

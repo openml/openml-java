@@ -47,9 +47,9 @@ import org.openml.apiconnector.xml.FlowTag;
 import org.openml.apiconnector.xml.FlowUntag;
 import org.openml.apiconnector.xml.Parameter;
 
-import testbase.TestBase;
+import testbase.BaseTestFramework;
 
-public class TestFlowFunctionality extends TestBase {
+public class TestFlowFunctionality extends BaseTestFramework {
 	private static final int probe = 10;
 	
 	private static final String tag = "junittest";
