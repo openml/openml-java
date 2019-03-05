@@ -41,12 +41,12 @@ public class TestCacheFunctions extends BaseTestFramework {
 		for (String s : suffix) {
 			File checkExists = HttpCacheController.getCacheLocation(new URL(openml.getApiUrl()), s);
 			assertTrue(checkExists.exists());
-
-			// redo the calls, to check all cache operations work fine
-			openml.dataGet(did);
-			openml.dataFeatures(did);
-			openml.datasetGet(dsd);
 		}
+
+		// redo the calls, to check all cache operations work fine
+		openml.dataGet(did);
+		openml.dataFeatures(did);
+		openml.datasetGet(dsd);
 	}
 	
 	private static void utilTaskCache(OpenmlConnector openml, int taskId) throws Exception {
@@ -72,10 +72,11 @@ public class TestCacheFunctions extends BaseTestFramework {
 		for (String s : suffix) {
 			File checkExists = HttpCacheController.getCacheLocation(new URL(openml.getApiUrl()), s);
 			assertTrue(checkExists.exists());
-			// redo the calls, to check all cache operations work fine
-			openml.taskGet(taskId);
-			openml.taskSplitsGet(task);
 		}
+		
+		// redo the calls, to check all cache operations work fine
+		openml.taskGet(taskId);
+		openml.taskSplitsGet(task);
 	}
 	
 	@Test
@@ -90,13 +91,11 @@ public class TestCacheFunctions extends BaseTestFramework {
 	
 	@Test
 	public void testTaskLive() throws Exception {
-		client_read_live.setVerboseLevel(1);
 		utilTaskCache(client_read_live, 59);
 	}
 	
 	@Test
 	public void testTaskTest() throws Exception {
-		client_read_test.setVerboseLevel(1);
 		utilTaskCache(client_read_test, 115);
 	}
 }
