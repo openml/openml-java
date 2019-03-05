@@ -436,7 +436,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public Task taskGet(int task_id) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "task" + task_id);
+		URL request = new URL(OPENML_URL + API_PART + "task/" + task_id);
 		String cacheSuffix = "tasks/" + task_id + "/task.xml";
 		Object apiResult = HttpCacheController.doApiGetRequest(request, cacheSuffix, getApiKey(), verboseLevel);
 		return (Task) apiResult;
