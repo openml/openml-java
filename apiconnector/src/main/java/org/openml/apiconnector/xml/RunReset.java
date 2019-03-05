@@ -30,7 +30,8 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-public class RunReset {
+public class RunReset extends OpenmlApiResponse {
+	private static final long serialVersionUID = 6640122538117983252L;
 	private Integer run_id;
 
 	public Integer getRun_id() {

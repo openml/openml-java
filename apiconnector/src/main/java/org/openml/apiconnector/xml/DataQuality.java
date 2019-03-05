@@ -33,19 +33,15 @@ package org.openml.apiconnector.xml;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("oml:data_qualities")
-public class DataQuality {
-
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
+public class DataQuality extends OpenmlApiResponse {
 	
+	private static final long serialVersionUID = 8312794451463544627L;
+
 	@XStreamAlias("oml:did")
 	private Integer did;
 
@@ -101,10 +97,6 @@ public class DataQuality {
 			qm.put(q.getName(), q.getValue());
 		}
 		return qm;
-	}
-
-	public String getOml() {
-		return oml;
 	}
 	
 	@Override

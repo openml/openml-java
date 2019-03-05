@@ -1,17 +1,11 @@
 package org.openml.apiconnector.xml;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 @XStreamAlias("oml:study_attach")
-public class StudyAttach {
-
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
-
+public class StudyAttach extends OpenmlApiResponse {
+	
+	private static final long serialVersionUID = 2684468069381731009L;
 	@XStreamAlias("oml:id")
 	private Integer id;
 	@XStreamAlias("oml:main_entity_type")

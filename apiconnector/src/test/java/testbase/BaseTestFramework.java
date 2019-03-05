@@ -24,6 +24,8 @@ public class BaseTestFramework {
 	@Before
     public void setup() {
 		Settings.CACHE_ALLOWED = false;
+		// for the functions that do use cache
+		Settings.CACHE_DIRECTORY = System.getProperty("user.home") + "/.openml_test/cache";
 		
 		if (VERBOSE) {
 			client_admin_test.setVerboseLevel(1);

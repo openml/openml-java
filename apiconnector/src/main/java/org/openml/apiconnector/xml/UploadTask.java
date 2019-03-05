@@ -30,7 +30,8 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-public class UploadTask {
+public class UploadTask extends OpenmlApiResponse {
+	private static final long serialVersionUID = 9165010121016289952L;
 	private Integer id;
 
 	public Integer getId() {

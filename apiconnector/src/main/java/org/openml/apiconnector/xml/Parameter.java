@@ -2,8 +2,10 @@ package org.openml.apiconnector.xml;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-public class Parameter {
+public class Parameter extends OpenmlApiResponse {
 	
+	private static final long serialVersionUID = 6386061353669118704L;
+
 	@XStreamAlias("oml:id")
 	private Integer id;
 	

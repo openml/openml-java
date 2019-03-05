@@ -33,18 +33,13 @@ package org.openml.apiconnector.xml;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("oml:setup_parameters")
-public class SetupParameters {
+public class SetupParameters extends OpenmlApiResponse {
 	
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
+	private static final long serialVersionUID = 8541218101490265115L;
 
 	@XStreamAlias("oml:flow_id")
 	private Integer flow_id;

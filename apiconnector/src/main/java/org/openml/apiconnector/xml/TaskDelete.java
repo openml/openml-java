@@ -30,7 +30,9 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-public class TaskDelete {
+public class TaskDelete extends OpenmlApiResponse {
+	
+	private static final long serialVersionUID = 9202660737159210565L;
 	
 	private Integer id;
 

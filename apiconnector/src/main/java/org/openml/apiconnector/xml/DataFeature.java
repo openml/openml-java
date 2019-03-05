@@ -33,18 +33,13 @@ package org.openml.apiconnector.xml;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("oml:data_features")
-public class DataFeature {
-
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
+public class DataFeature extends OpenmlApiResponse {
+	
+	private static final long serialVersionUID = 3681258334457732632L;
 
 	@XStreamAlias("oml:did")
 	private Integer did;
@@ -100,10 +95,6 @@ public class DataFeature {
 			fm.put(f.name, f);
 		}
 		return fm;
-	}
-
-	public String getOml() {
-		return oml;
 	}
 
 	@XStreamAlias("oml:feature")

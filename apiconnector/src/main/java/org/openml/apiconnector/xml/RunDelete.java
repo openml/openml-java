@@ -30,7 +30,9 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-public class RunDelete {
+public class RunDelete extends OpenmlApiResponse {
+	
+	private static final long serialVersionUID = 4926926044103730340L;
 	private Integer id;
 	
 	public Integer getId() {

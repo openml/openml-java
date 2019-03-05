@@ -35,11 +35,9 @@ import org.openml.apiconnector.settings.Constants;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
-public class EvaluationScore {
+public class EvaluationScore extends OpenmlApiResponse {
 	
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
+	private static final long serialVersionUID = -3786385994391724119L;
 
 	@XStreamAlias("oml:name")
 	private final String function;

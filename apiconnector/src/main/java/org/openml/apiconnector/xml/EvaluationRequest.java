@@ -30,18 +30,13 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("oml:evaluation_request")
-public class EvaluationRequest {
-
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
+public class EvaluationRequest extends OpenmlApiResponse {
+	
+	private static final long serialVersionUID = 5161739903220247192L;
 	
 	@XStreamImplicit(itemFieldName="oml:run")
 	private Run[] run;

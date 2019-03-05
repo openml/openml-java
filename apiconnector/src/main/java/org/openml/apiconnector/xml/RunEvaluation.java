@@ -31,18 +31,14 @@
 package org.openml.apiconnector.xml;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.openml.apiconnector.settings.Constants;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("oml:run_evaluation")
-public class RunEvaluation {
+public class RunEvaluation extends OpenmlApiResponse {
 	
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
+	private static final long serialVersionUID = 5192479094469645440L;
 
 	@XStreamAlias("oml:run_id")
 	private Integer run_id;
@@ -100,10 +96,6 @@ public class RunEvaluation {
 		} else {
 			this.warning = warning.substring(0, max_length - truncateMessage.length()) + truncateMessage;
 		}
-	}
-	
-	public String getOml() {
-		return oml;
 	}
 
 	public Integer getRun_id() {

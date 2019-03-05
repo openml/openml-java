@@ -30,22 +30,16 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("oml:flow_tag")
-public class FlowTag {
-
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
+public class FlowTag extends OpenmlApiResponse {
+	
+	private static final long serialVersionUID = -3214043893337869409L;
 
 	@XStreamAlias("oml:id")
 	private Integer id;
-	
 
 	@XStreamImplicit(itemFieldName="oml:tag")
 	private String[] tag;

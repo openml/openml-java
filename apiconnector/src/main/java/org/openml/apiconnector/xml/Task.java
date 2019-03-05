@@ -40,7 +40,6 @@ import java.util.TreeMap;
 
 import org.json.JSONArray;
 import org.openml.apiconnector.io.OpenmlBasicConnector;
-import org.openml.apiconnector.settings.Constants;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
@@ -50,12 +49,8 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 
 @XStreamAlias("oml:task")
-public class Task implements Serializable {
+public class Task extends OpenmlApiResponse {
 	private static final long serialVersionUID = 987612341009L;
-
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
 	
 	@XStreamAlias("oml:task_id")
 	private Integer task_id;
@@ -106,10 +101,6 @@ public class Task implements Serializable {
 				return true;
 		}
 		return false;
-	}
-	
-	public String getOml() {
-		return oml;
 	}
 
 	public Integer getTask_id() {

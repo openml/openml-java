@@ -30,17 +30,13 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 @XStreamAlias("oml:error")
-public class ApiError {
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
-
+public class ApiError extends OpenmlApiResponse {
+	
+	private static final long serialVersionUID = -6770232667442215942L;
+	
 	@XStreamAlias("oml:code")
 	private String code;
 	@XStreamAlias("oml:message")
@@ -48,9 +44,6 @@ public class ApiError {
 	@XStreamAlias("oml:additional_information")
 	private String additional_information;
 	
-	public String getOml() {
-		return oml;
-	}
 	public String getCode() {
 		return code;
 	}

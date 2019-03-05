@@ -30,26 +30,18 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("oml:data_qualities_list")
-public class DataQualityList {
-
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
-
+public class DataQualityList extends OpenmlApiResponse  {
+	
+	private static final long serialVersionUID = -1741300186340650362L;
+	
 	@XStreamImplicit
 	@XStreamAlias("oml:quality")
 	private String[] quality;
 	
-	public String getOml() {
-		return oml;
-	}
 	public String[] getQualities() {
 		return quality;
 	}

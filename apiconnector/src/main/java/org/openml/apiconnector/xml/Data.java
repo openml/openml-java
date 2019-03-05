@@ -33,8 +33,6 @@ package org.openml.apiconnector.xml;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
@@ -42,19 +40,14 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 
 @XStreamAlias("oml:data")
-public class Data {
-
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
-
+public class Data extends OpenmlApiResponse {
+	
+	private static final long serialVersionUID = 2150044241560166358L;
+	
 	@XStreamImplicit
 	@XStreamAlias("oml:dataset")
 	private DataSet[] data;
 	
-	public String getOml() {
-		return oml;
-	}
 	public DataSet[] getData() {
 		return data;
 	}

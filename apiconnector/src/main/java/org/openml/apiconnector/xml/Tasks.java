@@ -30,8 +30,6 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
@@ -39,19 +37,13 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 
 @XStreamAlias("oml:tasks")
-public class Tasks {
-
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
-
+public class Tasks extends OpenmlApiResponse {
+	
+	private static final long serialVersionUID = 2316014161824675013L;
+	
 	@XStreamImplicit
 	@XStreamAlias("oml:task")
 	public Task[] task;
-	
-	public String getOml() {
-		return oml;
-	}
 
 	public Task[] getTask() {
 		return task;
