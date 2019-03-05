@@ -61,7 +61,18 @@ public class HttpConnector implements Serializable {
 
 	private static final long serialVersionUID = -8589069573065947493L;
 
-	public static Object doApiRequest(URL url, MultipartEntity entity, String ash, int apiVerboseLevel)
+	/**
+	 * Performs a HTTP post call
+	 * 
+	 * @param url - The URL to do the request on
+	 * @param entity - The post variables
+	 * @param ash - api key to authenticate
+	 * @param apiVerboseLevel - for verbosity
+	 * @return Object - string response wrapped as object
+	 * @throws Exception
+	 *             - Can be: server down, problem with URL, etc
+	 */
+	public static Object doApiPostRequest(URL url, MultipartEntity entity, String ash, int apiVerboseLevel)
 			throws Exception {
 		if (ash == null) {
 			throw new Exception("Api key not set. ");
@@ -74,7 +85,17 @@ public class HttpConnector implements Serializable {
 		return wrapHttpResponse(response, url, "POST", apiVerboseLevel);
 	}
 
-	public static Object doApiRequest(URL url, String ash, int apiVerboseLevel) throws Exception {
+	/**
+	 * Performs a HTTP get call
+	 * 
+	 * @param url - The URL to do the request on
+	 * @param ash - api key to authenticate
+	 * @param apiVerboseLevel - for verbosity
+	 * @return Object - string response wrapped as object
+	 * @throws Exception
+	 *             - Can be: server down, problem with URL, etc
+	 */
+	public static Object doApiGetRequest(URL url, String ash, int apiVerboseLevel) throws Exception {
 		if (ash != null) {
 			url = new URL(url + "?api_key=" + ash);
 		}
@@ -83,8 +104,18 @@ public class HttpConnector implements Serializable {
 		CloseableHttpResponse response = httpclient.execute(httpget);
 		return wrapHttpResponse(response, url, "GET", apiVerboseLevel);
 	}
-
-	public static Object doApiDelete(URL url, String ash, int apiVerboseLevel) throws Exception {
+	
+	/**
+	 * Performs a HTTP delete call
+	 * 
+	 * @param url - The URL to do the request on
+	 * @param ash - api key to authenticate
+	 * @param apiVerboseLevel - for verbosity
+	 * @return Object - string response wrapped as object
+	 * @throws Exception
+	 *             - Can be: server down, problem with URL, etc
+	 */
+	public static Object doApiDeleteRequest(URL url, String ash, int apiVerboseLevel) throws Exception {
 		if (ash == null) {
 			throw new Exception("Api key not set. ");
 		}
@@ -102,33 +133,15 @@ public class HttpConnector implements Serializable {
 	 *            - The URL to obtain
 	 * @param extension
 	 *            - Extension to give temp file
-	 * @param accept_all - whether to accept results with status code other than 200
 	 * @return File - a pointer to the file that was saved.
 	 * @throws Exception
 	 *             - Can be: server down, problem with URL, etc
 	 */
-	public static File getTempFileFromUrl(URL url, String extension, boolean accept_all) throws Exception {
-		return getFileFromUrl(url, null, extension, accept_all);
-	}
-
-	
-	/**
-	 * Returns a file from the openml server
-	 * 
-	 * @param url
-	 *            - The URL to obtain
-	 * @param filepath
-	 *            - path to save the file
-	 * @param accept_all - whether to accept results with status code other than 200
-	 * @return File - a pointer to the file that was saved.
-	 * @throws Exception
-	 *             - Can be: server down, problem with URL, etc
-	 */
-	public static File getFileFromUrl(URL url, String filepath, boolean accept_all) throws Exception {
-		return getFileFromUrl(url, filepath, null, accept_all);
+	public static File getTempFileFromUrl(URL url, String extension) throws Exception {
+		return getFileFromUrl(url, null, extension);
 	}
 	
-	private static File getFileFromUrl(URL url, String filepath, String extension, boolean accept_all) throws Exception {
+	protected static File getFileFromUrl(URL url, String filepath, String extension) throws Exception {
 		File file;
 		if (filepath == null && extension != null) {
 			file = File.createTempFile("openml-", extension);
@@ -144,8 +157,8 @@ public class HttpConnector implements Serializable {
         HttpResponse response = httpClient.execute(httpget);
         
         int code = response.getStatusLine().getStatusCode();
-		if (!accept_all && code != HttpStatus.SC_OK) {
-			throw new IOException("Problem getting URL, status " + code + ": " + url);
+		if (code != HttpStatus.SC_OK) {
+			throw new IOException("Problem getting File from URL, status " + code + ": " + url);
 		}
         HttpEntity entity = response.getEntity();
         if (entity.getContentLength() == 0) {
@@ -178,7 +191,7 @@ public class HttpConnector implements Serializable {
 		return apiResult;
 	}
 
-	protected static String readHttpResponse(CloseableHttpResponse response, URL url, String requestType,
+	private static String readHttpResponse(CloseableHttpResponse response, URL url, String requestType,
 			int apiVerboseLevel) throws Exception {
 		String result = "";
 		HttpEntity resEntity = response.getEntity();
@@ -192,10 +205,7 @@ public class HttpConnector implements Serializable {
 				throw new IOException("An exception has occured while reading data input stream. ");
 			}
 		} finally {
-			try {
-				response.close();
-			} catch (Exception ignore) {
-			}
+			response.close();
 		}
 		if (apiVerboseLevel >= Constants.VERBOSE_LEVEL_XML) {
 			System.out.println("===== REQUEST URI (" + requestType + "): " + url + " (Status Code: " + code
@@ -205,7 +215,7 @@ public class HttpConnector implements Serializable {
 	}
 
 	@Deprecated
-	protected static String httpEntitiToString(HttpEntity resEntity) throws IOException {
+	private static String httpEntitiToString(HttpEntity resEntity) throws IOException {
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(new InputStreamReader(resEntity.getContent()), writer);
 		return writer.toString();
