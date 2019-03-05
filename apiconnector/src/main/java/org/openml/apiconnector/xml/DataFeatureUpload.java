@@ -35,7 +35,7 @@ import org.openml.apiconnector.settings.Constants;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
-@XStreamAlias("oml:data_feature_upload")
+@XStreamAlias("oml:data_features_upload")
 public class DataFeatureUpload {
 	@XStreamAsAttribute
 	@XStreamAlias("xmlns:oml")
