@@ -24,8 +24,9 @@ public class HttpCacheController extends HttpConnector {
 	 * Performs a HTTP get call, and caches it locally, if allowed
 	 * 
 	 * @param url - The URL to do the request on
-	 * @param ash - api key to authenticate
+	 * @param cacheSuffix - where to store this file in the cache tree
 	 * @param apiVerboseLevel - for verbosity
+	 * @param ash - api key to authenticate
 	 * @return Object - string response wrapped as object
 	 * @throws Exception
 	 *             - Can be: server down, problem with URL, etc
