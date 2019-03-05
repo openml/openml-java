@@ -49,6 +49,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.xml.ApiError;
@@ -93,16 +94,68 @@ public class HttpConnector implements Serializable {
 		CloseableHttpResponse response = httpclient.execute(httpdelete);
 		return wrapHttpResponse(response, url, "DELETE", apiVerboseLevel);
 	}
+	
+	/**
+	 * Returns a file from the openml server
+	 * 
+	 * @param url
+	 *            - The URL to obtain
+	 * @param extension
+	 *            - Extension to give temp file
+	 * @param accept_all - whether to accept results with status code other than 200
+	 * @return File - a pointer to the file that was saved.
+	 * @throws Exception
+	 *             - Can be: server down, problem with URL, etc
+	 */
+	public static File getTempFileFromUrl(URL url, String extension, boolean accept_all) throws Exception {
+		return getFileFromUrl(url, null, extension, accept_all);
+	}
 
-	public static File getFileFromUrl(URL url, String extension, boolean accept_all) throws Exception {
-		CloseableHttpClient client = HttpClients.createDefault();
-		HttpGet httpget = new HttpGet(url.toString());
-		HttpResponse httpResp = client.execute(httpget);
-		int code = httpResp.getStatusLine().getStatusCode();
+	
+	/**
+	 * Returns a file from the openml server
+	 * 
+	 * @param url
+	 *            - The URL to obtain
+	 * @param filepath
+	 *            - path to save the file
+	 * @param accept_all - whether to accept results with status code other than 200
+	 * @return File - a pointer to the file that was saved.
+	 * @throws Exception
+	 *             - Can be: server down, problem with URL, etc
+	 */
+	public static File getFileFromUrl(URL url, String filepath, boolean accept_all) throws Exception {
+		return getFileFromUrl(url, filepath, null, accept_all);
+	}
+	
+	private static File getFileFromUrl(URL url, String filepath, String extension, boolean accept_all) throws Exception {
+		File file;
+		if (filepath == null && extension != null) {
+			file = File.createTempFile("openml-", extension);
+			file.deleteOnExit();
+		} else if (filepath != null && extension == null) {
+			file = new File(filepath);
+		} else {
+			throw new Exception("set filepath xor extension argument");
+		}
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        // Compared to FileUtils.copyURLToFile this can handle http -> https redirects
+        HttpGet httpget = new HttpGet(url.toURI());
+        HttpResponse response = httpClient.execute(httpget);
+        
+        int code = response.getStatusLine().getStatusCode();
 		if (!accept_all && code != HttpStatus.SC_OK) {
 			throw new IOException("Problem getting URL, status " + code + ": " + url);
 		}
-		return httpEntityToFile(httpResp.getEntity(), extension);
+        HttpEntity entity = response.getEntity();
+        if (entity.getContentLength() == 0) {
+        	throw new ApiException(1, "Webserver returned empty result (possibly due to temporarily high load). Please try again. ");
+        }
+        FileOutputStream fos = new java.io.FileOutputStream(file);
+        entity.writeTo(fos);
+        fos.close();
+        
+		return file;
 	}
 
 	private static Object wrapHttpResponse(CloseableHttpResponse response, URL url, String requestType,
@@ -149,15 +202,6 @@ public class HttpConnector implements Serializable {
 					+ ", Content Length: " + contentLength + ") =====\n" + result + "\n=====\n");
 		}
 		return result;
-	}
-
-	protected static File httpEntityToFile(HttpEntity resEntity, String extension) throws IOException {
-		File tempFile = File.createTempFile("openml-", extension);
-		tempFile.deleteOnExit();
-		FileOutputStream fos = new FileOutputStream(tempFile);
-		resEntity.writeTo(fos);
-		fos.close();
-		return tempFile;
 	}
 
 	@Deprecated

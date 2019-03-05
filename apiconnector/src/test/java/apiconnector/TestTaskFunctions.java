@@ -72,7 +72,7 @@ public class TestTaskFunctions extends BaseTestFramework {
 		URL splitsUrl = TaskInformation.getEstimationProcedure(t).getData_splits_url();
 
 		Integer dataId = TaskInformation.getSourceData(t).getData_set_id();
-		File splitsFile = HttpConnector.getFileFromUrl(splitsUrl, "arff", false);
+		File splitsFile = HttpConnector.getTempFileFromUrl(splitsUrl, "arff", false);
 		String[] splits = Conversion.fileToString(splitsFile).split("\n");
 		DataQuality dq = client_read_test.dataQualities(dataId, null);
 		int numInstances = dq.getQualitiesMap().get("NumberOfInstances").intValue();
