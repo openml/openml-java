@@ -30,7 +30,9 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-public class UploadFlow {
+public class UploadFlow extends OpenmlApiResponse {
+	
+	private static final long serialVersionUID = 2318451355996813652L;
 	private int id;
 
 	public UploadFlow(int id)

@@ -30,7 +30,8 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-public class UploadRun {
+public class UploadRun extends OpenmlApiResponse {
+	private static final long serialVersionUID = 6290123924596475622L;
 	private Integer run_id;
 
 	public UploadRun(int id)

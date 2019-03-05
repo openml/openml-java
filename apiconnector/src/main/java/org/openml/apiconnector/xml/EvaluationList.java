@@ -32,20 +32,13 @@ package org.openml.apiconnector.xml;
 
 import java.io.Serializable;
 
-import org.openml.apiconnector.settings.Constants;
-
-public class EvaluationList {
-
-	private final String oml = Constants.OPENML_XMLNS;
+public class EvaluationList extends OpenmlApiResponse {
 	
+	private static final long serialVersionUID = -1942176708917211568L;
 	private Evaluation[] evaluation;
 
 	public Evaluation[] getEvaluations() {
 		return evaluation;
-	}
-
-	public String getOml() {
-		return oml;
 	}
 
 	public class Evaluation implements Serializable {

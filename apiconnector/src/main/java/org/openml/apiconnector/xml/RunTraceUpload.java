@@ -30,7 +30,8 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-public class RunTraceUpload {
+public class RunTraceUpload extends OpenmlApiResponse {
+	private static final long serialVersionUID = -1160018019729763943L;
 	private Integer run_id;
 
 	public Integer getRun_id() {

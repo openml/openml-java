@@ -30,7 +30,8 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-public class FlowDelete {
+public class FlowDelete extends OpenmlApiResponse {
+	private static final long serialVersionUID = 3109335028343891860L;
 	private Integer id;
 	
 	public Integer getId() {

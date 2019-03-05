@@ -32,16 +32,11 @@ package org.openml.apiconnector.xml;
 
 import java.io.Serializable;
 
-import org.openml.apiconnector.settings.Constants;
-
-public class SetupDifferences {
-	private final String oml = Constants.OPENML_XMLNS;
+public class SetupDifferences extends OpenmlApiResponse {
 	
+	private static final long serialVersionUID = -3970024711279385480L;
 	private Task[] tasks;
 	
-	public String getOml() {
-		return oml;
-	}
 	public Task[] getTasks() {
 		return tasks;
 	}

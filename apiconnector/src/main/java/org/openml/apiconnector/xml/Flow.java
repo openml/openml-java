@@ -34,20 +34,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 import org.apache.commons.lang3.ArrayUtils;
 
 @XStreamAlias("oml:flow")
-public class Flow {
+public class Flow extends OpenmlApiResponse {
 	
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
+	private static final long serialVersionUID = -778554189112252674L;
 
 	@XStreamAlias("oml:id")
 	private Integer id;
@@ -153,10 +148,6 @@ public class Flow {
 		this.installation_notes = installation_notes;
 		this.dependencies = dependencies;
 		this.tag = tag;
-	}
-	
-	public String getOml() {
-		return oml;
 	}
 
 	public Integer getId() {

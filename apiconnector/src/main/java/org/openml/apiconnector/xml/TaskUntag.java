@@ -30,18 +30,13 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("oml:task_untag")
-public class TaskUntag {
-
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
+public class TaskUntag extends OpenmlApiResponse {
+	
+	private static final long serialVersionUID = 1286782590221110240L;
 
 	@XStreamAlias("oml:id")
 	private Integer id;

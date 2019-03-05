@@ -34,12 +34,9 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.openml.apiconnector.settings.Constants;
-
-public class TaskInputs implements Serializable {
+public class TaskInputs extends OpenmlApiResponse  {
 	
 	private static final long serialVersionUID = -313419200748747105L;
-	private final String oml = Constants.OPENML_XMLNS;
 	private Integer task_id;
 	private Integer task_type_id;
 	private Input[] inputs;
@@ -50,10 +47,6 @@ public class TaskInputs implements Serializable {
 		this.task_type_id = task_type_id;
 		this.inputs = inputs;
 		this.tags = tags;
-	}
-	
-	public String getOml() {
-		return oml;
 	}
 	
 	public Integer getTask_id() {

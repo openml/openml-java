@@ -30,22 +30,16 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("oml:data_untag")
-public class DataUntag {
-
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
-
+public class DataUntag extends OpenmlApiResponse {
+	
+	private static final long serialVersionUID = -8232256862432128275L;
+	
 	@XStreamAlias("oml:id")
 	private Integer id;
-	
 
 	@XStreamImplicit(itemFieldName="oml:tag")
 	private String[] tag;

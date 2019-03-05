@@ -30,7 +30,8 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-public class RunEvaluate {
+public class RunEvaluate extends OpenmlApiResponse {
+	private static final long serialVersionUID = -6483627233240229638L;
 	private Integer run_id;
 
 	public Integer getRun_id() {

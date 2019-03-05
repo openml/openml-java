@@ -10,6 +10,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.settings.Config;
 import org.openml.apiconnector.settings.Settings;
+import org.openml.apiconnector.xml.OpenmlApiResponse;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 import com.thoughtworks.xstream.XStream;
@@ -29,14 +30,14 @@ public class HttpCacheController extends HttpConnector {
 	 * @throws Exception
 	 *             - Can be: server down, problem with URL, etc
 	 */
-	public static Object doApiGetRequest(URL url, String cacheSuffix, String ash, int apiVerboseLevel) throws Exception {
+	public static OpenmlApiResponse doApiGetRequest(URL url, String cacheSuffix, String ash, int apiVerboseLevel) throws Exception {
 		File cachedData = getCacheLocation(url, cacheSuffix);
 		if (cachedData.exists() && Settings.CACHE_ALLOWED) {
 			Conversion.log("OK", "Cache", "Obtained from cache: " + cacheSuffix);
-			return xstream.fromXML(cachedData);
+			return (OpenmlApiResponse) xstream.fromXML(cachedData);
 		} else {
 			// do request
-			Object apiResult = HttpConnector.doApiGetRequest(url, ash, apiVerboseLevel);
+			OpenmlApiResponse apiResult = HttpConnector.doApiGetRequest(url, ash, apiVerboseLevel);
 			
 			if (Settings.CACHE_ALLOWED) {
 				// make directories

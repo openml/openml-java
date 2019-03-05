@@ -30,26 +30,17 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 @XStreamAlias("oml:setup_exists")
-public class SetupExists {
+public class SetupExists extends OpenmlApiResponse {
 	
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
-	
+	private static final long serialVersionUID = -6890657210572506284L;
 	@XStreamAlias("oml:exists")
 	private boolean exists;
 	@XStreamAlias("oml:id")
 	private int id;
 	
-	public String getOml() {
-		return oml;
-	}
 	public boolean exists() {
 		return exists;
 	}

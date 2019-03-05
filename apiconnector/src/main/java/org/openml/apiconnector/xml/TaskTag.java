@@ -37,7 +37,9 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("oml:task_tag")
-public class TaskTag {
+public class TaskTag extends OpenmlApiResponse {
+	
+	private static final long serialVersionUID = 452850457017628201L;
 
 	@XStreamAsAttribute
 	@XStreamAlias("xmlns:oml")

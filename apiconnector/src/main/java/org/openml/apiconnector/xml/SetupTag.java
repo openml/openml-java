@@ -30,18 +30,13 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("oml:setup_tag")
-public class SetupTag {
-
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
+public class SetupTag extends OpenmlApiResponse {
+	
+	private static final long serialVersionUID = -2794002522343758664L;
 
 	@XStreamAlias("oml:id")
 	private Integer id;

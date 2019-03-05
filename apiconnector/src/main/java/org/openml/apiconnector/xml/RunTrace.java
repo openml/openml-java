@@ -31,11 +31,10 @@
 package org.openml.apiconnector.xml;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.openml.apiconnector.settings.Constants;
 
-public class RunTrace {
+public class RunTrace extends OpenmlApiResponse {
 	
-	private final String oml = Constants.OPENML_XMLNS;
+	private static final long serialVersionUID = -5644485172727387973L;
 	private Integer run_id;
 	private Trace_iteration[] trace_iterations;
 	
@@ -61,10 +60,6 @@ public class RunTrace {
 	
 	public Trace_iteration[] getTrace_iterations() {
 		return trace_iterations;
-	}
-	
-	public String getOml() {
-		return oml;
 	}
 	
 	public static class Trace_iteration {

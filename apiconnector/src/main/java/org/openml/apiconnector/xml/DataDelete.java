@@ -30,17 +30,13 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 @XStreamAlias("oml:data_delete")
-public class DataDelete {
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
-
+public class DataDelete extends OpenmlApiResponse  {
+	
+	private static final long serialVersionUID = 5425651367459026820L;
+	
 	@XStreamAlias("oml:id")
 	private Integer id;
 

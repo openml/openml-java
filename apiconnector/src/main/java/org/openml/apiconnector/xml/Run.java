@@ -34,21 +34,16 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.xml.Run.Data.File;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("oml:run")
-public class Run {
+public class Run extends OpenmlApiResponse {
 
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
-
+	private static final long serialVersionUID = -7306041664022650554L;
 	@XStreamAlias("oml:run_id")
 	private Integer run_id;
 	@XStreamAlias("oml:uploader")
@@ -86,10 +81,6 @@ public class Run {
 		this.tag = tags;
 		this.output_data = new Data();
 		this.input_data = new Data();
-	}
-
-	public String getOml() {
-		return oml;
 	}
 
 	public int getRun_id() {

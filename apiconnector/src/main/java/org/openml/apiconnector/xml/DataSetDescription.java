@@ -30,23 +30,16 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.openml.apiconnector.settings.Constants;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("oml:data_set_description")
-public class DataSetDescription implements Serializable {
+public class DataSetDescription extends OpenmlApiResponse  {
 	private static final long serialVersionUID = 987612341129L;
-
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
 
 	@XStreamAlias("oml:id")
 	private Integer id;
@@ -183,10 +176,6 @@ public class DataSetDescription implements Serializable {
 		this.row_id_attribute = null;
 		this.default_target_attribute = default_target_attribute;
 		this.md5_checksum = null;
-	}
-
-	public String getOml() {
-		return oml;
 	}
 
 	public Integer getId() {

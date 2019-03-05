@@ -30,7 +30,8 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-public class FileUpload {
+public class FileUpload extends OpenmlApiResponse {
+	private static final long serialVersionUID = -2140238931933782984L;
 	private Integer id;
 	private String url;
 	

@@ -30,17 +30,12 @@
  ******************************************************************************/
 package org.openml.apiconnector.xml;
 
-import org.openml.apiconnector.settings.Constants;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 @XStreamAlias("oml:data_reset")
-public class DataReset {
-	@XStreamAsAttribute
-	@XStreamAlias("xmlns:oml")
-	private final String oml = Constants.OPENML_XMLNS;
-
+public class DataReset extends OpenmlApiResponse  {
+	
+	private static final long serialVersionUID = 328776373622717107L;
 	@XStreamAlias("oml:id")
 	private Integer id;
 

@@ -53,6 +53,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.openml.apiconnector.settings.Constants;
 import org.openml.apiconnector.xml.ApiError;
+import org.openml.apiconnector.xml.OpenmlApiResponse;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 import com.thoughtworks.xstream.XStream;
@@ -72,7 +73,7 @@ public class HttpConnector implements Serializable {
 	 * @throws Exception
 	 *             - Can be: server down, problem with URL, etc
 	 */
-	public static Object doApiPostRequest(URL url, MultipartEntity entity, String ash, int apiVerboseLevel)
+	public static OpenmlApiResponse doApiPostRequest(URL url, MultipartEntity entity, String ash, int apiVerboseLevel)
 			throws Exception {
 		if (ash == null) {
 			throw new Exception("Api key not set. ");
@@ -95,7 +96,7 @@ public class HttpConnector implements Serializable {
 	 * @throws Exception
 	 *             - Can be: server down, problem with URL, etc
 	 */
-	public static Object doApiGetRequest(URL url, String ash, int apiVerboseLevel) throws Exception {
+	public static OpenmlApiResponse doApiGetRequest(URL url, String ash, int apiVerboseLevel) throws Exception {
 		if (ash != null) {
 			url = new URL(url + "?api_key=" + ash);
 		}
@@ -115,7 +116,7 @@ public class HttpConnector implements Serializable {
 	 * @throws Exception
 	 *             - Can be: server down, problem with URL, etc
 	 */
-	public static Object doApiDeleteRequest(URL url, String ash, int apiVerboseLevel) throws Exception {
+	public static OpenmlApiResponse doApiDeleteRequest(URL url, String ash, int apiVerboseLevel) throws Exception {
 		if (ash == null) {
 			throw new Exception("Api key not set. ");
 		}
@@ -171,7 +172,7 @@ public class HttpConnector implements Serializable {
 		return file;
 	}
 
-	private static Object wrapHttpResponse(CloseableHttpResponse response, URL url, String requestType,
+	private static OpenmlApiResponse wrapHttpResponse(CloseableHttpResponse response, URL url, String requestType,
 			int apiVerboseLevel) throws Exception {
 		String result = readHttpResponse(response, url, requestType, apiVerboseLevel);
 		if (result.length() == 0) {
@@ -179,7 +180,7 @@ public class HttpConnector implements Serializable {
 					"Webserver returned empty result (possibly due to temporarily high load). Please try again. ");
 		}
 		XStream xstreamClient = XstreamXmlMapping.getInstance();
-		Object apiResult = xstreamClient.fromXML(result);
+		OpenmlApiResponse apiResult = (OpenmlApiResponse) xstreamClient.fromXML(result);
 		if (apiResult instanceof ApiError) {
 			ApiError apiError = (ApiError) apiResult;
 			String message = apiError.getMessage();
