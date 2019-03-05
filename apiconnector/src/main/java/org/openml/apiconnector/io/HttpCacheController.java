@@ -33,7 +33,7 @@ public class HttpCacheController extends HttpConnector {
 		File cachedData = getCacheLocation(url, cacheSuffix);
 		if (cachedData.exists() && Settings.CACHE_ALLOWED) {
 			Conversion.log("OK", "Cache", "Obtained from cache: " + cacheSuffix);
-			return cachedData;
+			return xstream.fromXML(cachedData);
 		} else {
 			// do request
 			Object apiResult = HttpConnector.doApiGetRequest(url, ash, apiVerboseLevel);

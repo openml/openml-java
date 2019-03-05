@@ -39,8 +39,13 @@ public class TestCacheFunctions extends BaseTestFramework {
 		openml.datasetGet(dsd);
 		
 		for (String s : suffix) {
-			File toRemove = HttpCacheController.getCacheLocation(new URL(openml.getApiUrl()), s);
-			assertTrue(toRemove.exists());
+			File checkExists = HttpCacheController.getCacheLocation(new URL(openml.getApiUrl()), s);
+			assertTrue(checkExists.exists());
+
+			// redo the calls, to check all cache operations work fine
+			openml.dataGet(did);
+			openml.dataFeatures(did);
+			openml.datasetGet(dsd);
 		}
 	}
 	
@@ -65,8 +70,11 @@ public class TestCacheFunctions extends BaseTestFramework {
 		openml.taskSplitsGet(task);
 		
 		for (String s : suffix) {
-			File toRemove = HttpCacheController.getCacheLocation(new URL(openml.getApiUrl()), s);
-			assertTrue(toRemove.exists());
+			File checkExists = HttpCacheController.getCacheLocation(new URL(openml.getApiUrl()), s);
+			assertTrue(checkExists.exists());
+			// redo the calls, to check all cache operations work fine
+			openml.taskGet(taskId);
+			openml.taskSplitsGet(task);
 		}
 	}
 	
