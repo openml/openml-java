@@ -40,8 +40,8 @@ import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -155,11 +155,12 @@ public class HttpConnector implements Serializable {
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         // Compared to FileUtils.copyURLToFile this can handle http -> https redirects
         HttpGet httpget = new HttpGet(url.toURI());
-        HttpResponse response = httpClient.execute(httpget);
+        CloseableHttpResponse response = httpClient.execute(httpget);
         
         int code = response.getStatusLine().getStatusCode();
 		if (code != HttpStatus.SC_OK) {
-			throw new IOException("Problem getting File from URL, status " + code + ": " + url);
+			String responseString = readHttpResponse(response, url, "get File", 0);
+			throw new HttpResponseException(code, responseString);
 		}
         HttpEntity entity = response.getEntity();
         if (entity.getContentLength() == 0) {

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.net.URL;
 
+import org.apache.http.client.HttpResponseException;
 import org.junit.Test;
 import org.openml.apiconnector.io.HttpCacheController;
 import org.openml.apiconnector.io.OpenmlConnector;
@@ -97,5 +98,13 @@ public class TestCacheFunctions extends BaseTestFramework {
 	@Test
 	public void testTaskTest() throws Exception {
 		utilTaskCache(client_read_test, 115);
+	}
+	
+	@Test(expected=HttpResponseException.class)
+	public void testCacheRejectsOnError() throws Exception {
+		Integer illegalTaskId = 999999;
+		URL illigalSplits = new URL(url_test + "/api_splits/get/" + illegalTaskId + "/Task_" + illegalTaskId + "_splits.arff");
+		String suffix = "tasks/" + illegalTaskId + "/datasplits.arff";
+		HttpCacheController.getCachedFileFromUrl(illigalSplits, suffix);
 	}
 }
