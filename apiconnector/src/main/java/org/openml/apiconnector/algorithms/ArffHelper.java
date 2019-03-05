@@ -59,7 +59,7 @@ public class ArffHelper {
 		if(Settings.CACHE_ALLOWED) {
 			return Caching.cacheFile(url, type, identifier, extension);
 		} else {
-			return HttpConnector.getFileFromUrl(url, extension, false);
+			return HttpConnector.getTempFileFromUrl(url, extension, false);
 		}
 	}
 }

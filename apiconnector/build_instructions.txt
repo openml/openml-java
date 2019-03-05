@@ -10,8 +10,13 @@ https://oss.sonatype.org/
 
 Guide:
 https://central.sonatype.org/pages/ossrh-guide.html
+Apache Maven Section:
+https://central.sonatype.org/pages/apache-maven.html
 
-(~/.m2/settings.xml will include maven password and gpg password)
+Basically, the following requirements need to be met:
+* POM.xml requires a distributionManagement tag with servers
+* Settings file requires username / password for all servers (~/.m2/settings.xml)
+* GPG key should be available on the system (can be refered to in settings file)
 
 Known errors:
 

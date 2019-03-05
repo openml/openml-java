@@ -5,8 +5,8 @@
 
   <groupId>org.openml</groupId>
   <artifactId>apiconnector</artifactId>
-  <version>1.0.21-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <version>1.0.22-SNAPSHOT</version>
+  <packaging>jar</packaging> 
 
   <name>APIConnector</name>
   <description>Ancestor for API connector libraries for specific frameworks.</description>
@@ -252,6 +252,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.1.0</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
