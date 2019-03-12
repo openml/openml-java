@@ -349,6 +349,9 @@ public class Task extends OpenmlApiResponse {
 					
 				}
 			}
+			@XStreamAlias("oml:id")
+			private int id;
+			
 			@XStreamAlias("oml:type")
 			private EstimationProcedureType type;
 
@@ -358,6 +361,9 @@ public class Task extends OpenmlApiResponse {
 			@XStreamImplicit(itemFieldName="oml:parameter")
 			private Parameter[] parameters;
 			
+			public int getId() {
+				return id;
+			}
 			
 			public EstimationProcedureType getType() {
 				return type;
