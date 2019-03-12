@@ -482,7 +482,6 @@ public class OpenmlBasicConnector implements Serializable {
 	public File taskSplitsGet(Task task) throws Exception {
 		String cacheSuffix = "tasks/" + task.getTask_id() + "/datasplits.arff";
 		Estimation_procedure ep = TaskInformation.getEstimationProcedure(task);
-		System.out.println(ep.getData_splits_url());
 		return HttpCacheController.getCachedFileFromUrl(ep.getData_splits_url(), cacheSuffix);
 	}
 	
