@@ -65,6 +65,9 @@ public class TestTaskFunctions extends BaseTestFramework {
 	@Test
 	public void testApiAdditional() throws Exception {
 		Task t = client_read_test.taskGet(taskId);
+		
+		int epId = TaskInformation.getEstimationProcedure(t).getId();
+		client_read_test.estimationProcedureGet(epId);
 
 		TaskInputs ti = client_read_test.taskInputs(taskId);
 		assertTrue(ti.getInputsAsMap().size() > 2);

@@ -427,6 +427,34 @@ public class OpenmlBasicConnector implements Serializable {
 	}
 	
 	/**
+	 * Downloads an estimation procedure from OpenML
+	 * 
+	 * @param id - the estimation procedure id
+	 * @return an estimation procedure object
+	 * @throws Exception - Can be: IOException (problem with connection, server),
+	 *                   ApiException (contains error code, see OpenML
+	 *                   documentation)
+	 */
+	public EstimationProcedure estimationProcedureGet(int id) throws Exception {
+		URL request = new URL(OPENML_URL + API_PART + "estimationprocedure/" + id);
+		String cacheSuffix = "estimationprocedure/" + id + "/estimationprocedure.xml";
+		Object apiResult = HttpCacheController.doApiGetRequest(request, cacheSuffix, getApiKey(), verboseLevel);
+		return (EstimationProcedure) apiResult;
+	}
+	
+	/**
+	 * The list of all estimation procedures
+	 * 
+	 * @return An object containing several estimation procedures
+	 * @throws Exception
+	 */
+	public EstimationProcedures estimationProcedureList() throws Exception {
+		URL request = new URL(OPENML_URL + API_PART + "estimationprocedure/list");
+		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
+		return (EstimationProcedures) apiResult;
+	}
+	
+	/**
 	 * Downloads the task description
 	 * 
 	 * @param task_id - The numeric id of the task to be obtained.
@@ -440,7 +468,6 @@ public class OpenmlBasicConnector implements Serializable {
 		String cacheSuffix = "tasks/" + task_id + "/task.xml";
 		Object apiResult = HttpCacheController.doApiGetRequest(request, cacheSuffix, getApiKey(), verboseLevel);
 		return (Task) apiResult;
-		
 	}
 
 	/**

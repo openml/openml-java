@@ -349,8 +349,11 @@ public class Task extends OpenmlApiResponse {
 					
 				}
 			}
+			@XStreamAlias("oml:id")
+			private int id;
+			
 			@XStreamAlias("oml:type")
-			private String type;
+			private EstimationProcedureType type;
 
 			@XStreamAlias("oml:data_splits_url")
 			private String data_splits_url;
@@ -358,8 +361,11 @@ public class Task extends OpenmlApiResponse {
 			@XStreamImplicit(itemFieldName="oml:parameter")
 			private Parameter[] parameters;
 			
+			public int getId() {
+				return id;
+			}
 			
-			public String getType() {
+			public EstimationProcedureType getType() {
 				return type;
 			}
 

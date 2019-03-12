@@ -42,6 +42,8 @@ import org.openml.apiconnector.xml.DataReset;
 import org.openml.apiconnector.xml.DataTag;
 import org.openml.apiconnector.xml.DataUnprocessed;
 import org.openml.apiconnector.xml.DataUntag;
+import org.openml.apiconnector.xml.EstimationProcedure;
+import org.openml.apiconnector.xml.EstimationProcedures;
 import org.openml.apiconnector.xml.EvaluationList;
 import org.openml.apiconnector.xml.EvaluationRequest;
 import org.openml.apiconnector.xml.EvaluationScore;
@@ -119,6 +121,9 @@ public class XstreamXmlMapping {
 		xstream.processAnnotations(DataQualityUpload.class);
 		xstream.processAnnotations(DataStatusUpdate.class);
 		xstream.processAnnotations(UploadDataSet.class);
+		
+		xstream.processAnnotations(EstimationProcedure.class);
+		xstream.processAnnotations(EstimationProcedures.class);
 		
 		xstream.processAnnotations(TaskTag.class);
 		xstream.processAnnotations(TaskUntag.class);
