@@ -32,6 +32,7 @@ package org.openml.apiconnector.xml;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
@@ -53,6 +54,14 @@ public class DataFeature extends OpenmlApiResponse {
 	@XStreamImplicit
 	@XStreamAlias("oml:feature")
 	private Feature[] features;
+	
+	public Map<String, Feature> getFeaturesAsMap() {
+		Map<String, Feature> features = new TreeMap<String, DataFeature.Feature>();
+		for (Feature f : getFeatures()) {
+			features.put(f.getName(), f);
+		}
+		return features;
+	}
 
 	public DataFeature(Integer did, Integer evaluation_engine_id, Feature[] features) {
 		this.did = did;
