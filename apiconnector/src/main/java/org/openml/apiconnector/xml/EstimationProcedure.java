@@ -30,6 +30,18 @@ public class EstimationProcedure extends OpenmlApiResponse {
 
 	@XStreamAlias("oml:stratified_sampling")
 	private String stratifiedSampling;
+	
+	public EstimationProcedure(int id, int ttid, String name, EstimationProcedureType type, Integer repeats,
+			Integer folds, Integer percentage, String stratifiedSampling) {
+		this.id = id;
+		this.ttid = ttid;
+		this.name = name;
+		this.type = type;
+		this.repeats = repeats;
+		this.folds = folds;
+		this.percentage = percentage;
+		this.stratifiedSampling = stratifiedSampling;
+	}
 
 	public int getId() {
 		return id;
