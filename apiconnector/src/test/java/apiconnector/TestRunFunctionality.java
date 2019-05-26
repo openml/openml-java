@@ -84,6 +84,7 @@ public class TestRunFunctionality extends BaseTestFramework {
 	@Test
 	public void testApiRunList() throws Exception {
 		List<Integer> uploaderFilter = new ArrayList<Integer>();
+		uploaderFilter.add(1);
 		uploaderFilter.add(16);
 		
 		Map<String, List<Integer>> filters = new HashMap<String, List<Integer>>();

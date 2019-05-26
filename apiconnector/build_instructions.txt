@@ -1,7 +1,7 @@
 
 To compile using Maven (mvn): 
 
-mvn clean release:clean release:prepare release:perform
+mvn -X clean release:clean release:prepare release:perform -Dusername=janvanrijn -Dpassword=...
 
 To release on maven central, go to:
 
@@ -17,8 +17,40 @@ Basically, the following requirements need to be met:
 * POM.xml requires a distributionManagement tag with servers
 * Settings file requires username / password for all servers (~/.m2/settings.xml)
 * GPG key should be available on the system (can be refered to in settings file)
+* GPG key should be available on key server (e.g., using `gpg --keyserver keys.gnupg.net --send-keys KEY_ID`)
+can be checked with `gpg -vvvv --keyserver "keys.gnupg.net" --recv-keys "KEY_ID"`
+
+A typical settings.xml file can look like this:
+
+```
+<settings>
+  <servers>
+    <server>
+      <id>sonatype-nexus-staging</id>
+      <username>janvanrijn</username>
+      <password>HERE_THE_SONATYPE_PASSWORD</password>
+    </server>
+  </servers>
+  <profiles>
+    <profile>
+      <id>sonatype-nexus-staging</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <gpg.executable>gpg2</gpg.executable>
+        <gpg.passphrase>HERE_THE_GPG_PASSWORD</gpg.passphrase>
+      </properties>
+    </profile>
+  </profiles>
+</settings>
+```
 
 Known errors:
+
+* JAVA_HOME needs to be set
+Can find Java alternatives by running `sudo update-alternatives --config java`
+Omit bin directory (e.g., `export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64`)
 
 * command get_passphrase failed: Inappropriate ioctl for device
 You should set yout GPG_TTY variable for it to work, as in [this document](https://www.gnupg.org/documentation/manuals/gnupg/Invoking-GPG_002dAGENT.html):
