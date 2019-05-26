@@ -20,6 +20,10 @@ Basically, the following requirements need to be met:
 
 Known errors:
 
+* JAVA_HOME needs to be set
+Can find Java alternatives by running `sudo update-alternatives --config java`
+Omit bin directory (e.g., `export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64`)
+
 * command get_passphrase failed: Inappropriate ioctl for device
 You should set yout GPG_TTY variable for it to work, as in [this document](https://www.gnupg.org/documentation/manuals/gnupg/Invoking-GPG_002dAGENT.html):
 
