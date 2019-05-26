@@ -17,6 +17,8 @@ Basically, the following requirements need to be met:
 * POM.xml requires a distributionManagement tag with servers
 * Settings file requires username / password for all servers (~/.m2/settings.xml)
 * GPG key should be available on the system (can be refered to in settings file)
+* GPG key should be available on key server (e.g., using `gpg --keyserver keys.gnupg.net --send-keys KEY_ID`)
+can be checked with `gpg -vvvv --keyserver "keys.gnupg.net" --recv-keys "KEY_ID"`
 
 A typical settings.xml file can look like this:
 
