@@ -1,7 +1,7 @@
 
 To compile using Maven (mvn): 
 
-mvn clean release:clean release:prepare release:perform
+mvn -X clean release:clean release:prepare release:perform -Dusername=janvanrijn -Dpassword=...
 
 To release on maven central, go to:
 
