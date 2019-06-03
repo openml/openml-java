@@ -51,6 +51,22 @@ public class Data extends OpenmlApiResponse {
 	public DataSet[] getData() {
 		return data;
 	}
+	
+	public Integer[] getIds() {
+		Integer[] ids = new Integer[data.length];
+		for (int i = 0; i < data.length; ++i) {
+			ids[i] = data[i].did;
+		}
+		return ids;
+	}
+	
+	public String[] getNames() {
+		String[] names = new String[data.length];
+		for (int i = 0; i < data.length; ++i) {
+			names[i] = data[i].name;
+		}
+		return names;
+	}
 
 	@XStreamAlias("oml:dataset")
 	public static class DataSet {
