@@ -90,11 +90,11 @@
       </properties>
     </profile>
 	
-    	<profile>
+    <profile>
 	    <id>sonar</id>
   	    <properties>
     	        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    	        <sonar.organization>mwever-github</sonar.organization>
+    	        <sonar.organization>openml</sonar.organization>
   	    </properties>
   	    <build>
     	        <plugins>
