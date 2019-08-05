@@ -11,7 +11,7 @@ addons:
     sonarcloud:
         organization: "openml"
 
-script: mvn clean verify -P sonar -Dsonar.login=$SONAR_LOGIN_TOKEN
+script: mvn clean verify -P sonar:sonar "-Dsonar.login=$SONAR_LOGIN_TOKEN"
 
 deploy:
   provider: pages
