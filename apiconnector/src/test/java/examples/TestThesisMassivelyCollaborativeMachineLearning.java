@@ -79,7 +79,6 @@ public class TestThesisMassivelyCollaborativeMachineLearning extends BaseTestFra
 	}
 	
 	@Test
-	@Ignore
 	public void testFlowsOnTaks() throws Exception {
 		int taskId = 6;
 		String measure = "predictive_accuracy";
@@ -90,7 +89,6 @@ public class TestThesisMassivelyCollaborativeMachineLearning extends BaseTestFra
 	}
 	
 	@Test
-	@Ignore
 	public void testHyperparameterEffect() throws Exception {
 		Integer[] taskIds = {6, 21, 28, 41, 58};
 		Integer[] setupIds = {8920, 8921, 8922, 8923, 8924, 8925, 8926, 8927, 8929, 8930, 8932, 8937, 8938};
