@@ -95,7 +95,7 @@ public class TaskInformation {
 				return t.getInputs()[i].getData_set();
 			}
 		}
-		throw new Exception("Task does not define an estimation procedure (task_id="+t.getTask_id()+")");
+		throw new Exception("Task does not define a source data field (task_id="+t.getTask_id()+")");
 	}
 	
 	/**
