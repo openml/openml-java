@@ -189,7 +189,7 @@ public class TestRunFunctionality extends BaseTestFramework {
 		Map<String, String> filters = new TreeMap<String, String>();
 		Integer[] ttids = {3,4};
 		String ttidString = Arrays.toString(ttids).replaceAll(" ", "").replaceAll("\\[", "").replaceAll("\\]", "");
-		int numRequests = 100;
+		int numRequests = 25;
 		filters.put("ttid", ttidString);
 		EvaluationRequest er = client_admin_test.evaluationRequest(42, "random", numRequests, filters);
 		assertTrue(er.getRuns().length == numRequests);
