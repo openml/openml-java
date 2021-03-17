@@ -86,7 +86,7 @@ public class DataSetDescription extends OpenmlApiResponse  {
 	@XStreamAlias("oml:row_id_attribute")
 	private String row_id_attribute;
 
-	@XStreamImplicit(itemFieldName = "ignore_attribute")
+	@XStreamImplicit(itemFieldName = "oml:ignore_attribute")
 	private String[] ignore_attribute;
 
 	@XStreamAlias("oml:version_label")
