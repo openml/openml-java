@@ -119,9 +119,19 @@ public class TestFlowFunctionality extends BaseTestFramework {
 				"test should be deleted", "english", "UnitTest"));
 		created.addParameter(new Parameter("test_p", "option", "bla", "more bla"));
 		created.setCustom_name("Jans flow");
-
-		int flowId = client_write_test.flowUpload(created);
-
+		int flowId = -1;
+		try {
+			 flowId = client_write_test.flowUpload(created);
+		} catch (ApiException e) {
+			if (e.getCode() == 171) {
+				String idStr = e.getMessage().substring(e.getMessage().lastIndexOf(":") + 1);
+				flowId = Integer.parseInt(idStr);
+				client_admin_test.flowDelete(flowId);
+				fail("Flow was still on server, will be deleted now.");
+			} else {
+				fail("Flow was still on server, failed to delete it.");
+			}
+		}
 		try {
 			client_write_test.flowUpload(created);
 			fail("Test failed, flow upload should have been blocked.");

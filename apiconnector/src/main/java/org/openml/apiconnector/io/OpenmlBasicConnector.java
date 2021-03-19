@@ -102,6 +102,15 @@ public class OpenmlBasicConnector implements Serializable {
 	}
 
 	/**
+	 * Returns the Base URL. 
+	 * 
+	 * @return api url (server)
+	 */
+	public String getBaseUrl(){
+		return OPENML_URL;
+	}
+	
+	/**
 	 * Returns the total API URL. 
 	 * 
 	 * @return api url (server plus api part)

@@ -177,6 +177,23 @@ public class TestTaskFunctions extends BaseTestFramework {
 	}
 	
 	@Test
+	public void testAvoidInactiveDatasetClustering() throws Exception {
+		// clustering task is more complex test case, since the dataset does not need to be processed. 
+		File toUpload = new File(TestDataFunctionality.data_file);
+		DataSetDescription dsd = new DataSetDescription("test", "Unit test should be deleted", "arff", "class");
+		int dataId = client_write_test.dataUpload(dsd, toUpload);
+		
+		Input[] inputs = new Input[2];
+		inputs[0] = new Input("estimation_procedure", "17");
+		inputs[1] = new Input("source_data", "" + dataId);
+		
+		try {
+			client_write_test.taskUpload(new TaskInputs(null, 5, inputs, null));
+			fail("Should not be able to upload task.");
+		} catch(Exception e) { }
+	}
+	
+	@Test
 	public void testCreateChallengeTask() throws Exception {
 		Input[] inputs = new Input[4];
 		inputs[0] = new Input("estimation_procedure", "18");
