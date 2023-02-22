@@ -63,7 +63,7 @@ public class OpenmlBasicConnector implements Serializable {
 	
 	protected String OPENML_URL = Settings.BASE_URL;
 	
-	protected String API_PART = "api_new/v1/";
+	protected String API_PART = "api/v1/";
 	
 	/**
 	 * @return Return the api key that is used to authenticate with
