@@ -19,7 +19,10 @@
  */
 package apiconnector;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -46,11 +49,13 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.ApiException;
 import org.openml.apiconnector.io.HttpConnector;
 import org.openml.apiconnector.xml.Data;
+import org.openml.apiconnector.xml.Data.DataSet;
 import org.openml.apiconnector.xml.DataDelete;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
@@ -60,11 +65,10 @@ import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.DataTag;
 import org.openml.apiconnector.xml.DataUntag;
 import org.openml.apiconnector.xml.TaskDelete;
+import org.openml.apiconnector.xml.TaskInputs;
+import org.openml.apiconnector.xml.TaskInputs.Input;
 import org.openml.apiconnector.xml.TaskTag;
 import org.openml.apiconnector.xml.TaskUntag;
-import org.openml.apiconnector.xml.TaskInputs;
-import org.openml.apiconnector.xml.Data.DataSet;
-import org.openml.apiconnector.xml.TaskInputs.Input;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -75,8 +79,10 @@ import testbase.BaseTestFramework;
 public class TestDataFunctionality extends BaseTestFramework {
 	public static final String data_file = "data/iris.arff";
 	private static final int probe = 61;
+	private static final int probe_ignore_attribute = 44;
 	private static final String tag = "junittest";
 	
+	@Ignore // while working on MinIo, the dataset layout might change slightly. hard to check
 	@Test
 	public void testApiDataDownload() throws Exception {
 		DataSetDescription dsd = client_read_test.dataGet(probe);
@@ -103,12 +109,18 @@ public class TestDataFunctionality extends BaseTestFramework {
 			System.out.println(dsdFromConnector);
 		}
 		
-		assertTrue(dsdFromOpenml.equals(dsdFromConnector));
+		assertEquals(dsdFromOpenml, dsdFromConnector);
 		
 		// very easy checks, should all pass
 		assertTrue(dsd.getId() == probe);
 		assertTrue(features.getFeatures().length > 0);
 		assertTrue(qualities.getQualities().length > 0);
+	}
+
+	@Test
+	public void testIgnoreAttributeNotEmpty() throws Exception {
+		DataSetDescription dsd = client_read_test.dataGet(probe_ignore_attribute);
+		assertTrue(dsd.getIgnore_attribute().length > 0);
 	}
 	
 	@Test
