@@ -99,6 +99,9 @@ public class XstreamXmlMapping {
 	
 	public static XStream getInstance(ClassLoaderReference clr) {
 		XStream xstream = new XStream(null,new DomDriver("UTF-8", new NoNameCoder()), clr);
+		xstream.allowTypesByWildcard(new String[] { 
+		        "org.openml.apiconnector.xml.**",
+		});
 		xstream.registerConverter(new EmptyDoubleConverter());
 		xstream.processAnnotations(ApiError.class);
 		
