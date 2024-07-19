@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (C) 2017, Jan N. van Rijn <j.n.van.rijn@liacs.leidenuniv.nl>
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -59,26 +59,26 @@ public class OpenmlBasicConnector implements Serializable {
 	 */
 	protected int verboseLevel = 0;
 	
-	protected String api_key = null;
+	protected String apiKey = null;
 	
-	protected String OPENML_URL = Settings.BASE_URL;
+	protected String openmlUrl = Settings.BASE_URL;
 	
-	protected String API_PART = "api/v1/";
+	protected String apiPart = "api/v1/";
 	
 	/**
 	 * @return Return the api key that is used to authenticate with
 	 */
 	public String getApiKey() {
-		return api_key;
+		return apiKey;
 	}
 
 	/**
 	 * Updates the api key
-	 * 
+	 *
 	 * @param api_key - the api key
 	 */
-	public void setApiKey(String api_key) { 
-		this.api_key = api_key;
+	public void setApiKey(String api_key) {
+		this.apiKey = api_key;
 	}
 	
 	/**
@@ -107,7 +107,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @return api url (server)
 	 */
 	public String getBaseUrl(){
-		return OPENML_URL;
+		return openmlUrl;
 	}
 	
 	/**
@@ -116,7 +116,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @return api url (server plus api part)
 	 */
 	public String getApiUrl(){
-		return OPENML_URL + API_PART;
+		return openmlUrl + apiPart;
 	}
 
 
@@ -145,7 +145,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public DataSetDescription dataGet(int did) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "data/" + did);
+		URL request = new URL(openmlUrl + apiPart + "data/" + did);
 		String cacheSuffix = "datasets/" + did + "/description.xml";
 		Object apiResult = HttpCacheController.doApiGetRequest(request, cacheSuffix, getApiKey(), verboseLevel);
 		return (DataSetDescription) apiResult;
@@ -187,7 +187,7 @@ public class OpenmlBasicConnector implements Serializable {
 		if (dataset != null) {
 			params.addPart("dataset", new FileBody(dataset));
 		}
-		URL request = new URL(OPENML_URL + API_PART + "data/");
+		URL request = new URL(openmlUrl + apiPart + "data/");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (UploadDataSet) apiResult;
 	}
@@ -202,7 +202,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public DataDelete dataDelete(int did) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "data/" + did);
+		URL request = new URL(openmlUrl + apiPart + "data/" + did);
 		Object apiResult = HttpConnector.doApiDeleteRequest(request, getApiKey(), verboseLevel);
 		return (DataDelete) apiResult;
 	}
@@ -217,7 +217,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public DataReset dataReset(int did) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "data/reset/" + did);
+		URL request = new URL(openmlUrl + apiPart + "data/reset/" + did);
 		MultipartEntity params = new MultipartEntity();
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (DataReset) apiResult;
@@ -238,7 +238,7 @@ public class OpenmlBasicConnector implements Serializable {
 		params.addPart("data_id", new StringBody("" + did));
 		params.addPart("status", new StringBody(status));
 		
-		URL request = new URL(OPENML_URL + API_PART + "data/status/update");
+		URL request = new URL(openmlUrl + apiPart + "data/status/update");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (DataStatusUpdate) apiResult;
 	}
@@ -258,7 +258,7 @@ public class OpenmlBasicConnector implements Serializable {
 		params.addPart("data_id", new StringBody("" + id));
 		params.addPart("tag", new StringBody(tag));
 		
-		URL request = new URL(OPENML_URL + API_PART + "data/tag");
+		URL request = new URL(openmlUrl + apiPart + "data/tag");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (DataTag) apiResult;
 	}
@@ -278,7 +278,7 @@ public class OpenmlBasicConnector implements Serializable {
 		params.addPart("data_id", new StringBody("" + id));
 		params.addPart("tag", new StringBody(tag));
 		
-		URL request = new URL(OPENML_URL + API_PART + "data/untag");
+		URL request = new URL(openmlUrl + apiPart + "data/untag");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		
 		return (DataUntag) apiResult;
@@ -295,7 +295,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public DataFeature dataFeatures(int did) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "data/features/" + did);
+		URL request = new URL(openmlUrl + apiPart + "data/features/" + did);
 		String cacheSuffix = "datasets/" + did + "/features.xml";
 		Object apiResult = HttpCacheController.doApiGetRequest(request, cacheSuffix, getApiKey(), verboseLevel);
 		return (DataFeature) apiResult;
@@ -317,7 +317,7 @@ public class OpenmlBasicConnector implements Serializable {
 				suffix += filter + "/" + filters.get(filter) + "/";
 			}
 		}
-		URL request = new URL(OPENML_URL + API_PART + "data/list/" + suffix);
+		URL request = new URL(openmlUrl + apiPart + "data/list/" + suffix);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		return (Data) apiResult;
 	}
@@ -338,7 +338,7 @@ public class OpenmlBasicConnector implements Serializable {
 			suffix += "/" + evalEngine;
 		}
 		
-		URL request = new URL(OPENML_URL + API_PART + suffix);
+		URL request = new URL(openmlUrl + apiPart + suffix);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 
 		return (DataQuality) apiResult;
@@ -352,7 +352,7 @@ public class OpenmlBasicConnector implements Serializable {
 			System.out.println(Conversion.fileToString(description) + "\n==========\n");
 		}
 
-		URL request = new URL(OPENML_URL + API_PART + "data/features");
+		URL request = new URL(openmlUrl + apiPart + "data/features");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		
 		return (DataFeatureUpload) apiResult;
@@ -362,7 +362,7 @@ public class OpenmlBasicConnector implements Serializable {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
 
-		URL request = new URL(OPENML_URL + API_PART + "data/qualities");
+		URL request = new URL(openmlUrl + apiPart + "data/qualities");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (DataQualityUpload) apiResult;
 	}
@@ -376,7 +376,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public DataQualityList dataQualitiesList() throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "data/qualities/list");
+		URL request = new URL(openmlUrl + apiPart + "data/qualities/list");
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		return (DataQualityList) apiResult;
 	}
@@ -394,7 +394,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 */
 	public DataUnprocessed dataUnprocessed(int evaluationEngineId, String mode) throws Exception {
 		String suffix = "data/unprocessed/" + evaluationEngineId + "/" + mode;
-		URL request = new URL(OPENML_URL + API_PART + suffix);
+		URL request = new URL(openmlUrl + apiPart + suffix);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		return (DataUnprocessed) apiResult;
 	}
@@ -430,7 +430,7 @@ public class OpenmlBasicConnector implements Serializable {
 			suffix += "/" + priorityTag;
 		}
 		
-		URL request = new URL(OPENML_URL + API_PART + suffix);
+		URL request = new URL(openmlUrl + apiPart + suffix);
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (DataUnprocessed) apiResult;
 	}
@@ -445,7 +445,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public EstimationProcedure estimationProcedureGet(int id) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "estimationprocedure/" + id);
+		URL request = new URL(openmlUrl + apiPart + "estimationprocedure/" + id);
 		String cacheSuffix = "estimationprocedure/" + id + "/estimationprocedure.xml";
 		Object apiResult = HttpCacheController.doApiGetRequest(request, cacheSuffix, getApiKey(), verboseLevel);
 		return (EstimationProcedure) apiResult;
@@ -458,7 +458,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 * @throws Exception
 	 */
 	public EstimationProcedures estimationProcedureList() throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "estimationprocedure/list");
+		URL request = new URL(openmlUrl + apiPart + "estimationprocedure/list");
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		return (EstimationProcedures) apiResult;
 	}
@@ -473,7 +473,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public Task taskGet(int task_id) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "task/" + task_id);
+		URL request = new URL(openmlUrl + apiPart + "task/" + task_id);
 		String cacheSuffix = "tasks/" + task_id + "/task.xml";
 		Object apiResult = HttpCacheController.doApiGetRequest(request, cacheSuffix, getApiKey(), verboseLevel);
 		return (Task) apiResult;
@@ -504,7 +504,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public TaskInputs taskInputs(int task_id) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "task/inputs/" + task_id);
+		URL request = new URL(openmlUrl + apiPart + "task/inputs/" + task_id);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		return (TaskInputs) apiResult;
 	}
@@ -524,7 +524,7 @@ public class OpenmlBasicConnector implements Serializable {
 				suffix += filter + "/" + filters.get(filter) + "/";
 			}
 		}
-		URL request = new URL(OPENML_URL + API_PART + suffix);
+		URL request = new URL(openmlUrl + apiPart + suffix);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		return (Tasks) apiResult;
 	}
@@ -539,7 +539,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public TaskDelete taskDelete(int task_id) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "task/" + task_id);
+		URL request = new URL(openmlUrl + apiPart + "task/" + task_id);
 		Object apiResult = HttpConnector.doApiDeleteRequest(request, getApiKey(), verboseLevel);
 		return (TaskDelete) apiResult;
 	}
@@ -548,7 +548,7 @@ public class OpenmlBasicConnector implements Serializable {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
 		
-		URL request = new URL(OPENML_URL + API_PART + "task/");
+		URL request = new URL(openmlUrl + apiPart + "task/");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (UploadTask) apiResult;
 	}
@@ -568,7 +568,7 @@ public class OpenmlBasicConnector implements Serializable {
 		params.addPart("task_id", new StringBody("" + id));
 		params.addPart("tag", new StringBody(tag));
 		
-		URL request = new URL(OPENML_URL + API_PART + "task/tag");
+		URL request = new URL(openmlUrl + apiPart + "task/tag");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		
 		return (TaskTag) apiResult;
@@ -589,7 +589,7 @@ public class OpenmlBasicConnector implements Serializable {
 		params.addPart("task_id", new StringBody("" + id));
 		params.addPart("tag", new StringBody(tag));
 		
-		URL request = new URL(OPENML_URL + API_PART + "task/untag");
+		URL request = new URL(openmlUrl + apiPart + "task/untag");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		
 		return (TaskUntag) apiResult;
@@ -605,7 +605,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public Flow flowGet(int flow_id) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "flow/" + flow_id);
+		URL request = new URL(openmlUrl + apiPart + "flow/" + flow_id);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		return (Flow) apiResult;
 	}
@@ -626,7 +626,7 @@ public class OpenmlBasicConnector implements Serializable {
 		params.addPart("flow_id", new StringBody("" + id));
 		params.addPart("tag", new StringBody(tag));
 		
-		URL request = new URL(OPENML_URL + API_PART + "flow/tag");
+		URL request = new URL(openmlUrl + apiPart + "flow/tag");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		
 		return (FlowTag) apiResult;
@@ -647,7 +647,7 @@ public class OpenmlBasicConnector implements Serializable {
 		params.addPart("flow_id", new StringBody("" + id));
 		params.addPart("tag", new StringBody(tag));
 		
-		URL request = new URL(OPENML_URL + API_PART + "flow/untag");
+		URL request = new URL(openmlUrl + apiPart + "flow/untag");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		
 		return (FlowUntag) apiResult;
@@ -665,13 +665,13 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public FlowDelete flowDelete(int id) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "flow/" + id);
+		URL request = new URL(openmlUrl + apiPart + "flow/" + id);
 		Object apiResult = HttpConnector.doApiDeleteRequest(request, getApiKey(), verboseLevel);
 		return (FlowDelete) apiResult;
 	}
 	
 	public FlowDelete flowForceDelete(int id) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "flow/" + id + "/force");
+		URL request = new URL(openmlUrl + apiPart + "flow/" + id + "/force");
 		Object apiResult = HttpConnector.doApiDeleteRequest(request, getApiKey(), verboseLevel);
 		return (FlowDelete) apiResult;
 	}
@@ -693,7 +693,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public FlowExists flowExists(String name, String external_version) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "flow/exists/" + name + "/" + external_version);
+		URL request = new URL(openmlUrl + apiPart + "flow/exists/" + name + "/" + external_version);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		return (FlowExists) apiResult;
 	}
@@ -706,7 +706,7 @@ public class OpenmlBasicConnector implements Serializable {
 		if (binary != null)
 			params.addPart("binary", new FileBody(binary));
 
-		URL request = new URL(OPENML_URL + API_PART + "flow");
+		URL request = new URL(openmlUrl + apiPart + "flow");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (UploadFlow) apiResult;
 	}
@@ -743,7 +743,7 @@ public class OpenmlBasicConnector implements Serializable {
 			}
 		}
 		
-		URL request = new URL(OPENML_URL + API_PART + "run/");
+		URL request = new URL(openmlUrl + apiPart + "run/");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (UploadRun) apiResult;
 	}
@@ -774,7 +774,7 @@ public class OpenmlBasicConnector implements Serializable {
 			suffix += "/offset/" + offset;
 		}
 		
-		URL request = new URL(OPENML_URL + API_PART + "run/list" + suffix);
+		URL request = new URL(openmlUrl + apiPart + "run/list" + suffix);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		return (RunList) apiResult;
 	}
@@ -807,7 +807,7 @@ public class OpenmlBasicConnector implements Serializable {
 			suffix += "/limit/" + limit;
 		}
 		
-		URL request = new URL(OPENML_URL + API_PART + "evaluation/list" + suffix);
+		URL request = new URL(openmlUrl + apiPart + "evaluation/list" + suffix);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		return (EvaluationList) apiResult;
 	}
@@ -820,7 +820,7 @@ public class OpenmlBasicConnector implements Serializable {
 			}
 		}
 		
-		URL request = new URL(OPENML_URL + API_PART + suffix);
+		URL request = new URL(openmlUrl + apiPart + suffix);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		return (EvaluationRequest) apiResult;
 	}
@@ -839,7 +839,7 @@ public class OpenmlBasicConnector implements Serializable {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("run_id", new StringBody("" + id));
 		params.addPart("tag", new StringBody(tag));
-		URL request = new URL(OPENML_URL + API_PART + "run/tag");
+		URL request = new URL(openmlUrl + apiPart + "run/tag");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (RunTag) apiResult;
 	}
@@ -860,7 +860,7 @@ public class OpenmlBasicConnector implements Serializable {
 		params.addPart("run_id", new StringBody("" + id));
 		params.addPart("tag", new StringBody(tag));
 		
-		URL request = new URL(OPENML_URL + API_PART + "run/untag");
+		URL request = new URL(openmlUrl + apiPart + "run/untag");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (RunUntag) apiResult;
 	}
@@ -869,7 +869,7 @@ public class OpenmlBasicConnector implements Serializable {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("description", new FileBody(description));
 
-		URL request = new URL(OPENML_URL + API_PART + "run/evaluate");
+		URL request = new URL(openmlUrl + apiPart + "run/evaluate");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (RunEvaluate) apiResult;
 	}
@@ -887,7 +887,7 @@ public class OpenmlBasicConnector implements Serializable {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("trace", new FileBody(trace));
 
-		URL request = new URL(OPENML_URL + API_PART + "run/trace");
+		URL request = new URL(openmlUrl + apiPart + "run/trace");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (RunTraceUpload) apiResult;
 	}
@@ -903,7 +903,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 */
 	public RunTrace runTrace(int trace_id) throws Exception {
 
-		URL request = new URL(OPENML_URL + API_PART + "run/trace/" + trace_id);
+		URL request = new URL(openmlUrl + apiPart + "run/trace/" + trace_id);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		return (RunTrace) apiResult;
 	}
@@ -918,7 +918,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public Run runGet(int runId) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "run/" + runId);
+		URL request = new URL(openmlUrl + apiPart + "run/" + runId);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		return (Run) apiResult;
 	}
@@ -934,7 +934,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public RunDelete runDelete(int id) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "run/" + id);
+		URL request = new URL(openmlUrl + apiPart + "run/" + id);
 		Object apiResult = HttpConnector.doApiDeleteRequest(request, getApiKey(), verboseLevel);
 		return (RunDelete) apiResult;
 	}
@@ -950,7 +950,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public RunReset runReset(int run_id) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "run/reset/" + run_id);
+		URL request = new URL(openmlUrl + apiPart + "run/reset/" + run_id);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		return (RunReset) apiResult;
 	}
@@ -970,7 +970,7 @@ public class OpenmlBasicConnector implements Serializable {
 			System.out.println(Conversion.fileToString(description) + "\n==========");
 		}
 		params.addPart("description", new FileBody(description));
-		URL request = new URL(OPENML_URL + API_PART + "setup/exists");
+		URL request = new URL(openmlUrl + apiPart + "setup/exists");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (SetupExists) apiResult;
 	}
@@ -985,7 +985,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public SetupParameters setupParameters(int setup_id) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "setup/" + setup_id);
+		URL request = new URL(openmlUrl + apiPart + "setup/" + setup_id);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		return (SetupParameters) apiResult;
 	}
@@ -1005,7 +1005,7 @@ public class OpenmlBasicConnector implements Serializable {
 		params.addPart("setup_id", new StringBody("" + id));
 		params.addPart("tag", new StringBody(tag));
 		
-		URL request = new URL(OPENML_URL + API_PART + "setup/tag");
+		URL request = new URL(openmlUrl + apiPart + "setup/tag");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (SetupTag) apiResult;
 	}
@@ -1025,7 +1025,7 @@ public class OpenmlBasicConnector implements Serializable {
 		params.addPart("setup_id", new StringBody("" + id));
 		params.addPart("tag", new StringBody(tag));
 		
-		URL request = new URL(OPENML_URL + API_PART + "setup/untag");
+		URL request = new URL(openmlUrl + apiPart + "setup/untag");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		return (SetupUntag) apiResult;
 	}
@@ -1042,7 +1042,7 @@ public class OpenmlBasicConnector implements Serializable {
 	 *                   documentation)
 	 */
 	public SetupDelete setupDelete(int id) throws Exception {
-		URL request = new URL(OPENML_URL + API_PART + "setup/" + id);
+		URL request = new URL(openmlUrl + apiPart + "setup/" + id);
 		Object apiResult = HttpConnector.doApiDeleteRequest(request, getApiKey(), verboseLevel);
 		return (SetupDelete) apiResult;
 	}
@@ -1064,7 +1064,7 @@ public class OpenmlBasicConnector implements Serializable {
 			suffix += "/" + task_id;
 		}
 		
-		URL request = new URL(OPENML_URL + API_PART + "setup/differences/" + suffix);
+		URL request = new URL(openmlUrl + apiPart + "setup/differences/" + suffix);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		if (apiResult instanceof SetupDifferences) {
 			return (SetupDifferences) apiResult;
@@ -1092,7 +1092,7 @@ public class OpenmlBasicConnector implements Serializable {
 		params.addPart("task_size", new StringBody("" + task_size));
 		params.addPart("differences", new StringBody("" + differences));
 
-		URL request = new URL(OPENML_URL + API_PART + "setup/differences/" + setupA + "/" + setupB);
+		URL request = new URL(openmlUrl + apiPart + "setup/differences/" + setupA + "/" + setupB);
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		if (apiResult instanceof SetupDifferences) {
 			return (SetupDifferences) apiResult;
@@ -1108,7 +1108,7 @@ public class OpenmlBasicConnector implements Serializable {
 		}
 		params.addPart("file", new FileBody(file));
 
-		URL request = new URL(OPENML_URL + API_PART + "file/upload");
+		URL request = new URL(openmlUrl + apiPart + "file/upload");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		if (apiResult instanceof FileUpload) {
 			return (FileUpload) apiResult;
@@ -1121,7 +1121,7 @@ public class OpenmlBasicConnector implements Serializable {
 		String suffix = "";
 		if (dataType != null) { suffix += "/" + dataType; }
 		
-		URL request = new URL(OPENML_URL + API_PART + "study/" + studyAlias + suffix);
+		URL request = new URL(openmlUrl + apiPart + "study/" + studyAlias + suffix);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		if (apiResult instanceof Study) {
 			return (Study) apiResult;
@@ -1136,7 +1136,7 @@ public class OpenmlBasicConnector implements Serializable {
 			System.out.println(Conversion.fileToString(description) + "\n==========\n");
 		}
 		params.addPart("description", new FileBody(description));
-		URL request = new URL(OPENML_URL + API_PART + "study/");
+		URL request = new URL(openmlUrl + apiPart + "study/");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		if (apiResult instanceof StudyUpload) {
 			return (StudyUpload) apiResult;
@@ -1152,7 +1152,7 @@ public class OpenmlBasicConnector implements Serializable {
 			suffix += "/" + name + "/" + filters.get(name);
 		}
 		
-		URL request = new URL(OPENML_URL + API_PART + "study/list" + suffix);
+		URL request = new URL(openmlUrl + apiPart + "study/list" + suffix);
 		Object apiResult = HttpConnector.doApiGetRequest(request, getApiKey(), verboseLevel);
 		if (apiResult instanceof StudyList) {
 			return (StudyList) apiResult;
@@ -1165,7 +1165,7 @@ public class OpenmlBasicConnector implements Serializable {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("ids", new StringBody(StringUtils.join(entity_ids, ',')));
 		
-		URL request = new URL(OPENML_URL + API_PART + "study/" + id + "/attach");
+		URL request = new URL(openmlUrl + apiPart + "study/" + id + "/attach");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		if (apiResult instanceof StudyAttach) {
 			return (StudyAttach) apiResult;
@@ -1178,7 +1178,7 @@ public class OpenmlBasicConnector implements Serializable {
 		MultipartEntity params = new MultipartEntity();
 		params.addPart("ids", new StringBody(StringUtils.join(entity_ids, ',')));
 		
-		URL request = new URL(OPENML_URL + API_PART + "study/" + id + "/detach");
+		URL request = new URL(openmlUrl + apiPart + "study/" + id + "/detach");
 		Object apiResult = HttpConnector.doApiPostRequest(request, params, getApiKey(), verboseLevel);
 		if (apiResult instanceof StudyDetach) {
 			return (StudyDetach) apiResult;
@@ -1203,7 +1203,7 @@ public class OpenmlBasicConnector implements Serializable {
 	public URL getOpenmlFileUrl(Integer file_id, String filename, String phpFunction) throws Exception {
 		if (filename == null) {
 			filename = "file"; }
-		String suffix = api_key == null ? "" : "?api_key=" + getApiKey();
-		return new URL(OPENML_URL + "data/v1/" + phpFunction + "/" + file_id + "/" + URLEncoder.encode(filename, "UTF-8") +  suffix );
+		String suffix = apiKey == null ? "" : "?api_key=" + getApiKey();
+		return new URL(openmlUrl + "data/v1/" + phpFunction + "/" + file_id + "/" + URLEncoder.encode(filename, "UTF-8") +  suffix );
 	}
 }

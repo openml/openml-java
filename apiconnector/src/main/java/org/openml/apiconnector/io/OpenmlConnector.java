@@ -25,17 +25,23 @@ public class OpenmlConnector extends OpenmlBasicConnector {
 	private static final XStream xstream = XstreamXmlMapping.getInstance();
 	
 	public OpenmlConnector() {
-		this.OPENML_URL = Settings.BASE_URL;
-		this.api_key = null;
+		this.openmlUrl = Settings.BASE_URL;
+		this.apiKey = null;
 	}
-	
+
 	public OpenmlConnector(String url, String api_key) {
-		this.OPENML_URL = url;
-		this.api_key = api_key;
+		this.openmlUrl = url;
+		this.apiKey = api_key;
+	}
+
+	public OpenmlConnector(String url, String api_key, String api_part) {
+		this.openmlUrl = url;
+		this.apiKey = api_key;
+		this.apiPart = api_part;
 	}
 
 	public OpenmlConnector(String api_key) {
-		this.api_key = api_key;
+		this.apiKey = api_key;
 	}
 
 	/**
