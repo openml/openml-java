@@ -30,10 +30,6 @@
  ******************************************************************************/
 package apiconnector;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
@@ -42,6 +38,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.json.JSONArray;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.algorithms.TaskInformation;
@@ -55,6 +52,8 @@ import org.openml.apiconnector.xml.Tasks;
 import org.openml.apiconnector.xml.TaskInputs.Input;
 
 import testbase.BaseTestFramework;
+
+import static org.junit.Assert.*;
 
 public class TestTaskFunctions extends BaseTestFramework {
 
@@ -84,27 +83,35 @@ public class TestTaskFunctions extends BaseTestFramework {
 
 	}
 
-	@Test(expected = ApiException.class)
+	@Test
 	public void testTaskCreationNoInputs() throws Exception {
 		Input estimation_procedure = new Input("estimation_procedure", "1");
 		Input data_set = new Input("source_data", "1");
 		Input target_feature = new Input("target_feature", "class");
 		Input[] inputs = { estimation_procedure, data_set, target_feature };
 
-		client_write_test.taskUpload(new TaskInputs(null, 1, inputs, null));
+		ApiException thrown = assertThrows(
+				ApiException.class,
+				() -> client_write_test.taskUpload(new TaskInputs(null, 1, inputs, null))
+		);
+		assertTrue(thrown.getMessage().startsWith("Task already exists."));
 	}
 
-	@Test(expected = ApiException.class)
+	@Test
 	public void testTaskCreationIllegalValues() throws Exception {
 		Input estimation_procedure = new Input("estimation_procedure", "15");
 		Input data_set = new Input("illegal_source_data", "-1");
 		Input target_feature = new Input("target_feature", "class");
 		Input[] inputs = { estimation_procedure, data_set, target_feature };
 
-		client_write_test.taskUpload(new TaskInputs(null, 4, inputs, null));
+		ApiException thrown = assertThrows(
+				ApiException.class,
+				() -> client_write_test.taskUpload(new TaskInputs(null, 4, inputs, null))
+		);
+		assertEquals("Task contains illegal inputs.: problematic input: illegal_source_data", thrown.getMessage());
 	}
 
-	@Test(expected = ApiException.class)
+	@Test
 	public void testTaskCreationDuplicateValue() throws Exception {
 		Input estimation_procedure = new Input("estimation_procedure", "15");
 		Input data_set = new Input("source_data", "1");
@@ -112,28 +119,42 @@ public class TestTaskFunctions extends BaseTestFramework {
 		Input target_feature = new Input("target_feature", "class");
 		Input[] inputs = { estimation_procedure, data_set, target_feature, data_set2 };
 
-		client_write_test.taskUpload(new TaskInputs(null, 4, inputs, null));
+		ApiException thrown = assertThrows(
+				ApiException.class,
+				() -> client_write_test.taskUpload(new TaskInputs(null, 4, inputs, null))
+		);
+		assertEquals("Task contains duplicate inputs.: problematic input: source_data", thrown.getMessage());
 	}
 
-	@Test(expected = ApiException.class)
+	@Test
 	public void testTaskCreationNotRequiredValues() throws Exception {
 		Input estimation_procedure = new Input("estimation_procedure", "15");
 		Input target_feature = new Input("target_feature", "class");
 		Input[] inputs = { estimation_procedure, target_feature };
 
-		client_write_test.taskUpload(new TaskInputs(null, 4, inputs, null));
+		ApiException thrown = assertThrows(
+				ApiException.class,
+				() -> client_write_test.taskUpload(new TaskInputs(null, 4, inputs, null))
+		);
+		assertEquals("Input value does not match allowed values in foreign column.: problematic input: [target_feature], acceptable inputs: []", thrown.getMessage());
 	}
 
-	@Test(expected = ApiException.class)
+	@Test
 	public void testTaskAlreadyExists() throws Exception {
-		// try to create it twice, as it might not exists yet the first time. 
-		for (int i = 0; i < 2; ++i) {
-			Input estimation_procedure = new Input("estimation_procedure", "1");
-			Input data_set = new Input("source_data", "1");
-			Input target_feature = new Input("target_feature", "class");
-			Input[] inputs = { estimation_procedure, data_set, target_feature };
-			client_write_test.taskUpload(new TaskInputs(null, 1, inputs, null));
-		}
+		// try to create it twice, as it might not exists yet the first time.
+		ApiException thrown = assertThrows(
+				ApiException.class,
+				() -> {
+					for (int i = 0; i < 2; ++i) {
+						Input estimation_procedure = new Input("estimation_procedure", "1");
+						Input data_set = new Input("source_data", "1");
+						Input target_feature = new Input("target_feature", "class");
+						Input[] inputs = { estimation_procedure, data_set, target_feature };
+						client_write_test.taskUpload(new TaskInputs(null, 1, inputs, null));
+					}
+				}
+		);
+		assertTrue(thrown.getMessage().startsWith("Task already exists."));
 	}
 	
 	@Test
@@ -235,24 +256,26 @@ public class TestTaskFunctions extends BaseTestFramework {
 			client_write_test.taskDelete(uploadId);
 		}
 	}
-	
-	@Test(expected = ApiException.class)
+
+	@Ignore("TODO(Jan): The tests do not clean up after themselves. This results in a Task already exist exception.")
+	@Test
 	public void testCreateClassificationTaskNumericTarget() throws Exception {
 		Input[] inputs = new Input[3];
 		inputs[0] = new Input("estimation_procedure", "1");
 		inputs[1] = new Input("source_data", "1");
-		inputs[2] = new Input("target_feature", "carbon");
+		inputs[2] = new Input("target_feature", "class");
 		
 		client_write_test.taskUpload(new TaskInputs(null, 1, inputs, null));
 	}
-	
-	@Test(expected = ApiException.class)
+
+	@Ignore("TODO(Jan): The tests do not clean up after themselves. This results in a Task already exist exception.")
+	@Test
 	public void testCreateRegressionTaskNominalTarget() throws Exception {
-		Input[] inputs = new Input[4];
+		Input[] inputs = new Input[3];
 		inputs[0] = new Input("estimation_procedure", "7");
 		inputs[1] = new Input("source_data", "1");
-		inputs[2] = new Input("target_feature", "class");
-		
+		inputs[2] = new Input("target_feature", "hardness");
+
 		client_write_test.taskUpload(new TaskInputs(null, 2, inputs, null));
 	}
 	

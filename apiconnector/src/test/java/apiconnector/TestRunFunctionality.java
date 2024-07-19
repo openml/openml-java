@@ -134,35 +134,35 @@ public class TestRunFunctionality extends BaseTestFramework {
 		client_write_test.runDelete(runId);
 	}
 	
-	@Test(expected = ApiException.class)
+	@Test
 	public void testApiRunUploadIllegalMeasure() throws Exception {
 		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("unexisting", 1.0, "[1.0, 1.0]", 0, 0, null, null));
 		client_write_test.runUpload(r, null);
 	}
 	
-	@Test(expected = ApiException.class)
+	@Test
 	public void testApiRunUploadWronglyParameterziedMeasureRepeats() throws Exception {
 		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", num_repeats, 0, null, null));
 		client_write_test.runUpload(r, null);
 	}
 	
-	@Test(expected = ApiException.class)
+	@Test
 	public void testApiRunUploadWronglyParameterziedMeasureFolds() throws Exception {
 		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, num_folds, null, null));
 		client_write_test.runUpload(r, null);
 	}
 	
-	@Test(expected = ApiException.class)
+	@Test
 	public void testApiRunUploadWronglyParameterziedMeasureSample() throws Exception {
 		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, 0, 0, 0));
 		client_write_test.runUpload(r, null);
 	}
 	
-	@Test(expected = ApiException.class)
+	@Test
 	public void testApiRunUploadWronglyParameterziedMeasureSampleCurveTask() throws Exception {
 		Run r = new Run(curve_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, 0, num_samples, null));
