@@ -257,26 +257,34 @@ public class TestTaskFunctions extends BaseTestFramework {
 		}
 	}
 
-	@Ignore("TODO(Jan): The tests do not clean up after themselves. This results in a Task already exist exception.")
+
 	@Test
 	public void testCreateClassificationTaskNumericTarget() throws Exception {
 		Input[] inputs = new Input[3];
 		inputs[0] = new Input("estimation_procedure", "1");
 		inputs[1] = new Input("source_data", "1");
-		inputs[2] = new Input("target_feature", "class");
-		
-		client_write_test.taskUpload(new TaskInputs(null, 1, inputs, null));
+		inputs[2] = new Input("target_feature", "carbon");
+
+		ApiException thrown = assertThrows(
+				ApiException.class,
+				() -> client_write_test.taskUpload(new TaskInputs(null, 1, inputs, null))
+		);
+		assertTrue(thrown.getMessage().startsWith("Input value does not match allowed values in foreign column.: problematic input: [target_feature], acceptable inputs"));
 	}
 
-	@Ignore("TODO(Jan): The tests do not clean up after themselves. This results in a Task already exist exception.")
 	@Test
 	public void testCreateRegressionTaskNominalTarget() throws Exception {
 		Input[] inputs = new Input[3];
 		inputs[0] = new Input("estimation_procedure", "7");
 		inputs[1] = new Input("source_data", "1");
-		inputs[2] = new Input("target_feature", "hardness");
+		inputs[2] = new Input("target_feature", "class");
 
-		client_write_test.taskUpload(new TaskInputs(null, 2, inputs, null));
+
+		ApiException thrown = assertThrows(
+				ApiException.class,
+				() -> client_write_test.taskUpload(new TaskInputs(null, 2, inputs, null))
+		);
+		assertEquals("Input value does not match allowed values in foreign column.: problematic input: [target_feature], acceptable inputs: [carbon, hardness, strength, thick, width, len]", thrown.getMessage());
 	}
 	
 	@Test
