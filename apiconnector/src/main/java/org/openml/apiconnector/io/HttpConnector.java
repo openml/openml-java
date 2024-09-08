@@ -166,6 +166,7 @@ public class HttpConnector implements Serializable {
         if (entity.getContentLength() == 0) {
         	throw new ApiException(1, "Webserver returned empty result (possibly due to temporarily high load). Please try again. ");
         }
+        file.getParentFile().mkdirs();
         FileOutputStream fos = new java.io.FileOutputStream(file);
         entity.writeTo(fos);
         fos.close();
