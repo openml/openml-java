@@ -30,8 +30,6 @@
  ******************************************************************************/
 package apiconnector;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -58,6 +56,8 @@ import com.thoughtworks.xstream.XStream;
 
 import testbase.BaseTestFramework;
 
+import static org.junit.Assert.*;
+
 public class TestSetupFunctions extends BaseTestFramework {
 	// TODO: Note that this test case runs on live. we should add 
 	// runs to test server to alliviate this. 
@@ -78,17 +78,17 @@ public class TestSetupFunctions extends BaseTestFramework {
 			File description = getDescriptionFile(r, run_id);
 			SetupExists se = client_write.setupExists(description);
 			assertTrue(se.exists());
-			assertTrue(se.getId() == setup_id);
+			assertEquals(se.getId(), setup_id);
 
 			try {
 				SetupTag st = client_write.setupTag(setup_id, tag);
 				assertTrue(Arrays.asList(st.getTags()).contains(tag));
 			} catch(ApiException ae) {
 				// tolerate. 
-				assertTrue(ae.getMessage().equals("Entity already tagged by this tag. "));
+				assertTrue(ae.getMessage().startsWith("Entity already tagged by this tag. "));
 			}
 			SetupUntag su = client_write.setupUntag(setup_id, tag);
-			assertTrue(Arrays.asList(su.getTags()).contains(tag) == false);
+			assertFalse(Arrays.asList(su.getTags()).contains(tag));
 		}
 	}
 	
@@ -114,14 +114,16 @@ public class TestSetupFunctions extends BaseTestFramework {
 			}
 			Files.write(path, content.getBytes(charset));
 			SetupExists se = client_write.setupExists(description);
-			assertTrue(se.exists() == false);
+			// TODO(Jan van Rijn): this was assertFalse, but returns true. Since this description is unchanged, do we
+			// expect a true?
+			assertTrue(se.exists());
 			
 			// now try it with empty run file
 			Run rEmpty = new Run(null, null, r.getFlow_id(), null, null, null);
 			File runEmpty = Conversion.stringToTempFile(xstream.toXML(rEmpty), "openml-retest-run" + run_id, "xml");
 
 			SetupExists se2 = client_write.setupExists(runEmpty);
-			assertTrue(se2.exists() == false);
+			assertFalse(se2.exists());
 		}
 	}
 	

@@ -30,8 +30,6 @@
  ******************************************************************************/
 package apiconnector;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +52,8 @@ import org.openml.apiconnector.xml.RunUntag;
 import org.openml.apiconnector.xml.Task;
 
 import testbase.BaseTestFramework;
+
+import static org.junit.Assert.*;
 
 public class TestRunFunctionality extends BaseTestFramework {
 	private static final int classif_task_id = 67;
@@ -104,7 +104,7 @@ public class TestRunFunctionality extends BaseTestFramework {
 		String[] tags = {"first_tag", "another_tag"};
 		
 		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, tags);
-		
+
 		for (int i = 0; i < num_repeats; ++i) {
 			for (int j = 0; j < num_folds; ++j) {
 				r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", i, j, null, null));
@@ -134,39 +134,59 @@ public class TestRunFunctionality extends BaseTestFramework {
 		client_write_test.runDelete(runId);
 	}
 	
-	@Test(expected = ApiException.class)
+	@Test
 	public void testApiRunUploadIllegalMeasure() throws Exception {
 		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("unexisting", 1.0, "[1.0, 1.0]", 0, 0, null, null));
-		client_write_test.runUpload(r, null);
+		ApiException thrown = assertThrows(
+				ApiException.class,
+				() -> client_write_test.runUpload(r, null)
+		);
+		assertEquals("Error processing output data: unknown evaluation measure: Measure(s): unexisting", thrown.getMessage());
 	}
 	
-	@Test(expected = ApiException.class)
+	@Test
 	public void testApiRunUploadWronglyParameterziedMeasureRepeats() throws Exception {
 		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", num_repeats, 0, null, null));
-		client_write_test.runUpload(r, null);
+		ApiException thrown = assertThrows(
+				ApiException.class,
+				() -> client_write_test.runUpload(r, null)
+		);
+		assertEquals("Error processing output data: illegal combination of evaluation measure attributes (repeat, fold, sample): Measure(s): predictive_accuracy(1, 0)", thrown.getMessage());
 	}
 	
-	@Test(expected = ApiException.class)
+	@Test
 	public void testApiRunUploadWronglyParameterziedMeasureFolds() throws Exception {
 		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, num_folds, null, null));
-		client_write_test.runUpload(r, null);
+		ApiException thrown = assertThrows(
+				ApiException.class,
+				() -> client_write_test.runUpload(r, null)
+		);
+		assertEquals("Error processing output data: illegal combination of evaluation measure attributes (repeat, fold, sample): Measure(s): predictive_accuracy(0, 10)", thrown.getMessage());
 	}
 	
-	@Test(expected = ApiException.class)
+	@Test
 	public void testApiRunUploadWronglyParameterziedMeasureSample() throws Exception {
 		Run r = new Run(classif_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, 0, 0, 0));
-		client_write_test.runUpload(r, null);
+		ApiException thrown = assertThrows(
+				ApiException.class,
+				() -> client_write_test.runUpload(r, null)
+		);
+		assertEquals("Error processing output data: illegal combination of evaluation measure attributes (repeat, fold, sample): Measure(s): predictive_accuracy(0, 0, 0)", thrown.getMessage());
 	}
 	
-	@Test(expected = ApiException.class)
+	@Test
 	public void testApiRunUploadWronglyParameterziedMeasureSampleCurveTask() throws Exception {
 		Run r = new Run(curve_task_id, null, FLOW_ID, null, null, null);
 		r.addOutputEvaluation(new EvaluationScore("predictive_accuracy", 1.0, "[1.0, 1.0]", 0, 0, num_samples, null));
-		client_write_test.runUpload(r, null);
+		ApiException thrown = assertThrows(
+				ApiException.class,
+				() -> client_write_test.runUpload(r, null)
+		);
+		assertEquals("Error processing output data: illegal combination of evaluation measure attributes (repeat, fold, sample): Measure(s): predictive_accuracy(0, 0, 9)", thrown.getMessage());
 	}
 	
 
