@@ -201,7 +201,7 @@ public class TestRunFunctionality extends BaseTestFramework {
 	}
 	
 	@Test
-	@Ignore
+	@Ignore  // skipping because of test server state
 	public void testApiEvaluationRequest() throws Exception {
 		// this test assumes that there are runs on the test server. 
 		// might not be the case just after reset 

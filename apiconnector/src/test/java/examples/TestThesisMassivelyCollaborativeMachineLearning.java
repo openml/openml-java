@@ -89,6 +89,7 @@ public class TestThesisMassivelyCollaborativeMachineLearning extends BaseTestFra
 	}
 	
 	@Test
+	@Ignore // takes too long
 	public void testHyperparameterEffect() throws Exception {
 		Integer[] taskIds = {6, 21, 28, 41, 58};
 		Integer[] setupIds = {8920, 8921, 8922, 8923, 8924, 8925, 8926, 8927, 8929, 8930, 8932, 8937, 8938};
@@ -229,7 +230,7 @@ public class TestThesisMassivelyCollaborativeMachineLearning extends BaseTestFra
 		// now the resulting csv can be plotted with a GNUplot command like
 		// "plot 'results.csv' using 1:4:xticlabels(3)"
 	}
-
+	
 	public static void hyperparameterEffect(OpenmlConnector openml, List<Integer> taskIds, List<Integer> setupIds,
 			String hyperparameter, String evaluationMeasure, File resultsFile) throws Exception {
 		// obtains all evaluations that comply to the three filters
