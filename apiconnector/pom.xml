@@ -5,7 +5,7 @@
 
   <groupId>org.openml</groupId>
   <artifactId>apiconnector</artifactId>
-  <version>1.0.27</version>
+  <version>1.0.27-SNAPSHOT</version>
   <packaging>jar</packaging> 
 
   <name>APIConnector</name>
@@ -182,12 +182,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
-          <version>3.0.0-M1</version>
+          <version>3.1.1</version>
           <configuration>
             <useReleaseProfile>false</useReleaseProfile>
             <localCheckout>true</localCheckout>
-            <pushChanges>true</pushChanges>
-            <commitByProject>true</commitByProject>
+            <pushChanges>false</pushChanges>
+            <commitByProject>false</commitByProject>
           </configuration>
         </plugin>
       </plugins>
