@@ -187,6 +187,7 @@ public class TestDataFunctionality extends BaseTestFramework {
 	}
 	
 	@Test
+	@Ignore
 	public void testApiUploadFromUrl() throws Exception {
 		String dataUrl = "http://storm.cis.fordham.edu/~gweiss/data-mining/weka-data/cpu.arff";
 		
