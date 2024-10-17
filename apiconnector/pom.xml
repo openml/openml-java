@@ -46,6 +46,13 @@
     <version>7</version>
   </parent>
 
+  <scm>
+    <connection>scm:git:https://github.com/openml/java</connection>
+    <developerConnection>scm:git:https://github.com/openml/java</developerConnection>
+    <url>https://github.com/openml/java</url>
+    <tag>apiconnector-1.0.27</tag>
+  </scm>
+
   <profiles>
     <profile>
       <id>release-sign-artifacts</id>
@@ -55,7 +62,7 @@
           <value>true</value>
         </property>
       </activation>
-      <build> 
+      <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
