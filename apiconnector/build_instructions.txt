@@ -20,6 +20,8 @@ Basically, the following requirements need to be met:
 * GPG key should be available on key server (e.g., using `gpg --keyserver keys.gnupg.net --send-keys KEY_ID`)
 can be checked with `gpg -vvvv --keyserver "keys.gnupg.net" --recv-keys "KEY_ID"`
 
+To get the username / pass key, login to staging server https://oss.sonatype.org/, click on username (right top) -> profile, and change "Summary" dropdown to user token. This is needed for settings file. 
+
 A typical settings.xml file can look like this:
 
 ```
