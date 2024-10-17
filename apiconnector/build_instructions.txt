@@ -28,7 +28,7 @@ A typical settings.xml file can look like this:
     <server>
       <id>sonatype-nexus-staging</id>
       <username>janvanrijn</username>
-      <password>HERE_THE_SONATYPE_PASSWORD</password>
+      <password>HERE_THE_SONATYPE_TOKEN (to be generated on the server)</password>
     </server>
   </servers>
   <profiles>
