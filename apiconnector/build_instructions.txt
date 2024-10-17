@@ -72,3 +72,5 @@ ln -s /usr/local/bin/gpg /usr/local/bin/gpg2
 
 [source: Stackoverflow]
 https://stackoverflow.com/questions/54391696/gpg2-command-not-found-even-when-gpg2-is-installed-on-mac-trying-to-install-rv
+
+* Also note that GitHub nowadays requires a different authentication protocol. This needs to be setup accordingly (and can be tested using common git commands)
