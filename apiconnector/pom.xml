@@ -240,12 +240,12 @@
               <excludeResources>true</excludeResources>
             </configuration>
           </execution>
-          <execution>
+          <!--<execution>
             <id>attach-test-sources</id>
             <goals>
               <goal>test-jar</goal>
             </goals>
-          </execution>
+          </execution>-->
         </executions>
       </plugin>
 
