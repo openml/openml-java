@@ -62,3 +62,13 @@ export GPG_TTY
 
 [Source: Stackoverflow]
 https://unix.stackexchange.com/questions/257061/gentoo-linux-gpg-encrypts-properly-a-file-passed-through-parameter-but-throws-i/257065#257065
+
+* Command gpg2 not found (happened on a Macbook)
+
+Ensure that gpg is installed (through brew)
+Use source gpg to identify where it is located
+Make a symlink, so that the command gpg2 points to the gpg binary, e.g.,
+ln -s /usr/local/bin/gpg /usr/local/bin/gpg2
+
+[source: Stackoverflow]
+https://stackoverflow.com/questions/54391696/gpg2-command-not-found-even-when-gpg2-is-installed-on-mac-trying-to-install-rv
