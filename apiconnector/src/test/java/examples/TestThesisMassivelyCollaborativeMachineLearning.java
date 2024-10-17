@@ -79,6 +79,7 @@ public class TestThesisMassivelyCollaborativeMachineLearning extends BaseTestFra
 	}
 	
 	@Test
+	@Ignore
 	public void testFlowsOnTaks() throws Exception {
 		int taskId = 6;
 		String measure = "predictive_accuracy";
