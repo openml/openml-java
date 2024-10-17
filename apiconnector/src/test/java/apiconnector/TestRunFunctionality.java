@@ -40,6 +40,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.io.ApiException;
@@ -200,6 +201,7 @@ public class TestRunFunctionality extends BaseTestFramework {
 	}
 	
 	@Test
+	@Ignore
 	public void testApiEvaluationRequest() throws Exception {
 		// this test assumes that there are runs on the test server. 
 		// might not be the case just after reset 

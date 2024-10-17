@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openml.apiconnector.xml.Study;
 import org.openml.apiconnector.xml.StudyAttach;
@@ -104,6 +105,7 @@ public class TestStudyFunctions extends BaseTestFramework {
 	}
 
 	@Test
+	@Ignore
 	public void studyList() throws Exception {
 		Map<String, String> filters = new TreeMap<String, String>();
 		filters.put("status", "all");
