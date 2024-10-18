@@ -3,6 +3,8 @@ To compile using Maven (mvn):
 
 mvn -X clean release:clean release:prepare release:perform -Dusername=janvanrijn -Dpassword=...
 
+Don't forget to do a git push manually (this can be done automatically through configuring pom.xml, but due to gits authentication protocol it currently needs to be done manually)
+
 To release on maven central, go to:
 
 https://oss.sonatype.org/
