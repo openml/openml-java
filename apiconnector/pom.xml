@@ -41,9 +41,9 @@
        https://github.com/sonatype/oss-parents/blob/master/oss-parent/pom.xml
   -->
   <parent>
-    <groupId>org.sonatype.oss</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>7</version>
+    <groupId>com.github.fracpete</groupId>
+    <artifactId>central-portal-parent</artifactId>
+    <version>0.0.2</version>
   </parent>
 
   <scm>
@@ -132,7 +132,7 @@
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
-      <version>1.4.20</version>
+      <version>1.4.21</version>
     </dependency>
 
     <dependency>
