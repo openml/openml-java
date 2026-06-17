@@ -155,6 +155,8 @@ public class HttpConnector implements Serializable {
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         // Compared to FileUtils.copyURLToFile this can handle http -> https redirects
         HttpGet httpget = new HttpGet(url.toURI());
+        // TODO: JvR: would be cool to add to also add a version number, but this is hard. 
+        httpget.addHeader("User-Agent", "OpenML-Java");
         CloseableHttpResponse response = httpClient.execute(httpget);
         
         int code = response.getStatusLine().getStatusCode();

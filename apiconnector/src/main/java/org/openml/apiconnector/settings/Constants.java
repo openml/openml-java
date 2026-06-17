@@ -64,4 +64,7 @@ public class Constants {
 	
 	public final static DecimalFormat defaultDecimalFormat = new DecimalFormat("#.######",
 			DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+	
+	public final static String CLIENT_HEADER_NAME = "User-Agent";
+	public final static String CLIENT_NAME = "OpenML-Java";
 }
